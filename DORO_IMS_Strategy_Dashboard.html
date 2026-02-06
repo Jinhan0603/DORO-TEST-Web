@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DORO 강사 관리 시스템 고도화 전략 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f5f2; /* Warm neutral background */
+            color: #4a4a4a;
+        }
+
+        /* Chart Container Styling - Mandatory Constraint */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width to prevent excessive stretching */
+            height: 300px;    /* Base height */
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #ea580c; /* Orange-600 */
+            color: #ea580c;
+            font-weight: 700;
+        }
+        .inactive-tab {
+            color: #9ca3af;
+        }
+        .inactive-tab:hover {
+            color: #4b5563;
+        }
+        
+        .timeline-connector {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+        .timeline-item.active .timeline-connector {
+            background-color: #ea580c;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Background: #f8f5f2, Text: #4a4a4a) with Orange (#ea580c) and Slate Blue (#475569) accents for professional yet engaging look. -->
+    
+    <!-- Application Structure Plan:
+        1. Header: Report Title & Context.
+        2. Strategic Overview (Dashboard): "Why Change?" section summarizing Problem vs. Solution (Efficiency, Quality, Motivation).
+        3. Tier System Explorer (Interactive): Tabs to explore S/A/B/P tiers. Dynamic content area showing Role, Requirements, and Benefits. Visual comparison of Role-based vs. Tier-based pay structure.
+        4. Evaluation Simulator (Calculator): Users input instructor metrics (scores, penalties, experience) to see the calculated Score and resulting Tier. Demonstrates the "Digitization" of instructors.
+        5. Assignment Logic Visualizer (Process Flow): Step-by-step interactive diagram of the Filtering -> Scoring -> Optimization algorithm. Includes a mini-demo where selecting a lecture type highlights the matching logic.
+        6. Roadmap & Impact (Timeline): 4-Phase implementation plan visualization.
+        Rationale: This structure breaks down the complex report into logical "What", "Who", "How", and "When" sections, allowing users to actively explore the new system's mechanics rather than just reading about them.
+    -->
+
+    <!-- Visualization & Content Choices:
+        1. Overview: Comparison Cards (Grid) -> Goal: Inform context. -> Interaction: Hover effects.
+        2. Tier System: Tabbed Interface & Bar Chart -> Goal: Compare and Organize roles. -> Interaction: Tab switching updates details; Chart visualizes pay incentives. -> Method: Chart.js for pay gap visualization.
+        3. Evaluation: Interactive Form & Gauge/Progress Bar -> Goal: Inform & Engage. -> Interaction: Sliders/Inputs update real-time score. -> Method: DOM manipulation, simple JS logic.
+        4. Assignment: Interactive Flowchart (CSS/Flexbox) -> Goal: Explain Process. -> Interaction: Click steps to reveal logic details. -> Method: Structured HTML/CSS (No SVG).
+        5. Roadmap: Horizontal Timeline -> Goal: Plan presentation. -> Interaction: Hover for phase details.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased selection:bg-orange-100 selection:text-orange-900">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl font-bold text-gray-800">DORO</span>
+                <span class="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">전략기획팀 보고서</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-500">
+                <button onclick="scrollToSection('overview')" class="hover:text-orange-600 transition">개요</button>
+                <button onclick="scrollToSection('tier-system')" class="hover:text-orange-600 transition">강사 등급제</button>
+                <button onclick="scrollToSection('evaluation')" class="hover:text-orange-600 transition">평가 시뮬레이션</button>
+                <button onclick="scrollToSection('algorithm')" class="hover:text-orange-600 transition">배정 자동화</button>
+                <button onclick="scrollToSection('roadmap')" class="hover:text-orange-600 transition">로드맵</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section 1: Strategic Overview -->
+        <section id="overview" class="space-y-6">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">강사 관리 시스템 고도화 전략</h1>
+                <p class="text-lg text-gray-600">
+                    휴먼 에러와 비효율적인 수기 관리에서 벗어나,<br>
+                    <span class="font-bold text-orange-600">데이터 기반의 강사 등급제</span>와 <span class="font-bold text-blue-600">자동 배정 알고리즘</span>을 도입합니다.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-gray-100">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">추진 배경 및 기대효과</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-gray-50 rounded-xl p-6 card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">⚡</span>
+                            <span class="text-xs font-bold bg-red-100 text-red-600 px-2 py-1 rounded">Problem</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">업무 과부하 해소</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            혜원T 등 핵심 R&D 인력이 단순 배정 업무에 매몰되어 있습니다. 자동화를 통해 배정 업무 시간을 50% 이상 단축합니다.
+                        </p>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-400 h-2 rounded-full" style="width: 80%"></div>
+                        </div>
+                        <p class="text-xs text-right text-gray-500 mt-1">현재 리소스 낭비 심각</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-gray-50 rounded-xl p-6 card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">💎</span>
+                            <span class="text-xs font-bold bg-green-100 text-green-600 px-2 py-1 rounded">Solution</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">서비스 품질 표준화</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            관리자의 감이나 기억이 아닌, 객관적 데이터(평점, 경력 등)에 기반하여 최적의 강사를 배정합니다.
+                        </p>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>✓ S/A급 주강사 우선 배치</li>
+                            <li>✓ 휴먼 에러(중복 배정 등) 0%</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-gray-50 rounded-xl p-6 card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">🚀</span>
+                            <span class="text-xs font-bold bg-blue-100 text-blue-600 px-2 py-1 rounded">Goal</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 mb-2">동기 부여 시스템</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            역할 중심 급여에서 '등급 중심 급여'로 전환하여, 강사들이 스스로 성장하고자 하는 확실한 유인을 제공합니다.
+                        </p>
+                        <div class="flex gap-2 text-xs">
+                            <span class="px-2 py-1 bg-white border rounded">공정성</span>
+                            <span class="px-2 py-1 bg-white border rounded">투명성</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Instructor Tier System -->
+        <section id="tier-system" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">강사 등급제 (Tier System)</h2>
+                    <p class="text-sm text-gray-500 mt-1">S, A, B 3단계 등급 체계와 차등 보상 전략을 확인하세요.</p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Left: Interactive Tier Details -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex space-x-4 border-b border-gray-200 mb-6">
+                        <button onclick="switchTier('S')" id="tab-S" class="active-tab pb-2 px-1 text-sm font-medium transition">S (Master)</button>
+                        <button onclick="switchTier('A')" id="tab-A" class="inactive-tab pb-2 px-1 text-sm font-medium transition">A (Advanced)</button>
+                        <button onclick="switchTier('B')" id="tab-B" class="inactive-tab pb-2 px-1 text-sm font-medium transition">B (General)</button>
+                        <button onclick="switchTier('P')" id="tab-P" class="inactive-tab pb-2 px-1 text-sm font-medium transition">P (Penalty)</button>
+                    </div>
+
+                    <div id="tier-content" class="space-y-4">
+                        <!-- Content injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Compensation Chart -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">보상 체계 변화 시뮬레이션</h3>
+                    <p class="text-xs text-gray-500 mb-4">역할(Role) 중심에서 등급(Tier) 중심으로의 급여 구조 변화 (예시 데이터)</p>
+                    <div class="chart-container">
+                        <canvas id="compensationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Evaluation Simulator -->
+        <section id="evaluation" class="space-y-6">
+            <div class="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden">
+                <!-- Decorative Circle -->
+                <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-slate-800 rounded-full opacity-50"></div>
+
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-bold mb-2">평가 시뮬레이터 (Evaluation Simulator)</h2>
+                    <p class="text-slate-300 text-sm mb-8 max-w-2xl">
+                        강사의 정량적/정성적 데이터를 입력하여 예상 등급을 산출해보세요. 
+                        <br>점수는 <span class="text-orange-400 font-mono">IRI (Instructor Reliability Index)</span> 알고리즘에 기반합니다.
+                    </p>
+
+                    <div class="grid lg:grid-cols-3 gap-8">
+                        <!-- Input Form -->
+                        <div class="lg:col-span-2 grid sm:grid-cols-2 gap-6">
+                            <!-- Metric 1 -->
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-2">강의 만족도 (40%)</label>
+                                <input type="range" id="input-satisfaction" min="1" max="5" step="0.1" value="4.5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                                <div class="flex justify-between text-xs mt-1">
+                                    <span>1.0</span>
+                                    <span id="val-satisfaction" class="text-orange-400 font-bold">4.5</span>
+                                    <span>5.0</span>
+                                </div>
+                            </div>
+
+                            <!-- Metric 2 -->
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-2">누적 강의 횟수 (20%)</label>
+                                <input type="number" id="input-count" value="15" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-orange-500 text-white">
+                            </div>
+
+                            <!-- Metric 3 -->
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-2">전문성 및 교육 이수 (30%)</label>
+                                <select id="input-expertise" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-orange-500 text-white">
+                                    <option value="100">Lv.3 심화 (전공자)</option>
+                                    <option value="70">Lv.2 기본 (비전공 유경험)</option>
+                                    <option value="40">Lv.1 입문 (교육생)</option>
+                                </select>
+                            </div>
+
+                            <!-- Metric 4 -->
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-2">최근 페널티 (10% 감점)</label>
+                                <select id="input-penalty" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-orange-500 text-white">
+                                    <option value="0">없음 (0건)</option>
+                                    <option value="10">경미 (지각 1회)</option>
+                                    <option value="50">중대 (노쇼/당일취소)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Result Display -->
+                        <div class="bg-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center border border-slate-700">
+                            <span class="text-slate-400 text-xs uppercase tracking-wider mb-2">Predicted Tier</span>
+                            <div id="result-tier" class="text-5xl font-bold text-white mb-2">A</div>
+                            <div class="text-sm text-slate-300 mb-4">Score: <span id="result-score" class="font-mono text-orange-400">85</span>/100</div>
+                            <div class="w-full bg-slate-900 rounded-full h-2 mb-2">
+                                <div id="score-bar" class="bg-gradient-to-r from-orange-600 to-orange-400 h-2 rounded-full transition-all duration-500" style="width: 85%"></div>
+                            </div>
+                            <p id="result-desc" class="text-xs text-slate-500">주강사 활동 가능, 표준 강사료 상한 적용</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Automated Assignment Process -->
+        <section id="algorithm" class="space-y-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">강의 배정 자동화 로직</h2>
+            <p class="text-gray-600 max-w-3xl mb-8">
+                Google Sheets와 Apps Script를 활용한 3단계 배정 알고리즘입니다. 
+                시스템은 제약 조건을 필터링하고, 가중치 점수를 계산하여 전체 효율이 최대화되는 조합을 제안합니다.
+            </p>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <!-- Process Diagram -->
+                <div class="grid md:grid-cols-4 gap-4 mb-8">
+                    <!-- Step 1 -->
+                    <div class="relative group cursor-pointer" onclick="showAlgoDetail(1)">
+                        <div class="border-2 border-orange-100 bg-orange-50 rounded-xl p-4 hover:border-orange-400 transition h-full flex flex-col items-center text-center">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold mb-3">1</div>
+                            <h3 class="font-bold text-gray-800 text-sm">Input & Filter</h3>
+                            <p class="text-xs text-gray-500 mt-2">시간 중복, 자격 미달, 페널티 락 강사 제외</p>
+                        </div>
+                        <div class="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-300">➜</div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative group cursor-pointer" onclick="showAlgoDetail(2)">
+                        <div class="border-2 border-white bg-white hover:border-blue-400 border-gray-100 rounded-xl p-4 transition h-full flex flex-col items-center text-center shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mb-3">2</div>
+                            <h3 class="font-bold text-gray-800 text-sm">Scoring</h3>
+                            <p class="text-xs text-gray-500 mt-2">등급 점수 + 전문성 + 거리 점수 계산</p>
+                        </div>
+                        <div class="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-300">➜</div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative group cursor-pointer" onclick="showAlgoDetail(3)">
+                        <div class="border-2 border-white bg-white hover:border-purple-400 border-gray-100 rounded-xl p-4 transition h-full flex flex-col items-center text-center shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold mb-3">3</div>
+                            <h3 class="font-bold text-gray-800 text-sm">Optimization</h3>
+                            <p class="text-xs text-gray-500 mt-2">전체 효용 최대화 및 쏠림 방지</p>
+                        </div>
+                        <div class="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-300">➜</div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative group cursor-pointer" onclick="showAlgoDetail(4)">
+                        <div class="border-2 border-white bg-white hover:border-green-400 border-gray-100 rounded-xl p-4 transition h-full flex flex-col items-center text-center shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold mb-3">4</div>
+                            <h3 class="font-bold text-gray-800 text-sm">Final Review</h3>
+                            <p class="text-xs text-gray-500 mt-2">관리자(Human) 검토 후 최종 확정</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Detail Panel -->
+                <div id="algo-detail-panel" class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                    <h4 class="font-bold text-gray-800 mb-2" id="algo-title">Step 1: Input & Filtering</h4>
+                    <p class="text-sm text-gray-600" id="algo-desc">
+                        강사 DB와 강의 일정 DB를 연동하여 기초 데이터를 수집합니다.<br>
+                        <strong>Hard Constraints:</strong> 1인 1강의 원칙, 역할별 최소 등급 요건(주강사=A이상), 페널티 보유자 자동 배제.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-gray-200 text-xs text-gray-500">
+                        <span class="font-mono bg-gray-200 px-1 rounded">Constraint: Role_Lead requires Tier >= A</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Roadmap -->
+        <section id="roadmap" class="pb-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">단계별 실행 로드맵</h2>
+            
+            <div class="relative">
+                <!-- Vertical line for mobile, Horizontal for desktop -->
+                <div class="hidden md:block absolute top-8 left-0 w-full h-1 bg-gray-200 -z-10"></div>
+                
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- Phase 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative mt-4 md:mt-0">
+                        <div class="w-4 h-4 bg-orange-500 rounded-full absolute -top-2 md:-top-2 left-1/2 transform -translate-x-1/2 border-4 border-white shadow-sm"></div>
+                        <h3 class="text-orange-600 font-bold text-sm mb-1">1단계: 기획/설계</h3>
+                        <p class="text-xs text-gray-400 mb-3">1개월 차</p>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                            <li>등급 산정 기준표 확정</li>
+                            <li>DB 스키마 설계 (Sheets)</li>
+                            <li>강사 의견 수렴</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative mt-4 md:mt-0">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full absolute -top-2 md:-top-2 left-1/2 transform -translate-x-1/2 border-4 border-white shadow-sm"></div>
+                        <h3 class="text-gray-800 font-bold text-sm mb-1">2단계: 개발/구축</h3>
+                        <p class="text-xs text-gray-400 mb-3">2개월 차</p>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                            <li>Apps Script 알고리즘 코딩</li>
+                            <li>초기 등급 산정</li>
+                            <li>데이터 이관</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative mt-4 md:mt-0">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full absolute -top-2 md:-top-2 left-1/2 transform -translate-x-1/2 border-4 border-white shadow-sm"></div>
+                        <h3 class="text-gray-800 font-bold text-sm mb-1">3단계: 시범 운영</h3>
+                        <p class="text-xs text-gray-400 mb-3">3개월 차</p>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                            <li>Pilot 자동 배정 테스트</li>
+                            <li>Human-in-the-Loop 검증</li>
+                            <li>강사 등급제 공식 선포</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative mt-4 md:mt-0">
+                        <div class="w-4 h-4 bg-gray-300 rounded-full absolute -top-2 md:-top-2 left-1/2 transform -translate-x-1/2 border-4 border-white shadow-sm"></div>
+                        <h3 class="text-gray-800 font-bold text-sm mb-1">4단계: 전면 도입</h3>
+                        <p class="text-xs text-gray-400 mb-3">4개월 차 ~</p>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                            <li>대규모 캠프 적용</li>
+                            <li>S급 운영총괄 배치 의무화</li>
+                            <li>분기별 등급 재산정</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
+            <p>© 2026 DORO Corporation. Internal Strategy Document.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Logic: Tier System Content & Switching ---
+        const tierData = {
+            'S': {
+                title: 'S Class (Master)',
+                role: '운영 총괄 (PM) 및 심화 주강사',
+                req: '경력 3년 이상, 페널티 0회, 멘토링 역량 보유',
+                benefit: '최고 구간 강사료, 대형 캠프 운영 수당, 배정 우선권',
+                color: 'text-orange-600',
+                bg: 'bg-orange-50'
+            },
+            'A': {
+                title: 'A Class (Advanced)',
+                role: '전문 주강사 (Lead)',
+                req: '검증된 강의력, 최근 6개월 페널티 없음, 단독 수업 가능',
+                benefit: '표준 주강사료 상한 적용, 정기 수업 우선 배정',
+                color: 'text-blue-600',
+                bg: 'bg-blue-50'
+            },
+            'B': {
+                title: 'B Class (General)',
+                role: '보조강사 및 입문 주강사',
+                req: '기본 교육 이수 완료, 신규 진입자',
+                benefit: '기본 강사료, 승급 심사 기회 제공',
+                color: 'text-gray-600',
+                bg: 'bg-gray-50'
+            },
+            'P': {
+                title: 'P Class (Penalty)',
+                role: '배정 제한 (Lock)',
+                req: '페널티 누적 (지각, 노쇼 등)',
+                benefit: '없음 (재교육 필수, 승급 제한)',
+                color: 'text-red-600',
+                bg: 'bg-red-50'
+            }
+        };
+
+        function switchTier(tier) {
+            // Update Tab Styles
+            ['S', 'A', 'B', 'P'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tier) {
+                    btn.className = 'active-tab pb-2 px-1 text-sm font-medium transition';
+                } else {
+                    btn.className = 'inactive-tab pb-2 px-1 text-sm font-medium transition';
+                }
+            });
+
+            // Update Content
+            const data = tierData[tier];
+            const contentDiv = document.getElementById('tier-content');
+            contentDiv.innerHTML = `
+                <div class="${data.bg} p-4 rounded-xl border border-gray-100 animate-fade-in">
+                    <h3 class="text-xl font-bold ${data.color} mb-2">${data.title}</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-xs font-bold text-gray-500 uppercase">Role</span>
+                            <p class="text-sm text-gray-800">${data.role}</p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-gray-500 uppercase">Requirements</span>
+                            <p class="text-sm text-gray-800">${data.req}</p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-gray-500 uppercase">Benefits</span>
+                            <p class="text-sm text-gray-800 font-medium">${data.benefit}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize Tier S
+        switchTier('S');
+
+
+        // --- Logic: Evaluation Simulator ---
+        const inputs = {
+            satisfaction: document.getElementById('input-satisfaction'),
+            count: document.getElementById('input-count'),
+            expertise: document.getElementById('input-expertise'),
+            penalty: document.getElementById('input-penalty')
+        };
+
+        function calculateScore() {
+            // Weights based on Report: Satis(40), Count/Exp(Combined 30+20~), Penalty(Decay)
+            // Simplified logic for simulation:
+            // Base = 0
+            // Satisfaction (1-5) -> Max 40pts (Val * 8)
+            // Count -> Max 20pts (Min(Count, 50) * 0.4)
+            // Expertise -> Max 30pts (Value 40/70/100 -> scaled to 12/21/30)
+            // Bonus -> 10pts
+            // Penalty -> Subtract Value
+
+            const satVal = parseFloat(inputs.satisfaction.value);
+            document.getElementById('val-satisfaction').innerText = satVal.toFixed(1);
+
+            const scoreSat = satVal * 8; // Max 40
+            const scoreCount = Math.min(parseInt(inputs.count.value), 50) * 0.4; // Max 20 (at 50 lectures)
+            const scoreExp = parseInt(inputs.expertise.value) * 0.3; // Max 30
+            const penalty = parseInt(inputs.penalty.value);
+            const bonus = 10; // Basic attendance/admin score assumption
+
+            let totalScore = scoreSat + scoreCount + scoreExp + bonus - penalty;
+            totalScore = Math.max(0, Math.min(100, totalScore)); // Clamp 0-100
+
+            // Determine Tier
+            let tier = 'P';
+            let desc = '재교육이 필요합니다.';
+            if (penalty >= 50) {
+                tier = 'P';
+                desc = '중대 페널티로 배정이 제한됩니다.';
+            } else if (totalScore >= 90) {
+                tier = 'S';
+                desc = '최고 수준 대우 및 운영 권한 부여';
+            } else if (totalScore >= 80) {
+                tier = 'A';
+                desc = '주강사 활동 가능, 표준 강사료 적용';
+            } else if (totalScore >= 60) {
+                tier = 'B';
+                desc = '보조강사 활동, 경험 축적 필요';
+            } else {
+                tier = 'P'; // Low score
+            }
+
+            // Update UI
+            document.getElementById('result-tier').innerText = tier;
+            document.getElementById('result-score').innerText = Math.round(totalScore);
+            document.getElementById('score-bar').style.width = `${totalScore}%`;
+            document.getElementById('result-desc').innerText = desc;
+        }
+
+        // Add Listeners
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', calculateScore);
+        });
+        calculateScore(); // Init
+
+
+        // --- Logic: Chart.js Compensation Comparison ---
+        const ctx = document.getElementById('compensationChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Junior (B급)', 'Mid (A급)', 'Senior (S급)'],
+                datasets: [
+                    {
+                        label: '기존 (역할급)',
+                        data: [15000, 25000, 25000], // Old: Fixed role pay
+                        backgroundColor: '#e5e7eb',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '변경 후 (등급급)',
+                        data: [18000, 30000, 45000], // New: Tier incentives
+                        backgroundColor: '#ea580c',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw.toLocaleString() + '원';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return value / 1000 + 'k'; }
+                        }
+                    }
+                }
+            }
+        });
+
+
+        // --- Logic: Algorithm Details ---
+        const algoSteps = {
+            1: {
+                title: 'Step 1: Input & Filtering (필터링)',
+                desc: '<strong>목표:</strong> 배정 불가능한 인원을 1차적으로 제외합니다.<br><br>• <strong>시간 중복:</strong> 동일 시간대 타 강의 배정자 제외<br>• <strong>자격 검증:</strong> 주강사 요청 시 A등급 미만 제외<br>• <strong>페널티:</strong> 최근 중대 위반자(Lock) 자동 제외',
+                code: 'Constraint: Role_Lead requires Tier >= A'
+            },
+            2: {
+                title: 'Step 2: Scoring (점수 산정)',
+                desc: '<strong>목표:</strong> 남은 후보군에 대해 적합도 점수를 계산합니다.<br><br>$$Score = (w_1 \\cdot Tier) + (w_2 \\cdot Exp) - (w_3 \\cdot Dist)$$<br>• <strong>Tier Score:</strong> 기본 역량 점수<br>• <strong>Distance:</strong> 이동 거리 페널티 적용',
+                code: 'Score = (TierScore * 0.5) + (Expertise * 0.3) - DistancePenalty'
+            },
+            3: {
+                title: 'Step 3: Optimization (최적화)',
+                desc: '<strong>목표:</strong> 개별 강의가 아닌, 전체 일정의 효율을 극대화합니다.<br><br>• <strong>전역 최적화:</strong> 특정 강의에만 S급이 몰리지 않도록 조정<br>• <strong>Fairness:</strong> 주당 최대 강의 수(Capping) 제한',
+                code: 'Maximize Sum(Scores) for All_Lectures'
+            },
+            4: {
+                title: 'Step 4: Final Review (최종 검토)',
+                desc: '<strong>목표:</strong> 시스템의 한계를 보완하고 확정합니다.<br><br>• <strong>Human-in-the-Loop:</strong> 관리자가 최종 안을 검토<br>• <strong>승인:</strong> 승인 시 강사에게 알림 발송 및 일정 확정',
+                code: 'Status: Pending_Approval -> Confirmed'
+            }
+        };
+
+        function showAlgoDetail(step) {
+            const data = algoSteps[step];
+            document.getElementById('algo-title').innerHTML = data.title;
+            document.getElementById('algo-desc').innerHTML = data.desc;
+            const codeEl = document.querySelector('#algo-detail-panel span');
+            if (codeEl) codeEl.innerText = data.code;
+        }
+
+        // --- Utils ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
