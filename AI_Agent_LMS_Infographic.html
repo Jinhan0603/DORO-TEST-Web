@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent LMS 사업화 로드맵 인포그래픽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* Custom Flowchart Connector Lines */
+        .flow-connector {
+            position: absolute;
+            background-color: #cbd5e1;
+            z-index: 0;
+        }
+    </style>
+    <!-- 
+    Palette Name: Electric Future
+    Primary: #4F46E5 (Indigo 600)
+    Secondary: #06B6D4 (Cyan 500)
+    Accent: #F472B6 (Pink 400)
+    Background: #F8FAFC (Slate 50)
+    Text: #1E293B (Slate 800)
+    -->
+    <!-- 
+    Plan Summary:
+    1. Introduction: Vision and Core Value.
+    2. Year 1 (Automation): Data Standard, RecSys, Auto-Content.
+       - Viz: Flow Diagram (HTML/CSS) for Hybrid RecSys.
+    3. Year 2 (Agentic): Copilot, Early Warning, Roadmap.
+       - Viz: Radar Chart for Risk Scoring.
+    4. KPIs: 2026-2028 Goals.
+       - Viz: Grouped Bar Chart for Accuracy metrics.
+       - Viz: Line Chart for Satisfaction.
+    NO SVG used. NO Mermaid JS used.
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-indigo-700 via-purple-600 to-indigo-800 text-white py-16 px-4 shadow-xl">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-block px-4 py-1 mb-4 bg-white/20 rounded-full text-sm font-semibold tracking-wide uppercase backdrop-blur-sm">
+                Future of Edutech
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                AI Agent 기반<br/>LMS 플랫폼 로드맵
+            </h1>
+            <p class="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto font-light">
+                운영 자동화부터 초개인화 Agentic 서비스까지,<br class="hidden md:block">
+                데이터와 AI가 만드는 교육의 미래
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12 space-y-20">
+
+        <!-- Section 1: Year 1 - Automation Platform -->
+        <section id="year1">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-4 flex items-center justify-center gap-3">
+                    <span class="bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                    사업화 1년차: 운영 자동화
+                </h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">
+                    데이터 표준화를 기반으로 추천 시스템을 고도화하고, 교안 및 평가 문항 생성을 자동화하여 운영 효율성을 극대화합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Card 1: Data Standardization -->
+                <div class="glass-card bg-white rounded-2xl shadow-lg p-8 border-t-4 border-indigo-500 hover:-translate-y-1 transition-transform duration-300">
+                    <div class="text-4xl mb-4">🗂️</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">데이터 표준화 & DB화</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-500 font-bold">✓</span>
+                            <span><strong>학습 맥락 정보:</strong> 수강 정보, 성취도 평가 결과 표준화</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-500 font-bold">✓</span>
+                            <span><strong>벡터 DB 구축:</strong> 비정형 텍스트(강의, 질의) 임베딩 저장</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-500 font-bold">✓</span>
+                            <span><strong>이벤트 스키마 통합:</strong> 모든 로그(출석, 상호작용) 정규화</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Hybrid Recommendation System (Visualized Logic) -->
+                <div class="glass-card bg-white rounded-2xl shadow-lg p-8 border-t-4 border-cyan-500 lg:col-span-2 relative overflow-hidden">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">하이브리드 추천 알고리즘</h3>
+                    <p class="text-sm text-slate-500 mb-6">협업 필터링과 콘텐츠 기반 필터링을 결합하여 최적의 커리큘럼과 강사를 매칭합니다.</p>
+                    
+                    <!-- Logic Flow using HTML/Flexbox (NO SVG/Mermaid) -->
+                    <div class="flex flex-col md:flex-row items-stretch justify-between gap-4 relative z-10">
+                        <!-- Input -->
+                        <div class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-center items-center text-center">
+                            <div class="text-2xl mb-2">👤</div>
+                            <div class="font-bold text-sm">학습자 프로필</div>
+                            <div class="text-xs text-slate-500 mt-1">학년, 진로, DIMC,<br>취약점 벡터</div>
+                        </div>
+                        
+                        <!-- Process -->
+                        <div class="flex-1 flex flex-col gap-2 justify-center">
+                            <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-3 text-center shadow-sm">
+                                <div class="text-xs font-bold text-indigo-700">협업 필터링</div>
+                                <div class="text-[10px] text-indigo-500">유사 집단 패턴 분석</div>
+                            </div>
+                            <div class="text-center text-slate-400 font-bold text-xs">+</div>
+                            <div class="bg-cyan-50 border border-cyan-100 rounded-lg p-3 text-center shadow-sm">
+                                <div class="text-xs font-bold text-cyan-700">콘텐츠 기반</div>
+                                <div class="text-[10px] text-cyan-500">벡터 유사도 분석</div>
+                            </div>
+                        </div>
+
+                        <!-- Weighting -->
+                        <div class="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-4 flex flex-col justify-center items-center text-center text-white shadow-md">
+                            <div class="text-xl mb-1">⚖️</div>
+                            <div class="font-bold text-sm">가중치(β) 결합</div>
+                            <div class="text-xs opacity-80 mt-1">초기: 콘텐츠 70%<br>후기: 협업 비중↑</div>
+                        </div>
+
+                        <!-- Output -->
+                        <div class="flex-1 bg-slate-800 text-white border border-slate-700 rounded-xl p-4 flex flex-col justify-center items-center text-center shadow-lg">
+                            <div class="text-2xl mb-2">🎯</div>
+                            <div class="font-bold text-sm">최적 추천</div>
+                            <div class="text-xs text-slate-400 mt-1">커리큘럼 시퀀스<br>& XAI 설명 생성</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Automation & Gamification -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col border-l-8 border-pink-400">
+                    <h3 class="text-lg font-bold mb-2">📝 콘텐츠 생성 자동화</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        RAG 기반으로 기존 자료를 참조하여 강의 교안, 평가 문항, 개인 맞춤형 보충 자료를 자동 생성합니다.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2 mt-auto text-center text-xs font-medium">
+                        <div class="bg-pink-50 text-pink-700 p-2 rounded">강의 교안</div>
+                        <div class="bg-pink-50 text-pink-700 p-2 rounded">평가 문항</div>
+                        <div class="bg-pink-50 text-pink-700 p-2 rounded">보충 자료</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col border-l-8 border-yellow-400">
+                    <h3 class="text-lg font-bold mb-2">🎮 게이미피케이션</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        학습 데이터를 실시간으로 EXP로 변환하고, 보이지 않는 역량(DIMC)을 아바타 레벨로 시각화합니다.
+                    </p>
+                    <div class="w-full bg-slate-200 rounded-full h-4 mb-1">
+                        <div class="bg-yellow-400 h-4 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span>Lv. 10 Initiator</span>
+                        <span>EXP +150</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-slate-200">
+
+        <!-- Section 2: Year 2 - Agentic Service -->
+        <section id="year2">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-4 flex items-center justify-center gap-3">
+                    <span class="bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                    사업화 2년차: End-to-End Agentic LMS
+                </h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">
+                    AI 코파일럿과 조기 경고 시스템을 도입하여 위험을 관리하고, 초개인화된 학습 로드맵을 제공합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Chart Container: Risk Scoring -->
+                <div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">🚨 조기 경고 시스템 (Risk Scoring)</h3>
+                        <p class="text-sm text-slate-500 mb-4">
+                            이해도, 참여도, 성취도 점수를 통합하여 고위험군을 식별하고 능동적으로 개입합니다.
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="riskRadarChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Copilot Feature -->
+                    <div class="mt-8 bg-indigo-900 text-white rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                            🤖 AI 코파일럿
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Chat Bubble 1 -->
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs">S</div>
+                                <div class="bg-indigo-700/50 rounded-lg rounded-tl-none p-3 text-sm text-indigo-100">
+                                    "이번 주차 퀴즈에서 자꾸 틀려요."
+                                </div>
+                            </div>
+                            <!-- Chat Bubble 2 -->
+                            <div class="flex gap-3 flex-row-reverse">
+                                <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-xs">AI</div>
+                                <div class="bg-cyan-600/20 border border-cyan-500/30 rounded-lg rounded-tr-none p-3 text-sm text-cyan-50">
+                                    최근 오답 태그를 분석해보니 <strong>'함수'</strong> 개념이 약하네요. 보충 설명을 먼저 해드릴게요. 미니 퀴즈로 다시 확인해볼까요?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personalized Roadmap Logic -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-slate-800">초개인화 학습 로드맵 설계</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        학습자의 DIMC 진단과 성취 목표(LO) 달성도를 분석하여, 미달성 목표를 위한 최적의 경로를 동적으로 생성하고 주차별 계획을 자동 조정합니다.
+                    </p>
+
+                    <div class="relative pl-8 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                        <!-- Step 1 -->
+                        <div class="relative">
+                            <div class="absolute -left-8 top-1 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
+                            <h4 class="font-bold text-slate-800">프로필 및 달성도 분석</h4>
+                            <p class="text-sm text-slate-500 mt-1">DIMC 역량, 미달성 LO 목록, 참여 패턴 확인</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="relative">
+                            <div class="absolute -left-8 top-1 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
+                            <h4 class="font-bold text-slate-800">콘텐츠 필터링 & 순서 결정</h4>
+                            <p class="text-sm text-slate-500 mt-1">선수 지식 제약 만족 (기초 → 표준 → 심화)</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="relative">
+                            <div class="absolute -left-8 top-1 w-6 h-6 bg-indigo-400 rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
+                            <h4 class="font-bold text-slate-800">동적 난이도/학습량 조정</h4>
+                            <p class="text-sm text-slate-500 mt-1">최근 성취 추세를 반영한 주차별 부하 조절</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="relative">
+                            <div class="absolute -left-8 top-1 w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">4</div>
+                            <h4 class="font-bold text-slate-800">자동 재계획 (Re-planning)</h4>
+                            <p class="text-sm text-slate-500 mt-1">과부하 방지 및 목표 커버리지 자동 점검</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: KPIs -->
+        <section id="kpis" class="bg-indigo-50 rounded-3xl p-8 md:p-12">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-4">정량적 성과 목표 (KPI)</h2>
+                <p class="text-indigo-600 max-w-2xl mx-auto">
+                    2026년부터 2028년까지, AI 성능과 사용자 만족도에서 세계 최고 수준의 목표를 달성하겠습니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Chart: AI Performance Metrics -->
+                <div class="bg-white rounded-2xl shadow-sm p-6">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">AI 모델 성능 목표 (%)</h4>
+                    <p class="text-sm text-slate-500 mb-4">Q&A 검색 정확도, 툴 호출 정확도 등 핵심 기술 지표의 연도별 성장 목표입니다.</p>
+                    <div class="chart-container">
+                        <canvas id="kpiBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart: User Satisfaction -->
+                <div class="bg-white rounded-2xl shadow-sm p-6">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">사용자 추천 만족도 (%)</h4>
+                    <p class="text-sm text-slate-500 mb-4">실제 서비스 도입 후 학습자가 느끼는 추천 적합성 목표입니다.</p>
+                    <div class="chart-container">
+                        <canvas id="satisfactionLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Legend Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <div class="text-2xl font-bold text-indigo-600">75%</div>
+                    <div class="text-xs text-slate-500 mt-1">Q&A 정확도 (2028)</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <div class="text-2xl font-bold text-indigo-600">87%</div>
+                    <div class="text-xs text-slate-500 mt-1">추천 만족도 (2028)</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <div class="text-2xl font-bold text-indigo-600">65%</div>
+                    <div class="text-xs text-slate-500 mt-1">Task Pass (2028)</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <div class="text-2xl font-bold text-indigo-600">75%</div>
+                    <div class="text-xs text-slate-500 mt-1">Tool Accuracy (2028)</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-12 text-center">
+        <p class="text-sm opacity-60">
+            AI Agent LMS Roadmap Infographic &copy; 2026
+        </p>
+    </footer>
+
+    <script>
+        // --- Utility Function for Word Wrapping Labels ---
+        function wrapLabel(label, maxChars = 16) {
+            if (label.length <= maxChars) return label;
+            
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + ' ' + words[i]).length <= maxChars) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- Common Tooltip Config for Multiline Support ---
+        const commonTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- Chart 1: Risk Scoring Radar Chart ---
+        const riskCtx = document.getElementById('riskRadarChart').getContext('2d');
+        new Chart(riskCtx, {
+            type: 'radar',
+            data: {
+                labels: ['이해도 저하', '참여도 저하', '성취도 하락 추세', '오답 패턴 심화', '미제출/결석'],
+                datasets: [{
+                    label: '위험 감지 임계값 (Threshold)',
+                    data: [60, 50, 65, 70, 40],
+                    fill: true,
+                    backgroundColor: 'rgba(6, 182, 212, 0.2)', // Cyan
+                    borderColor: 'rgb(6, 182, 212)',
+                    pointBackgroundColor: 'rgb(6, 182, 212)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(6, 182, 212)'
+                }, {
+                    label: '고위험 학생 예시',
+                    data: [85, 90, 75, 80, 85],
+                    fill: true,
+                    backgroundColor: 'rgba(244, 114, 182, 0.2)', // Pink
+                    borderColor: 'rgb(244, 114, 182)',
+                    pointBackgroundColor: 'rgb(244, 114, 182)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(244, 114, 182)'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                elements: {
+                    line: { borderWidth: 3 }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        pointLabels: {
+                            font: { size: 12, family: "'Noto Sans KR', sans-serif" },
+                            color: '#475569'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- Chart 2: KPI Bar Chart (Performance) ---
+        const kpiCtx = document.getElementById('kpiBarChart').getContext('2d');
+        
+        // Data Processing with Wrap
+        const kpiLabelsRaw = ['Q&A 문서 검색 정확도', '툴 호출 정확도 (Task Pass)', '툴 호출 정확도 (Accuracy)'];
+        const kpiLabelsWrapped = kpiLabelsRaw.map(l => wrapLabel(l));
+
+        new Chart(kpiCtx, {
+            type: 'bar',
+            data: {
+                labels: kpiLabelsWrapped,
+                datasets: [
+                    {
+                        label: '2026년',
+                        data: [70, 60, 70],
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)', // Indigo Light
+                        borderColor: 'rgb(79, 70, 229)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '2027년',
+                        data: [72, 62, 72],
+                        backgroundColor: 'rgba(79, 70, 229, 0.8)', // Indigo Medium
+                        borderColor: 'rgb(79, 70, 229)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '2028년',
+                        data: [75, 65, 75],
+                        backgroundColor: 'rgb(79, 70, 229)', // Indigo Solid
+                        borderColor: 'rgb(79, 70, 229)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: '목표 달성률 (%)' }
+                    },
+                    x: {
+                        ticks: { autoSkip: false, maxRotation: 0 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- Chart 3: Satisfaction Line Chart ---
+        const satCtx = document.getElementById('satisfactionLineChart').getContext('2d');
+        new Chart(satCtx, {
+            type: 'line',
+            data: {
+                labels: ['2026년', '2027년', '2028년'],
+                datasets: [{
+                    label: '추천 시스템 만족도 목표',
+                    data: [84, 86, 87],
+                    fill: true,
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)', // Amber with opacity
+                    borderColor: 'rgb(245, 158, 11)',
+                    tension: 0.3,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 80,
+                        max: 100,
+                        title: { display: true, text: '만족도 (%)' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltipConfig,
+                    annotation: {
+                        // Hypothetical annotation logic if plugin was loaded, kept simple here
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
