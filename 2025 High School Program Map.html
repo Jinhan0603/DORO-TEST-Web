@@ -35,7 +35,6 @@
             </svg>
         );
 
-        // JSX 문법 오류 수정: Youtube 아이콘의 path들을 Fragment(<>)로 감쌈
         const Icons = {
             X: <Icon path={<><path d="M18 6 6 18"/><path d="m6 6 12 12"/></>} />,
             ExternalLink: <Icon path={<><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></>} />,
@@ -153,9 +152,14 @@
                                 <span className="font-bold text-xl tracking-tight">DORO <span className="text-gray-400 font-normal">High School</span></span>
                             </div>
                             <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-                                <a href="#" className="hover:text-white transition-colors">Curriculum</a>
-                                <a href="#" className="hover:text-white transition-colors">About</a>
-                                <a href="#" className="hover:text-white transition-colors">Contact</a>
+                                {/* Curriculum 클릭 시 2025_도로_컨텐츠맵.pdf 다운로드 (파일명 주의) */}
+                                <a href="2025_도로_컨텐츠맵.pdf" download className="hover:text-white transition-colors cursor-pointer">Curriculum</a>
+                                
+                                {/* About 클릭 시 회사 소개 페이지 이동 */}
+                                <a href="https://dorocoltd.imweb.me/company" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">About</a>
+                                
+                                {/* Contact 클릭 시 문의 페이지 이동 */}
+                                <a href="https://dorocoltd.imweb.me/24" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Contact</a>
                             </nav>
                         </div>
                     </header>
@@ -263,9 +267,10 @@
                                 
                                 {/* Modal Header */}
                                 <div className={`p-8 bg-gradient-to-r ${selectedProgram.color} text-white relative`}>
+                                    {/* 수정된 닫기 버튼: z-index 추가 및 클릭 핸들러 개선 */}
                                     <button 
-                                        onClick={() => setSelectedProgram(null)}
-                                        className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors"
+                                        onClick={(e) => { e.stopPropagation(); setSelectedProgram(null); }}
+                                        className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors z-50 cursor-pointer"
                                     >
                                         {Icons.X}
                                     </button>
@@ -327,11 +332,16 @@
                                         </div>
                                     </section>
 
-                                    {/* Action Button */}
+                                    {/* Action Button: 상담 신청하기 링크로 변경 */}
                                     <div className="pt-4">
-                                        <button className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                        <a 
+                                            href="https://dorocoltd.imweb.me/24" 
+                                            target="_blank" 
+                                            rel="noreferrer"
+                                            className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                                        >
                                             상담 신청하기 {Icons.ExternalLink}
-                                        </button>
+                                        </a>
                                     </div>
 
                                 </div>
