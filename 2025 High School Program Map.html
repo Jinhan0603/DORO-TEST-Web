@@ -152,13 +152,11 @@
                                 <span className="font-bold text-xl tracking-tight">DORO <span className="text-gray-400 font-normal">High School</span></span>
                             </div>
                             <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-                                {/* Curriculum 클릭 시 2025_도로_컨텐츠맵.pdf 다운로드 (파일명 주의) */}
+                                {/* Curriculum: PDF 다운로드 (같은 폴더에 파일이 있어야 함) */}
                                 <a href="2025_도로_컨텐츠맵.pdf" download className="hover:text-white transition-colors cursor-pointer">Curriculum</a>
-                                
-                                {/* About 클릭 시 회사 소개 페이지 이동 */}
+                                {/* About: 회사 소개 페이지 */}
                                 <a href="https://dorocoltd.imweb.me/company" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">About</a>
-                                
-                                {/* Contact 클릭 시 문의 페이지 이동 */}
+                                {/* Contact: 문의 페이지 */}
                                 <a href="https://dorocoltd.imweb.me/24" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Contact</a>
                             </nav>
                         </div>
@@ -267,7 +265,7 @@
                                 
                                 {/* Modal Header */}
                                 <div className={`p-8 bg-gradient-to-r ${selectedProgram.color} text-white relative`}>
-                                    {/* 수정된 닫기 버튼: z-index 추가 및 클릭 핸들러 개선 */}
+                                    {/* 닫기 버튼: z-index 추가 및 이벤트 전파 방지(stopPropagation) */}
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); setSelectedProgram(null); }}
                                         className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors z-50 cursor-pointer"
@@ -332,7 +330,7 @@
                                         </div>
                                     </section>
 
-                                    {/* Action Button: 상담 신청하기 링크로 변경 */}
+                                    {/* Action Button: 상담 신청하기 (링크로 변경) */}
                                     <div className="pt-4">
                                         <a 
                                             href="https://dorocoltd.imweb.me/24" 
