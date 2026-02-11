@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Road System Architecture Blueprint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --primary: #3b82f6; /* Core Blue */
+            --accent: #0ea5e9;  /* Sky Blue */
+            --hardware: #64748b; /* Grey for HW */
+            --edge: #8b5cf6;    /* Purple for Smartphone */
+            --cloud: #3b82f6;   /* Blue for Cloud */
+            --service: #ec4899; /* Pink for LMS */
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Noto Sans KR', sans-serif;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .container {
+            width: 1200px;
+            background-image: 
+                linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+            background-size: 40px 40px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 48px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        header h1 span { color: var(--primary); }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 18px;
+        }
+
+        .badge {
+            position: absolute;
+            right: 0; top: 10px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Diagram Layout */
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            position: relative;
+        }
+
+        /* Group Boxes */
+        .group-box {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .group-box:hover { border-color: var(--text-sub); background: rgba(255,255,255,0.02); }
+
+        .group-label {
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: var(--bg-color);
+            padding: 0 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            color: var(--text-sub);
+            font-size: 18px;
+        }
+
+        /* Layers */
+        .layer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .layer-card:last-child { margin-bottom: 0; }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .icon-box {
+            width: 50px; height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .layer-title h3 { font-size: 20px; font-weight: 700; }
+        .layer-title span { font-size: 12px; color: var(--text-sub); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #cbd5e1;
+        }
+
+        .feature-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Specific Colors */
+        .hw-color .icon-box { background: linear-gradient(135deg, #475569, #64748b); }
+        .hw-color { border-left: 4px solid #64748b; }
+        
+        .edge-color .icon-box { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .edge-color { border-left: 4px solid #8b5cf6; }
+
+        .cloud-color .icon-box { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        .cloud-color { border-left: 4px solid #3b82f6; }
+
+        .svc-color .icon-box { background: linear-gradient(135deg, #db2777, #ec4899); }
+        .svc-color { border-left: 4px solid #ec4899; }
+
+        /* Data Flow Arrows */
+        .connection {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Horizontal Connectors */
+        .conn-h {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            top: 50%;
+            width: 60px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Arrow animation */
+        @keyframes flow {
+            0% { transform: translateX(-10px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(10px); opacity: 0; }
+        }
+
+        .flow-arrow {
+            position: absolute;
+            color: var(--accent);
+            font-size: 20px;
+            animation: flow 1.5s infinite;
+        }
+
+        /* Patent Logic Highlight */
+        .patent-flow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .token-icon {
+            font-size: 32px;
+            color: #fbbf24;
+            background: #0f172a;
+            border-radius: 50%;
+            padding: 10px;
+            border: 2px solid #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .token-label {
+            font-size: 12px;
+            color: #fbbf24;
+            margin-top: 5px;
+            font-weight: 700;
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Connector Lines (SVG) */
+        svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        path {
+            stroke: var(--text-sub);
+            stroke-width: 2;
+            stroke-dasharray: 10;
+            fill: none;
+            opacity: 0.3;
+        }
+
+        .active-path {
+            stroke: var(--accent);
+            stroke-width: 2;
+            stroke-dasharray: 10;
+            animation: dash 1s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+
+        /* Footer Legend */
+        .legend {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-sub); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="badge">Patent Pending 10-2025-0168946</div>
+            <h1>Open Road <span>Architecture</span></h1>
+            <p>Smart Competency-Linked Control System Blueprint</p>
+        </header>
+
+        <div class="diagram-grid">
+            
+            <!-- SVG Lines for Connections -->
+            <svg>
+                <!-- Edge to Cloud -->
+                <path d="M 450 250 C 600 250, 600 250, 750 250" class="active-path" />
+                <!-- Cloud to Service -->
+                <path d="M 900 380 L 900 480" />
+                <!-- Hardware to Edge -->
+                <path d="M 300 480 L 300 380" />
+            </svg>
+
+            <!-- Center Token Visual -->
+            <div class="patent-flow">
+                <i class="fa-solid fa-key token-icon"></i>
+                <div class="token-label">Auth Token</div>
+            </div>
+
+            <!-- Left Column: User Space (Physical) -->
+            <div class="column-left">
+                <div class="group-box">
+                    <span class="group-label"><i class="fa-solid fa-user"></i> USER SPACE (Physical)</span>
+
+                    <!-- Edge Layer -->
+                    <div class="layer-card edge-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                            <div class="layer-title">
+                                <span>Edge Layer</span>
+                                <h3>Smartphone Brain</h3>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Vision AI:</strong> YOLOv8 (Human/Obstacle)</li>
+                            <li><strong>Nav:</strong> SLAM / VIO (Indoor Mapping)</li>
+                            <li><strong>Control:</strong> <span style="color:#fbbf24">Token Verification & Unlock</span></li>
+                        </ul>
+                    </div>
+
+                    <div style="height: 40px;"></div> <!-- Spacer -->
+
+                    <!-- Hardware Layer -->
+                    <div class="layer-card hw-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-microchip"></i></div>
+                            <div class="layer-title">
+                                <span>Hardware Layer</span>
+                                <h3>Brain-less Edge Board</h3>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>MCU:</strong> ESP32 (Wi-Fi/BLE)</li>
+                            <li><strong>I/O:</strong> PWM Motor Control, Encoder</li>
+                            <li><strong>Safety:</strong> Emergency Stop Logic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Cloud Space (Digital) -->
+            <div class="column-right">
+                <div class="group-box">
+                    <span class="group-label"><i class="fa-solid fa-cloud"></i> CLOUD SPACE (Digital)</span>
+
+                    <!-- Cloud Layer -->
+                    <div class="layer-card cloud-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-server"></i></div>
+                            <div class="layer-title">
+                                <span>Cloud Layer</span>
+                                <h3>Open Road OS</h3>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Fleet:</strong> Real-time Dashboard & Logs</li>
+                            <li><strong>OTA:</strong> Model/Firmware Updates</li>
+                            <li><strong>Auth:</strong> <span style="color:#fbbf24">Token Issuance (Patent Core)</span></li>
+                        </ul>
+                    </div>
+
+                    <div style="height: 40px;"></div> <!-- Spacer -->
+
+                    <!-- Service Layer -->
+                    <div class="layer-card svc-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                            <div class="layer-title">
+                                <span>Service Layer</span>
+                                <h3>LMS & DIMC</h3>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Edu:</strong> Safety Training Contents</li>
+                            <li><strong>Test:</strong> User Competency Eval</li>
+                            <li><strong>Level:</strong> Certification Badge</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item"><span class="dot" style="background:#fbbf24"></span> Patent Tech Flow</div>
+            <div class="legend-item"><span class="dot" style="background:var(--accent)"></span> Data/Signal Flow</div>
+            <div class="legend-item"><span class="dot" style="background:var(--text-sub)"></span> System Boundary</div>
+        </div>
+    </div>
+
+</body>
+</html>
