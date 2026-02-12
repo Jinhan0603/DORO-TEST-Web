@@ -3,24 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Road System Architecture Blueprint</title>
+    <title>Open Road System Architecture Blueprint (Light)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --border-color: #334155;
-            --primary: #3b82f6; /* Core Blue */
-            --accent: #0ea5e9;  /* Sky Blue */
-            --hardware: #64748b; /* Grey for HW */
-            --edge: #8b5cf6;    /* Purple for Smartphone */
-            --cloud: #3b82f6;   /* Blue for Cloud */
-            --service: #ec4899; /* Pink for LMS */
-            --text-main: #f1f5f9;
-            --text-sub: #94a3b8;
+            /* Light Theme Palette */
+            --bg-color: #f8fafc;       /* Slate 50 */
+            --card-bg: #ffffff;        /* White */
+            --border-color: #cbd5e1;   /* Slate 300 */
+            --primary: #2563eb;        /* Blue 600 */
+            --accent: #0ea5e9;         /* Sky 500 */
+            
+            /* Layer Specific Colors (Lightened for better contrast on white) */
+            --hardware: #64748b;       /* Slate 500 */
+            --hardware-bg: #f1f5f9;    /* Slate 100 */
+            
+            --edge: #8b5cf6;           /* Violet 500 */
+            --edge-bg: #f5f3ff;        /* Violet 50 */
+            
+            --cloud: #2563eb;          /* Blue 600 */
+            --cloud-bg: #eff6ff;       /* Blue 50 */
+            
+            --service: #db2777;        /* Pink 600 */
+            --service-bg: #fdf2f8;     /* Pink 50 */
+            
+            --text-main: #1e293b;      /* Slate 800 */
+            --text-sub: #64748b;       /* Slate 500 */
+            --shadow: rgba(148, 163, 184, 0.15); /* Soft Shadow */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,81 +49,103 @@
 
         .container {
             width: 1200px;
+            background-color: #ffffff;
+            /* Engineering Grid Pattern */
             background-image: 
-                linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
             background-size: 40px 40px;
-            padding: 40px;
+            /* Make grid subtle */
+            background-image: 
+                linear-gradient(rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+            
+            padding: 60px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
             position: relative;
+            border-radius: 8px;
         }
 
         /* Header */
         header {
             text-align: center;
             margin-bottom: 60px;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px;
             position: relative;
+        }
+
+        .logo-area {
+            display: inline-block;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         header h1 {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 48px;
+            font-size: 52px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            line-height: 1;
+            margin: 0;
         }
 
-        header h1 span { color: var(--primary); }
+        header h1 span { color: var(--primary); font-weight: 700; }
 
         header p {
             color: var(--text-sub);
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: 500;
         }
 
         .badge {
             position: absolute;
-            right: 0; top: 10px;
-            background: rgba(59, 130, 246, 0.2);
+            right: 0; top: 0;
+            background: #eff6ff;
             border: 1px solid var(--primary);
             color: var(--primary);
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 15px;
             font-weight: 700;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
         }
 
         /* Diagram Layout */
         .diagram-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 80px;
             position: relative;
+            margin-top: 40px;
         }
 
         /* Group Boxes */
         .group-box {
+            background: rgba(255,255,255,0.8);
             border: 2px dashed var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 40px 30px 30px 30px;
             position: relative;
-            transition: all 0.3s ease;
+            height: 100%;
         }
-
-        .group-box:hover { border-color: var(--text-sub); background: rgba(255,255,255,0.02); }
 
         .group-label {
             position: absolute;
-            top: -15px;
+            top: -18px;
             left: 30px;
-            background: var(--bg-color);
-            padding: 0 15px;
+            background: #ffffff;
+            padding: 5px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             font-family: 'Rajdhani', sans-serif;
             font-weight: 700;
             color: var(--text-sub);
             font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Layers */
@@ -120,12 +154,14 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px var(--shadow);
             z-index: 2;
+            transition: transform 0.2s ease;
         }
-
+        
+        .layer-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .layer-card:last-child { margin-bottom: 0; }
 
         .layer-header {
@@ -133,117 +169,75 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .icon-box {
-            width: 50px; height: 50px;
-            border-radius: 10px;
+            width: 54px; height: 54px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 26px;
             color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .layer-title h3 { font-size: 20px; font-weight: 700; }
-        .layer-title span { font-size: 12px; color: var(--text-sub); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
-
-        .feature-list {
-            list-style: none;
+        .layer-title h3 { font-size: 22px; font-weight: 800; color: var(--text-main); margin: 0; }
+        .layer-title span { 
+            font-size: 13px; 
+            font-weight: 600;
+            color: var(--text-sub); 
+            font-family: 'Rajdhani', sans-serif; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
         }
+
+        .feature-list { list-style: none; padding-left: 5px; }
 
         .feature-list li {
-            font-size: 14px;
+            font-size: 15px;
             margin-bottom: 8px;
-            padding-left: 20px;
+            padding-left: 24px;
             position: relative;
-            color: #cbd5e1;
+            color: #475569;
+            font-weight: 500;
         }
 
         .feature-list li::before {
             content: '•';
             position: absolute;
-            left: 0;
-            color: var(--primary);
+            left: 5px;
+            color: var(--border-color); /* Default bullet */
+            font-size: 18px;
+            line-height: 1;
         }
 
-        /* Specific Colors */
-        .hw-color .icon-box { background: linear-gradient(135deg, #475569, #64748b); }
-        .hw-color { border-left: 4px solid #64748b; }
-        
-        .edge-color .icon-box { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
-        .edge-color { border-left: 4px solid #8b5cf6; }
+        .feature-list li strong { color: #334155; font-weight: 700; }
 
-        .cloud-color .icon-box { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-        .cloud-color { border-left: 4px solid #3b82f6; }
+        /* Specific Colors & Styles */
+        /* Hardware */
+        .hw-color { border-left: 5px solid var(--hardware); background: linear-gradient(to right, #ffffff, #f8fafc); }
+        .hw-color .icon-box { background: linear-gradient(135deg, #64748b, #475569); }
+        .hw-color .feature-list li::before { color: var(--hardware); }
 
-        .svc-color .icon-box { background: linear-gradient(135deg, #db2777, #ec4899); }
-        .svc-color { border-left: 4px solid #ec4899; }
+        /* Edge */
+        .edge-color { border-left: 5px solid var(--edge); background: linear-gradient(to right, #ffffff, var(--edge-bg)); }
+        .edge-color .icon-box { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .edge-color .feature-list li::before { color: var(--edge); }
 
-        /* Data Flow Arrows */
-        .connection {
-            position: absolute;
-            z-index: 1;
-            pointer-events: none;
-        }
+        /* Cloud */
+        .cloud-color { border-left: 5px solid var(--cloud); background: linear-gradient(to right, #ffffff, var(--cloud-bg)); }
+        .cloud-color .icon-box { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .cloud-color .feature-list li::before { color: var(--cloud); }
 
-        /* Horizontal Connectors */
-        .conn-h {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            top: 50%;
-            width: 60px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        /* Service */
+        .svc-color { border-left: 5px solid var(--service); background: linear-gradient(to right, #ffffff, var(--service-bg)); }
+        .svc-color .icon-box { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .svc-color .feature-list li::before { color: var(--service); }
 
-        /* Arrow animation */
-        @keyframes flow {
-            0% { transform: translateX(-10px); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(10px); opacity: 0; }
-        }
-
-        .flow-arrow {
-            position: absolute;
-            color: var(--accent);
-            font-size: 20px;
-            animation: flow 1.5s infinite;
-        }
-
-        /* Patent Logic Highlight */
-        .patent-flow {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            text-align: center;
-            z-index: 10;
-        }
-        
-        .token-icon {
-            font-size: 32px;
-            color: #fbbf24;
-            background: #0f172a;
-            border-radius: 50%;
-            padding: 10px;
-            border: 2px solid #fbbf24;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
-        }
-
-        .token-label {
-            font-size: 12px;
-            color: #fbbf24;
-            margin-top: 5px;
-            font-weight: 700;
-            background: rgba(0,0,0,0.8);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        /* Connector Lines (SVG) */
+        /* SVG Lines */
         svg {
             position: absolute;
             top: 0; left: 0;
@@ -253,37 +247,71 @@
         }
         
         path {
-            stroke: var(--text-sub);
-            stroke-width: 2;
-            stroke-dasharray: 10;
+            stroke: #94a3b8;
+            stroke-width: 3;
+            stroke-dasharray: 8 8;
             fill: none;
-            opacity: 0.3;
+            opacity: 0.4;
         }
 
         .active-path {
-            stroke: var(--accent);
-            stroke-width: 2;
+            stroke: var(--primary);
+            stroke-width: 3;
             stroke-dasharray: 10;
             animation: dash 1s linear infinite;
-            opacity: 0.8;
+            opacity: 1;
         }
 
         @keyframes dash {
             to { stroke-dashoffset: -20; }
         }
 
+        /* Patent Flow Centerpiece */
+        .patent-flow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            text-align: center;
+            z-index: 10;
+            background: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .token-icon {
+            font-size: 40px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 50%;
+            padding: 15px;
+            box-shadow: 0 8px 15px rgba(245, 158, 11, 0.3);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .token-label {
+            font-size: 14px;
+            color: #d97706;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* Footer Legend */
         .legend {
-            margin-top: 40px;
+            margin-top: 50px;
             display: flex;
             justify-content: center;
-            gap: 30px;
-            padding-top: 20px;
+            gap: 40px;
+            padding-top: 25px;
             border-top: 1px solid var(--border-color);
         }
 
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-sub); }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-sub); font-weight: 500; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
 
     </style>
 </head>
@@ -291,8 +319,10 @@
 
     <div class="container">
         <header>
-            <div class="badge">Patent Pending 10-2025-0168946</div>
-            <h1>Open Road <span>Architecture</span></h1>
+            <div class="badge"><i class="fa-solid fa-file-contract"></i> Patent 10-2025-0168946</div>
+            <div class="logo-area">
+                <h1>Open Road <span>Architecture</span></h1>
+            </div>
             <p>Smart Competency-Linked Control System Blueprint</p>
         </header>
 
@@ -300,12 +330,12 @@
             
             <!-- SVG Lines for Connections -->
             <svg>
-                <!-- Edge to Cloud -->
-                <path d="M 450 250 C 600 250, 600 250, 750 250" class="active-path" />
-                <!-- Cloud to Service -->
-                <path d="M 900 380 L 900 480" />
-                <!-- Hardware to Edge -->
-                <path d="M 300 480 L 300 380" />
+                <!-- Edge to Cloud (Curved) -->
+                <path d="M 450 220 C 600 220, 600 220, 750 220" class="active-path" />
+                <!-- Cloud to Service (Straight Vertical) -->
+                <path d="M 880 370 L 880 480" />
+                <!-- Hardware to Edge (Straight Vertical) -->
+                <path d="M 320 480 L 320 370" />
             </svg>
 
             <!-- Center Token Visual -->
@@ -317,7 +347,7 @@
             <!-- Left Column: User Space (Physical) -->
             <div class="column-left">
                 <div class="group-box">
-                    <span class="group-label"><i class="fa-solid fa-user"></i> USER SPACE (Physical)</span>
+                    <span class="group-label"><i class="fa-solid fa-user"></i> User Space (Physical)</span>
 
                     <!-- Edge Layer -->
                     <div class="layer-card edge-color">
@@ -331,11 +361,11 @@
                         <ul class="feature-list">
                             <li><strong>Vision AI:</strong> YOLOv8 (Human/Obstacle)</li>
                             <li><strong>Nav:</strong> SLAM / VIO (Indoor Mapping)</li>
-                            <li><strong>Control:</strong> <span style="color:#fbbf24">Token Verification & Unlock</span></li>
+                            <li><strong>Control:</strong> <span style="color:#d97706; background:#fffbeb; padding:2px 5px; border-radius:4px; font-weight:700;">Token Verification</span></li>
                         </ul>
                     </div>
 
-                    <div style="height: 40px;"></div> <!-- Spacer -->
+                    <div style="height: 60px;"></div> <!-- Spacer -->
 
                     <!-- Hardware Layer -->
                     <div class="layer-card hw-color">
@@ -358,7 +388,7 @@
             <!-- Right Column: Cloud Space (Digital) -->
             <div class="column-right">
                 <div class="group-box">
-                    <span class="group-label"><i class="fa-solid fa-cloud"></i> CLOUD SPACE (Digital)</span>
+                    <span class="group-label"><i class="fa-solid fa-cloud"></i> Cloud Space (Digital)</span>
 
                     <!-- Cloud Layer -->
                     <div class="layer-card cloud-color">
@@ -372,11 +402,11 @@
                         <ul class="feature-list">
                             <li><strong>Fleet:</strong> Real-time Dashboard & Logs</li>
                             <li><strong>OTA:</strong> Model/Firmware Updates</li>
-                            <li><strong>Auth:</strong> <span style="color:#fbbf24">Token Issuance (Patent Core)</span></li>
+                            <li><strong>Auth:</strong> <span style="color:#d97706; background:#fffbeb; padding:2px 5px; border-radius:4px; font-weight:700;">Token Issuance (Core)</span></li>
                         </ul>
                     </div>
 
-                    <div style="height: 40px;"></div> <!-- Spacer -->
+                    <div style="height: 60px;"></div> <!-- Spacer -->
 
                     <!-- Service Layer -->
                     <div class="layer-card svc-color">
@@ -400,9 +430,9 @@
 
         <!-- Legend -->
         <div class="legend">
-            <div class="legend-item"><span class="dot" style="background:#fbbf24"></span> Patent Tech Flow</div>
-            <div class="legend-item"><span class="dot" style="background:var(--accent)"></span> Data/Signal Flow</div>
-            <div class="legend-item"><span class="dot" style="background:var(--text-sub)"></span> System Boundary</div>
+            <div class="legend-item"><span class="dot" style="background:#f59e0b; box-shadow:0 0 5px rgba(245,158,11,0.5);"></span> Patent Tech Flow</div>
+            <div class="legend-item"><span class="dot" style="background:var(--primary)"></span> Data/Signal Flow</div>
+            <div class="legend-item"><span class="dot" style="background:#94a3b8"></span> System Boundary</div>
         </div>
     </div>
 
