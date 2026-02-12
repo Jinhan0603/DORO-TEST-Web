@@ -3,609 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DORO Open Road: 전략적 IP 분석</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Vibrant "Cybernetic Neon" Palette: 
-         Background: Slate-900 (#0f172a)
-         Card Bg: Slate-800 (#1e293b)
-         Primary Text: White (#ffffff)
-         Accents: Cyan-400 (#22d3ee), Violet-500 (#8b5cf6), Pink-500 (#ec4899)
-    -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'neon-cyan': '#22d3ee',
-                        'neon-purple': '#8b5cf6',
-                        'neon-pink': '#ec4899',
-                        'deep-space': '#0f172a',
-                        'card-bg': '#1e293b',
-                    },
-                    fontFamily: {
-                        sans: ['Pretendard', 'Malgun Gothic', 'sans-serif'], // 한글 폰트 적용
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Open Road System Architecture Blueprint (Light)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        /* 한글 웹폰트 (Pretendard 예시 - 실제 CDN 필요시 추가, 여기서는 시스템 폰트 활용) */
-        
+        :root {
+            /* Light Theme Palette */
+            --bg-color: #f8fafc;       /* Slate 50 */
+            --card-bg: #ffffff;        /* White */
+            --border-color: #cbd5e1;   /* Slate 300 */
+            --primary: #2563eb;        /* Blue 600 */
+            --accent: #0ea5e9;         /* Sky 500 */
+            
+            /* Layer Specific Colors (Lightened for better contrast on white) */
+            --hardware: #64748b;       /* Slate 500 */
+            --hardware-bg: #f1f5f9;    /* Slate 100 */
+            
+            --edge: #8b5cf6;           /* Violet 500 */
+            --edge-bg: #f5f3ff;        /* Violet 50 */
+            
+            --cloud: #2563eb;          /* Blue 600 */
+            --cloud-bg: #eff6ff;       /* Blue 50 */
+            
+            --service: #db2777;        /* Pink 600 */
+            --service-bg: #fdf2f8;     /* Pink 50 */
+            
+            --text-main: #1e293b;      /* Slate 800 */
+            --text-sub: #64748b;       /* Slate 500 */
+            --shadow: rgba(148, 163, 184, 0.15); /* Soft Shadow */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Pretendard', 'Malgun Gothic', 'Inter', sans-serif;
-            background-color: #0f172a; /* deep-space */
-            color: #f8fafc;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Noto Sans KR', sans-serif;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px;
         }
 
-        .chart-container {
+        .container {
+            width: 1200px;
+            background-color: #ffffff;
+            /* Engineering Grid Pattern */
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            /* Make grid subtle */
+            background-image: 
+                linear-gradient(rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+            
+            padding: 60px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
             position: relative;
-            width: 100%;
-            max-width: 600px; 
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+            border-radius: 8px;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #22d3ee; 
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
         }
 
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .logo-area {
+            display: inline-block;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .step-connector {
+        header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 52px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            line-height: 1;
+            margin: 0;
+        }
+
+        header h1 span { color: var(--primary); font-weight: 700; }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .badge {
             position: absolute;
-            top: 50%;
-            left: -20px;
-            width: 20px;
-            height: 2px;
-            background-color: #4b5563;
-            transform: translateY(-50%);
+            right: 0; top: 0;
+            background: #eff6ff;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Diagram Layout */
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            position: relative;
+            margin-top: 40px;
+        }
+
+        /* Group Boxes */
+        .group-box {
+            background: rgba(255,255,255,0.8);
+            border: 2px dashed var(--border-color);
+            border-radius: 20px;
+            padding: 40px 30px 30px 30px;
+            position: relative;
+            height: 100%;
+        }
+
+        .group-label {
+            position: absolute;
+            top: -18px;
+            left: 30px;
+            background: #ffffff;
+            padding: 5px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            color: var(--text-sub);
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Layers */
+        .layer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+            position: relative;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 2;
+            transition: transform 0.2s ease;
         }
         
-        /* For mobile flow diagrams */
-        @media (max-width: 768px) {
-            .step-connector {
-                top: -20px;
-                left: 50%;
-                width: 2px;
-                height: 20px;
-                transform: translateX(-50%);
-            }
+        .layer-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .layer-card:last-child { margin-bottom: 0; }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
         }
+
+        .icon-box {
+            width: 54px; height: 54px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .layer-title h3 { font-size: 22px; font-weight: 800; color: var(--text-main); margin: 0; }
+        .layer-title span { 
+            font-size: 13px; 
+            font-weight: 600;
+            color: var(--text-sub); 
+            font-family: 'Rajdhani', sans-serif; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+
+        .feature-list { list-style: none; padding-left: 5px; }
+
+        .feature-list li {
+            font-size: 15px;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .feature-list li::before {
+            content: '•';
+            position: absolute;
+            left: 5px;
+            color: var(--border-color); /* Default bullet */
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .feature-list li strong { color: #334155; font-weight: 700; }
+
+        /* Specific Colors & Styles */
+        /* Hardware */
+        .hw-color { border-left: 5px solid var(--hardware); background: linear-gradient(to right, #ffffff, #f8fafc); }
+        .hw-color .icon-box { background: linear-gradient(135deg, #64748b, #475569); }
+        .hw-color .feature-list li::before { color: var(--hardware); }
+
+        /* Edge */
+        .edge-color { border-left: 5px solid var(--edge); background: linear-gradient(to right, #ffffff, var(--edge-bg)); }
+        .edge-color .icon-box { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .edge-color .feature-list li::before { color: var(--edge); }
+
+        /* Cloud */
+        .cloud-color { border-left: 5px solid var(--cloud); background: linear-gradient(to right, #ffffff, var(--cloud-bg)); }
+        .cloud-color .icon-box { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .cloud-color .feature-list li::before { color: var(--cloud); }
+
+        /* Service */
+        .svc-color { border-left: 5px solid var(--service); background: linear-gradient(to right, #ffffff, var(--service-bg)); }
+        .svc-color .icon-box { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .svc-color .feature-list li::before { color: var(--service); }
+
+        /* SVG Lines */
+        svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        path {
+            stroke: #94a3b8;
+            stroke-width: 3;
+            stroke-dasharray: 8 8;
+            fill: none;
+            opacity: 0.4;
+        }
+
+        .active-path {
+            stroke: var(--primary);
+            stroke-width: 3;
+            stroke-dasharray: 10;
+            animation: dash 1s linear infinite;
+            opacity: 1;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+
+        /* Patent Flow Centerpiece */
+        .patent-flow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            text-align: center;
+            z-index: 10;
+            background: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .token-icon {
+            font-size: 40px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 50%;
+            padding: 15px;
+            box-shadow: 0 8px 15px rgba(245, 158, 11, 0.3);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .token-label {
+            font-size: 14px;
+            color: #d97706;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer Legend */
+        .legend {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-sub); font-weight: 500; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+
     </style>
 </head>
-<body class="antialiased selection:bg-neon-pink selection:text-white">
+<body>
 
-    <!-- Header Section -->
-    <header class="w-full py-12 px-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div>
-                <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple tracking-tight">
-                    DORO 'Open Road'
-                </h1>
-                <p class="text-slate-400 mt-2 text-lg font-light">
-                    전략적 IP 분석 및 특허 발명 제안서
-                </p>
+    <div class="container">
+        <header>
+            <div class="badge"><i class="fa-solid fa-file-contract"></i> Patent 10-2025-0168946</div>
+            <div class="logo-area">
+                <h1>Open Road <span>Architecture</span></h1>
             </div>
-            <div class="mt-4 md:mt-0 flex gap-3">
-                <span class="px-4 py-1 rounded-full border border-neon-cyan text-neon-cyan text-sm font-semibold shadow-[0_0_10px_rgba(34,211,238,0.3)]">IP 전략</span>
-                <span class="px-4 py-1 rounded-full border border-neon-purple text-neon-purple text-sm font-semibold shadow-[0_0_10px_rgba(139,92,246,0.3)]">피지컬 AI</span>
-            </div>
-        </div>
-    </header>
+            <p>Smart Competency-Linked Control System Blueprint</p>
+        </header>
 
-    <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-6 py-10 space-y-24">
-
-        <!-- Section 1: Introduction & The Paradigm Shift -->
-        <section id="introduction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl font-bold mb-6 border-l-4 border-neon-pink pl-4">패러다임의 전환</h2>
-                    <p class="text-slate-300 text-lg leading-relaxed mb-6">
-                        로봇 산업은 고비용 하드웨어 중심에서 <strong class="text-white">소프트웨어 정의 로봇 (SDR)</strong>으로 급격히 이동하고 있습니다. 그러나 여전히 두 가지 장벽, 즉 '하드웨어 비용'과 비숙련자로 인한 '운영 역량의 공백'이 존재합니다.
-                    </p>
-                    <p class="text-slate-300 text-lg leading-relaxed">
-                        **DORO의 솔루션:** 사용자의 스마트폰을 두뇌로 사용하는 "브레인리스(Brain-less)" 로봇 섀시에, LMS(학습관리시스템)가 물리적 제어 권한을 엄격히 관리하는 운영체제입니다.
-                    </p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Key Metric Cards -->
-                    <div class="glass-panel p-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition duration-300">
-                        <div class="text-neon-cyan text-4xl font-extrabold mb-2">90%</div>
-                        <div class="text-slate-400 font-medium">하드웨어 비용 절감</div>
-                        <div class="text-xs text-slate-500 mt-2">LiDAR 로봇 대비 목표치</div>
-                    </div>
-                    <div class="glass-panel p-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition duration-300">
-                        <div class="text-neon-purple text-4xl font-extrabold mb-2">100%</div>
-                        <div class="text-slate-400 font-medium">운영자 검증 완료</div>
-                        <div class="text-xs text-slate-500 mt-2">LMS 역량 평가 기반</div>
-                    </div>
-                    <div class="glass-panel p-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition duration-300 col-span-2">
-                        <div class="text-neon-pink text-4xl font-extrabold mb-2">BYOD</div>
-                        <div class="text-slate-400 font-medium">개인 기기 활용 (Bring Your Own Device)</div>
-                        <div class="text-xs text-slate-500 mt-2">스마트폰을 로봇의 두뇌로 사용</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2: Market Landscape (Radar Chart) -->
-        <section id="market-landscape">
-            <h2 class="text-3xl font-bold mb-4 border-l-4 border-neon-cyan pl-4">시장 및 기술 환경 분석</h2>
-            <p class="text-slate-400 mb-8 max-w-3xl">
-                기존 로봇 플랫폼은 비용, 지능, 안전성 사이에서 트레이드오프를 강요받습니다. 임베디드 시스템(LG/삼성)은 안정적이나 비싸고, 클라우드 브레인(Brain Corp)은 지능적이나 네트워크 의존적입니다. DORO는 "역량 기반 엣지 제어" 모델로 이 구도를 혁신합니다.
-            </p>
+        <div class="diagram-grid">
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Chart Column -->
-                <div class="md:col-span-2 glass-panel p-6 rounded-2xl shadow-2xl border border-slate-700">
-                    <h3 class="text-xl font-semibold mb-4 text-center text-neon-cyan">플랫폼 성능 비교</h3>
-                    <div class="chart-container">
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                    <p class="text-center text-sm text-slate-500 mt-4 italic">
-                        DORO는 사용자 기기를 활용하여 최소한의 비용으로 높은 확장성과 안전성을 달성합니다.
-                    </p>
-                </div>
+            <!-- SVG Lines for Connections -->
+            <svg>
+                <!-- Edge to Cloud (Curved) -->
+                <path d="M 450 220 C 600 220, 600 220, 750 220" class="active-path" />
+                <!-- Cloud to Service (Straight Vertical) -->
+                <path d="M 880 370 L 880 480" />
+                <!-- Hardware to Edge (Straight Vertical) -->
+                <path d="M 320 480 L 320 370" />
+            </svg>
 
-                <!-- Text Column -->
-                <div class="space-y-4">
-                    <div class="bg-card-bg p-4 rounded-lg border-l-2 border-slate-500">
-                        <h4 class="font-bold text-white">1. 기존 임베디드 (Legacy)</h4>
-                        <p class="text-sm text-slate-400">높은 H/W 비용(LiDAR, Jetson), 경직된 구조. 안전하지만 확장이 어려움. (예: LG CLOi)</p>
-                    </div>
-                    <div class="bg-card-bg p-4 rounded-lg border-l-2 border-slate-500">
-                        <h4 class="font-bold text-white">2. 클라우드 브레인</h4>
-                        <p class="text-sm text-slate-400">서버 기반의 높은 지능, 그러나 지연 시간(Latency) 문제 존재. 복잡한 매핑 필요. (예: Brain Corp)</p>
-                    </div>
-                    <div class="bg-card-bg p-4 rounded-lg border-l-2 border-neon-cyan bg-slate-800/50">
-                        <h4 class="font-bold text-neon-cyan">3. DORO Open Road</h4>
-                        <p class="text-sm text-white">스마트폰 센서(Visual SLAM) + LMS 권한 제어. 최저 비용, 최고의 교육적 가치.</p>
-                    </div>
-                </div>
+            <!-- Center Token Visual -->
+            <div class="patent-flow">
+                <i class="fa-solid fa-key token-icon"></i>
+                <div class="token-label">Auth Token</div>
             </div>
-        </section>
 
-        <!-- Section 3: System Architecture (Diagram) -->
-        <section id="architecture">
-            <h2 class="text-3xl font-bold mb-4 border-l-4 border-neon-purple pl-4">시스템 아키텍처</h2>
-            <p class="text-slate-400 mb-10 max-w-3xl">
-                'Open Road' 생태계는 3계층으로 구성됩니다. 핵심 혁신은 스마트폰이 클라우드로부터 '권한 토큰'을 받아야만 브레인리스 엣지 유닛을 작동시키는 **논리적 잠금장치(Logical Interlock)**에 있습니다.
-            </p>
+            <!-- Left Column: User Space (Physical) -->
+            <div class="column-left">
+                <div class="group-box">
+                    <span class="group-label"><i class="fa-solid fa-user"></i> User Space (Physical)</span>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-                <!-- Layer 1: Cloud -->
-                <div class="glass-panel p-6 rounded-xl flex flex-col items-center text-center relative z-10">
-                    <div class="text-4xl mb-3">☁️</div>
-                    <h3 class="text-xl font-bold text-neon-purple">클라우드 OS (LMS)</h3>
-                    <div class="w-full h-px bg-slate-600 my-3"></div>
-                    <ul class="text-sm text-slate-300 space-y-2">
-                        <li>사용자 교육 및 테스트</li>
-                        <li>역량 평가 (Competency)</li>
-                        <li><span class="text-neon-pink font-bold">권한 토큰 발행</span></li>
-                    </ul>
-                </div>
-
-                <!-- Connector Mobile (Down) / Desktop (Right) -->
-                <div class="hidden md:flex flex-col justify-center items-center">
-                    <div class="text-xs text-slate-500 mb-1">암호화된 토큰 (Network)</div>
-                    <div class="w-full h-1 bg-gradient-to-r from-neon-purple to-neon-cyan relative">
-                         <div class="absolute right-0 -top-1.5 w-3 h-3 bg-neon-cyan rounded-full animate-pulse"></div>
-                    </div>
-                </div>
-                <div class="md:hidden flex flex-col justify-center items-center h-16">
-                    <div class="h-full w-1 bg-gradient-to-b from-neon-purple to-neon-cyan"></div>
-                </div>
-
-                <!-- Layer 2: Smartphone -->
-                <div class="glass-panel p-6 rounded-xl flex flex-col items-center text-center relative z-10 border-2 border-neon-cyan shadow-[0_0_20px_rgba(34,211,238,0.15)]">
-                    <div class="text-4xl mb-3">📱</div>
-                    <h3 class="text-xl font-bold text-neon-cyan">스마트폰 브레인</h3>
-                    <div class="w-full h-px bg-slate-600 my-3"></div>
-                    <ul class="text-sm text-slate-300 space-y-2">
-                        <li>Visual SLAM / 인지</li>
-                        <li>토큰 복호화 및 검증</li>
-                        <li><span class="text-neon-cyan font-bold">파라미터 재설정</span></li>
-                    </ul>
-                </div>
-
-                <!-- Connector Mobile (Down) / Desktop (Right) -->
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 md:mt-12 relative">
-                 <div class="md:col-start-2 flex justify-center">
-                    <div class="h-16 w-1 bg-gradient-to-b from-neon-cyan to-slate-500 md:h-12"></div>
-                 </div>
-                 
-                 <div class="md:col-start-2 glass-panel p-6 rounded-xl flex flex-col items-center text-center relative z-10">
-                    <div class="text-4xl mb-3">🤖</div>
-                    <h3 class="text-xl font-bold text-slate-200">브레인리스 엣지 구동체</h3>
-                    <div class="w-full h-px bg-slate-600 my-3"></div>
-                    <ul class="text-sm text-slate-300 space-y-2">
-                        <li>모터 및 배터리 전용</li>
-                        <li>BLE를 통한 PWM 수신</li>
-                        <li><span class="text-slate-400">물리적 구동 (Actuation)</span></li>
-                    </ul>
-                    <div class="absolute -top-3 bg-slate-800 px-2 text-xs text-slate-400 border border-slate-600 rounded">BLE 연결</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 4: Patent Landscape Map (Scatter Plot) -->
-        <section id="patent-landscape">
-            <h2 class="text-3xl font-bold mb-4 border-l-4 border-neon-pink pl-4">특허 지형 분석</h2>
-            <p class="text-slate-400 mb-8 max-w-3xl">
-                주요 레퍼런스(Intel, Brain Corp, SMT) 분석 결과, DORO가 선점할 수 있는 '빈틈(White Space)'이 발견되었습니다. 경쟁사들이 고비용 하드웨어나 순수 자율주행 학습에 집중할 때, DORO는 <strong>"인간 교육에 기반한 조건부 제어"</strong>라는 독창적 위치를 점유합니다.
-            </p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2 glass-panel p-6 rounded-2xl shadow-xl border border-slate-700">
-                    <h3 class="text-xl font-semibold mb-2 text-center text-neon-pink">IP 포지셔닝 맵</h3>
-                    <div class="chart-container">
-                        <canvas id="scatterChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="p-4 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-neon-pink transition">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-bold text-white">Intel (OpenBot)</h4>
-                            <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">H/W 중심</span>
-                        </div>
-                        <p class="text-xs text-slate-400"><strong>장벽:</strong> 단순 스마트폰 연결 로직 선점.<br><strong>DORO 전략:</strong> 연결 방식은 공지 기술로 인정하되, '토큰 기반 잠금 해제' 로직을 청구.</p>
-                    </div>
-
-                    <div class="p-4 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-neon-pink transition">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-bold text-white">Brain Corp</h4>
-                            <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">클라우드 중심</span>
-                        </div>
-                        <p class="text-xs text-slate-400"><strong>장벽:</strong> Teach & Repeat 데이터 루프.<br><strong>DORO 전략:</strong> 기계 학습(Machine Learning)과 차별화된 '인간 학습(Human Learning)' 루프 강조.</p>
-                    </div>
-
-                    <div class="p-4 bg-slate-900/80 rounded-lg border border-neon-pink shadow-[0_0_15px_rgba(236,72,153,0.2)]">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-bold text-neon-pink">DORO (목표)</h4>
-                            <span class="text-xs bg-neon-pink text-white px-2 py-1 rounded">핵심 혁신</span>
-                        </div>
-                        <p class="text-xs text-slate-300"><strong>LMS 기반 권한 제어</strong>에 진보성이 있음. 센서가 아닌 '사용자 자격 증명'으로 안전을 보장.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 5: The "Secret Sauce" (Core Patent Claim Logic) -->
-        <section id="core-patent">
-            <h2 class="text-3xl font-bold mb-4 border-l-4 border-neon-cyan pl-4">핵심 경쟁력(Secret Sauce): 조건부 제어</h2>
-            <p class="text-slate-400 mb-8">
-                DORO 메인 청구항의 핵심은 <strong>"교육적 성취도와 물리적 성능 간의 상관관계"</strong>입니다. 아래 그래프는 특허의 진보성을 입증하는 '잠금 해제(Unlock)' 메커니즘을 보여줍니다.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="chart-container">
-                    <canvas id="stepChart"></canvas>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-white mb-4">"교육을 통한 안전" 로직</h3>
-                    <ul class="space-y-6">
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 font-bold mr-4">1</div>
-                            <div>
-                                <h4 class="font-bold text-neon-cyan">역량 평가 (Assessment)</h4>
-                                <p class="text-sm text-slate-400">사용자가 LMS 클라우드에서 시뮬레이터 훈련 또는 퀴즈를 완료합니다.</p>
+                    <!-- Edge Layer -->
+                    <div class="layer-card edge-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                            <div class="layer-title">
+                                <span>Edge Layer</span>
+                                <h3>Smartphone Brain</h3>
                             </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 font-bold mr-4">2</div>
-                            <div>
-                                <h4 class="font-bold text-neon-purple">토큰 발행 (Issuance)</h4>
-                                <p class="text-sm text-slate-400">서버가 파라미터(예: 최대 속도 0.5m/s)가 담긴 암호화된 '권한 토큰'을 발행합니다.</p>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Vision AI:</strong> YOLOv8 (Human/Obstacle)</li>
+                            <li><strong>Nav:</strong> SLAM / VIO (Indoor Mapping)</li>
+                            <li><strong>Control:</strong> <span style="color:#d97706; background:#fffbeb; padding:2px 5px; border-radius:4px; font-weight:700;">Token Verification</span></li>
+                        </ul>
+                    </div>
+
+                    <div style="height: 60px;"></div> <!-- Spacer -->
+
+                    <!-- Hardware Layer -->
+                    <div class="layer-card hw-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-microchip"></i></div>
+                            <div class="layer-title">
+                                <span>Hardware Layer</span>
+                                <h3>Brain-less Edge Board</h3>
                             </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-neon-pink flex items-center justify-center text-white font-bold mr-4">3</div>
-                            <div>
-                                <h4 class="font-bold text-neon-pink">물리적 재설정 (Reconfiguration)</h4>
-                                <p class="text-sm text-slate-400">스마트폰 앱이 토큰을 해석하여 모터의 RPM 제한과 AI 기능을 물리적으로 해제합니다.</p>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>MCU:</strong> ESP32 (Wi-Fi/BLE)</li>
+                            <li><strong>I/O:</strong> PWM Motor Control, Encoder</li>
+                            <li><strong>Safety:</strong> Emergency Stop Logic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Cloud Space (Digital) -->
+            <div class="column-right">
+                <div class="group-box">
+                    <span class="group-label"><i class="fa-solid fa-cloud"></i> Cloud Space (Digital)</span>
+
+                    <!-- Cloud Layer -->
+                    <div class="layer-card cloud-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-server"></i></div>
+                            <div class="layer-title">
+                                <span>Cloud Layer</span>
+                                <h3>Open Road OS</h3>
                             </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Fleet:</strong> Real-time Dashboard & Logs</li>
+                            <li><strong>OTA:</strong> Model/Firmware Updates</li>
+                            <li><strong>Auth:</strong> <span style="color:#d97706; background:#fffbeb; padding:2px 5px; border-radius:4px; font-weight:700;">Token Issuance (Core)</span></li>
+                        </ul>
+                    </div>
 
-        <!-- Section 6: Future Value (Data Flywheel) -->
-        <section id="future-value" class="pb-10">
-            <h2 class="text-3xl font-bold mb-4 border-l-4 border-neon-purple pl-4">전략적 가치: 데이터 플라이휠</h2>
-            <p class="text-slate-400 mb-8 max-w-3xl">
-                무작위 주행 데이터를 수집하는 경쟁사와 달리, DORO는 구조화된 교육 미션을 통해 <strong>"의도(Intent)가 명확한 라벨링 데이터"</strong>를 수집합니다. 이는 AI 미세 조정(Fine-tuning)에 탁월한 가치를 지닙니다.
-            </p>
+                    <div style="height: 60px;"></div> <!-- Spacer -->
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass-panel p-6 rounded-2xl shadow-lg border border-slate-700 flex flex-col items-center">
-                    <h3 class="text-lg font-semibold mb-4 text-center">데이터 품질 구성비</h3>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-card-bg p-6 rounded-xl border border-slate-700">
-                        <div class="text-3xl mb-2">🛡️</div>
-                        <h4 class="font-bold text-white mb-2">규제 준수 (Compliance)</h4>
-                        <p class="text-sm text-slate-400">
-                            "로봇 운전 면허"의 표준으로 포지셔닝 가능. 향후 공공장소 로봇 도입 시 보험 및 규제 대응의 필수 요소가 될 것입니다.
-                        </p>
-                    </div>
-                    <div class="bg-card-bg p-6 rounded-xl border border-slate-700">
-                        <div class="text-3xl mb-2">🔄</div>
-                        <h4 class="font-bold text-white mb-2">하드웨어 불가지론 (H/W Agnostic)</h4>
-                        <p class="text-sm text-slate-400">
-                            "Brain-less" 섀시라면 어디든 적용 가능. 2028년까지 순수 RaaS (Robot as a Service) 소프트웨어 모델로 피벗(Pivot) 가능.
-                        </p>
-                    </div>
-                    <div class="bg-card-bg p-6 rounded-xl border border-slate-700 col-span-1 sm:col-span-2">
-                        <div class="text-3xl mb-2">📈</div>
-                        <h4 class="font-bold text-white mb-2">반복 매출 (Recurring Revenue)</h4>
-                        <p class="text-sm text-slate-400">
-                            특허를 통해 하드웨어와 구독 서비스 간의 연결고리를 보호합니다. H/W가 복제되더라도 "OS + 교육" 루프는 침해 없이 복제 불가능합니다.
-                        </p>
+                    <!-- Service Layer -->
+                    <div class="layer-card svc-color">
+                        <div class="layer-header">
+                            <div class="icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                            <div class="layer-title">
+                                <span>Service Layer</span>
+                                <h3>LMS & DIMC</h3>
+                            </div>
+                        </div>
+                        <ul class="feature-list">
+                            <li><strong>Edu:</strong> Safety Training Contents</li>
+                            <li><strong>Test:</strong> User Competency Eval</li>
+                            <li><strong>Level:</strong> Certification Badge</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-10 mt-12">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-2xl font-bold text-white mb-4">특허 출원 준비 완료</h2>
-            <p class="text-slate-400 mb-6">
-                전략은 수립되었고, 차별점은 명확하며, 시장은 기다리고 있습니다.
-            </p>
-            <div class="inline-block bg-gradient-to-r from-neon-cyan to-neon-purple p-[1px] rounded-full">
-                <button class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition">
-                    전체 제안서 검토하기
-                </button>
-            </div>
-            <p class="text-xs text-slate-600 mt-8">
-                DORO 내부 보고서(2026) 기반 생성. 대외비(Confidential).
-            </p>
         </div>
-    </footer>
 
-    <!-- Chart.js Implementation -->
-    <script>
-        // Common Tooltip Configuration for Multiline Labels
-        const commonTooltipOptions = {
-            callbacks: {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
-                    } else {
-                        return label;
-                    }
-                }
-            }
-        };
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item"><span class="dot" style="background:#f59e0b; box-shadow:0 0 5px rgba(245,158,11,0.5);"></span> Patent Tech Flow</div>
+            <div class="legend-item"><span class="dot" style="background:var(--primary)"></span> Data/Signal Flow</div>
+            <div class="legend-item"><span class="dot" style="background:#94a3b8"></span> System Boundary</div>
+        </div>
+    </div>
 
-        // 1. Radar Chart: Market Landscape
-        const ctxRadar = document.getElementById('radarChart').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: ['비용 효율성', '확장성', '안전성 (검증됨)', '지능 수준', '유지보수'],
-                datasets: [
-                    {
-                        label: 'DORO Open Road',
-                        data: [9, 9, 10, 7, 8],
-                        backgroundColor: 'rgba(34, 211, 238, 0.2)', // Neon Cyan transparent
-                        borderColor: '#22d3ee',
-                        pointBackgroundColor: '#22d3ee',
-                        borderWidth: 2
-                    },
-                    {
-                        label: '기존 임베디드 (LG/삼성)',
-                        data: [3, 4, 8, 6, 4],
-                        backgroundColor: 'rgba(148, 163, 184, 0.1)', // Slate
-                        borderColor: '#94a3b8',
-                        pointBackgroundColor: '#94a3b8',
-                        borderWidth: 1,
-                        borderDash: [5, 5]
-                    },
-                    {
-                        label: '클라우드 브레인 (Brain Corp)',
-                        data: [5, 7, 6, 9, 6],
-                        backgroundColor: 'rgba(139, 92, 246, 0.1)', // Purple
-                        borderColor: '#8b5cf6',
-                        pointBackgroundColor: '#8b5cf6',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: '#334155' },
-                        grid: { color: '#334155' },
-                        pointLabels: { color: '#cbd5e1', font: { size: 12 } },
-                        ticks: { display: false, backdropColor: 'transparent' }
-                    }
-                },
-                plugins: {
-                    legend: { labels: { color: '#f8fafc' } },
-                    tooltip: commonTooltipOptions
-                }
-            }
-        });
-
-        // 2. Scatter Plot: Patent Landscape
-        const ctxScatter = document.getElementById('scatterChart').getContext('2d');
-        new Chart(ctxScatter, {
-            type: 'scatter',
-            data: {
-                datasets: [
-                    {
-                        label: '경쟁사',
-                        data: [
-                            { x: 8, y: 3, label: 'LG/SMT (임베디드 H/W)' }, // High Cost, Low Flex Control
-                            { x: 7, y: 8, label: 'Brain Corp (클라우드 AI)' }, // High Cost, High AI
-                            { x: 2, y: 5, label: 'Intel (단순 OpenBot)' }, // Low Cost, Med Control
-                        ],
-                        backgroundColor: '#94a3b8',
-                        pointRadius: 8
-                    },
-                    {
-                        label: 'DORO 목표 영역',
-                        data: [
-                            { x: 1, y: 9, label: 'DORO Open Road' } // Very Low Cost, High Conditional Control
-                        ],
-                        backgroundColor: '#ec4899', // Neon Pink
-                        pointRadius: 12,
-                        pointHoverRadius: 15
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: { display: true, text: '하드웨어 비용 / 복잡도', color: '#cbd5e1' },
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8' },
-                        min: 0, max: 10
-                    },
-                    y: {
-                        title: { display: true, text: '권한 제어 로직 (조건부)', color: '#cbd5e1' },
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8' },
-                        min: 0, max: 10
-                    }
-                },
-                plugins: {
-                    legend: { labels: { color: '#f8fafc' } },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.raw.label; // Custom label from data object
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // 3. Step Chart: Competency vs Control
-        const ctxStep = document.getElementById('stepChart').getContext('2d');
-        
-        // Label Wrapping Logic (16 char limit)
-        // Manual wrapping for Korean to look good
-        const wrappedLabels = [
-            ['레벨 0:', '교육 미이수'], 
-            ['레벨 1:', '기초 안전 교육'], 
-            ['레벨 2:', '심화 운영 과정'], 
-            ['레벨 3:', '전문가 라이선스']
-        ];
-
-        new Chart(ctxStep, {
-            type: 'line',
-            data: {
-                labels: wrappedLabels,
-                datasets: [{
-                    label: '최대 로봇 속도 (m/s)',
-                    data: [0, 0.5, 1.2, 2.0],
-                    borderColor: '#22d3ee', // Neon Cyan
-                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
-                    borderWidth: 3,
-                    stepped: true, // Key feature for "Step" chart
-                    fill: true
-                },
-                {
-                    label: '자율주행 기능 활성화',
-                    data: [0, 0, 1, 3], // Conceptual numeric representation
-                    borderColor: '#8b5cf6', // Neon Purple
-                    borderWidth: 3,
-                    borderDash: [5, 5],
-                    stepped: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8' },
-                        title: { display: true, text: '물리적 성능 제한', color: '#cbd5e1' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#cbd5e1' }
-                    }
-                },
-                plugins: {
-                    legend: { labels: { color: '#f8fafc' } },
-                    tooltip: commonTooltipOptions
-                }
-            }
-        });
-
-        // 4. Doughnut Chart: Data Quality
-        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-        new Chart(ctxDoughnut, {
-            type: 'doughnut',
-            data: {
-                labels: ['의도 기반 라벨링 데이터 (고가치)', '무작위 노이즈 데이터 (저가치)'],
-                datasets: [{
-                    data: [75, 25],
-                    backgroundColor: [
-                        '#8b5cf6', // Neon Purple
-                        '#334155'  // Slate 700
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { 
-                        position: 'bottom',
-                        labels: { color: '#f8fafc', padding: 20 }
-                    },
-                    tooltip: commonTooltipOptions
-                },
-                cutout: '70%'
-            }
-        });
-    </script>
 </body>
 </html>
