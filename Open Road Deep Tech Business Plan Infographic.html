@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Road: 딥테크 창업사관학교 전략적 사업계획서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            blue: '#2563eb',
+                            purple: '#9333ea',
+                            green: '#059669',
+                            pink: '#db2777'
+                        },
+                        surface: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            background-color: #ffffff;
+            color: #1e293b;
+            font-family: 'Pretendard', sans-serif;
+            word-break: keep-all;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="antialiased bg-surface-50">
+
+    <header class="w-full bg-white border-b border-surface-200 p-8 text-center shadow-sm sticky top-0 z-50 bg-opacity-95 backdrop-blur">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-blue to-primary-purple mb-3">
+                OPEN ROAD
+            </h1>
+            <p class="text-xl md:text-2xl text-surface-800 font-medium">
+                초거대 <span class="font-bold text-primary-green">피지컬 AI(Physical AI)</span> 시대를 위한 엣지-클라우드 하이브리드 OS
+            </p>
+            <div class="mt-4 flex flex-wrap justify-center gap-2 md:gap-4">
+                <span class="px-4 py-1.5 rounded-full bg-blue-50 border border-primary-blue text-xs font-bold text-primary-blue">하드웨어 불가지론적 확장성</span>
+                <span class="px-4 py-1.5 rounded-full bg-purple-50 border border-primary-purple text-xs font-bold text-primary-purple">블록체인 토큰 보안 통제</span>
+                <span class="px-4 py-1.5 rounded-full bg-green-50 border border-primary-green text-xs font-bold text-primary-green">고품질 데이터 플라이휠</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-20">
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div class="space-y-6">
+                <h2 class="text-3xl font-bold text-surface-900 border-l-4 border-primary-blue pl-4">
+                    문제 인식: <br>과도한 도입 비용과 공공 안전의 위협
+                </h2>
+                <p class="text-surface-800 text-lg leading-relaxed">
+                    피지컬 AI 시장이 급성장하고 있으나, 상용화의 병목 현상은 
+                    <strong class="text-primary-blue">수천만 원에 달하는 고가의 온보드 컴퓨팅 연산 장치(CAPEX)</strong>와 
+                    <strong class="text-primary-purple">공공장소 자율주행 시의 제어 권한 및 책임 소재의 불분명성</strong>에 있습니다.
+                </p>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-surface-200">
+                    <h3 class="text-primary-pink font-bold mb-2 text-lg">전략적 피벗 (Pivot)</h3>
+                    <p class="text-sm text-surface-800 leading-relaxed">
+                        주식회사 도로는 단순한 교육용 키트 제조를 넘어, 전 세계 70억 대의 스마트폰 유휴 컴퓨팅 자원을 활용하는 
+                        <span class="text-primary-blue font-bold">소프트웨어 정의 로봇(SDR) 생태계 플랫폼</span>으로 진화합니다.
+                    </p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-surface-200 flex flex-col items-center justify-center">
+                <h3 class="text-xl font-bold mb-4 text-center w-full text-surface-900">로봇 하드웨어 비용 혁신 (90% 절감)</h3>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+                <p class="mt-4 text-center text-sm text-surface-800 bg-surface-100 p-3 rounded-lg w-full">
+                    인지(Perception)는 스마트폰으로, 판단(Planning)은 클라우드로 분산 처리하여 대당 $18k의 하드웨어 비용 제거
+                </p>
+            </div>
+        </section>
+
+        <section class="space-y-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-surface-900 mb-4">핵심 기술: 블록체인 토큰 기반 브레인리스 엣지 시스템</h2>
+                <p class="text-surface-800 text-lg">
+                    고가의 연산 장치를 제거하는 대신, <strong>블록체인 스마트 컨트랙트</strong> 기반의 
+                    '제어 권한 토큰(Authority Token)'을 도입하여 완벽한 물리적 보안 통제(Logical Interlock)를 달성합니다.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 md:p-10 border border-surface-200 shadow-xl relative">
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                    
+                    <div class="flex flex-col items-center space-y-4">
+                        <div class="w-full bg-purple-50 border-2 border-primary-purple rounded-2xl p-6 shadow-md text-center aspect-square flex flex-col justify-center">
+                            <div class="text-4xl mb-2">⛓️</div>
+                            <h4 class="text-primary-purple font-bold text-xl mb-1">클라우드 & 블록체인</h4>
+                            <p class="text-xs text-surface-800 font-medium">스마트 컨트랙트 연동</p>
+                            <p class="text-xs text-surface-800">제어 권한 토큰 발행</p>
+                            <p class="text-xs text-surface-800">사용자 역량 DB 관리</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center space-y-2 hidden md:flex">
+                        <div class="text-primary-purple font-bold text-2xl">→</div>
+                        <span class="bg-surface-100 px-3 py-1 rounded-full text-xs font-bold text-surface-800">토큰 발급</span>
+                    </div>
+
+                    <div class="flex flex-col items-center space-y-4">
+                        <div class="w-full bg-blue-50 border-2 border-primary-blue rounded-2xl p-6 shadow-md text-center aspect-square flex flex-col justify-center">
+                            <div class="text-4xl mb-2">📱</div>
+                            <h4 class="text-primary-blue font-bold text-xl mb-1">스마트폰 (Edge)</h4>
+                            <p class="text-xs text-surface-800 font-medium">경량화 VIO/SLAM</p>
+                            <p class="text-xs text-surface-800">실시간 인지 및 연산</p>
+                            <p class="text-xs text-surface-800">토큰 암호화 패킷 전송</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center space-y-2 hidden md:flex">
+                        <div class="text-primary-blue font-bold text-2xl">→</div>
+                        <span class="bg-surface-100 px-3 py-1 rounded-full text-xs font-bold text-surface-800">BLE/WiFi 통신</span>
+                    </div>
+
+                    <div class="flex flex-col items-center space-y-4 col-span-1 md:col-span-4 mt-8 md:mt-4">
+                        <div class="w-full max-w-2xl bg-white border-2 border-surface-300 rounded-2xl p-4 shadow-md flex flex-col md:flex-row items-center gap-6">
+                            <img src="image_fe05d5.png" alt="제어 보드" class="w-48 h-auto rounded-lg shadow-sm border border-surface-200 object-cover">
+                            <div class="text-left w-full">
+                                <h4 class="text-surface-900 font-bold text-xl mb-2 flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-primary-green inline-block"></span>
+                                    DORO ESP32 & 모터 드라이버 (인터락 시스템)
+                                </h4>
+                                <ul class="text-sm text-surface-800 space-y-2 list-disc pl-5">
+                                    <li>소프트웨어와 로봇 구동부(Actuator)를 연결하는 핵심 하드웨어 앵커</li>
+                                    <li>블록체인 네트워크에서 검증된 <strong>권한 토큰(Token)의 유효성을 최종 확인</strong></li>
+                                    <li>유효성 미확인 시 물리적 모터 구동 차단 (Fail-safe 로직)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center space-y-2 col-span-1 md:col-span-4 h-12">
+                        <div class="text-surface-400 font-bold text-2xl h-full border-l-2 border-dashed border-surface-400"></div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-8 bg-surface-100 p-8 rounded-2xl">
+                        <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center text-center">
+                            <span class="bg-primary-pink text-white text-xs font-bold px-3 py-1 rounded-full mb-4">Phase 1. 데이터 수집</span>
+                            <img src="image_fe0215.png" alt="교육용 로봇 키트" class="w-full h-48 object-contain rounded mb-4">
+                            <h5 class="font-bold text-surface-900 text-lg mb-2">B2G/B2C 교육용 엔트리 키트</h5>
+                            <p class="text-xs text-surface-800">수만 명의 교육생을 통해 '사용자의 명확한 의도(Intent)'가 라벨링된 고품질 물리 환경 데이터를 Zero Cost로 수집</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center text-center border-2 border-primary-green">
+                            <span class="bg-primary-green text-white text-xs font-bold px-3 py-1 rounded-full mb-4">Phase 2. 상용화 스케일업</span>
+                            <img src="image_fe0238.png" alt="실제 팔로잉 로봇" class="w-full h-48 object-cover rounded mb-4">
+                            <h5 class="font-bold text-surface-900 text-lg mb-2">B2B 실증용 서비스 팔로잉 로봇</h5>
+                            <p class="text-xs text-surface-800">물류, 순찰 등 현장에 배치되어 토큰 보안 기반의 안전한 자율 주행 및 RaaS(Robot-as-a-Service) 비즈니스 모델 실현</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-1 space-y-6">
+                <h2 class="text-2xl font-bold text-surface-900 border-l-4 border-primary-green pl-4">목표 시장: 107B 달러</h2>
+                <p class="text-surface-800 text-sm leading-relaxed">
+                    단순한 에듀테크 시장을 넘어 글로벌 서비스 로봇 OS 및 RaaS 시장을 타겟팅합니다. 하드웨어 마진율은 하락하는 반면 소프트웨어 및 보안 플랫폼의 가치는 폭발적으로 증가하고 있습니다.
+                </p>
+                <div class="bg-gradient-to-br from-primary-blue to-primary-green p-6 rounded-2xl shadow-lg text-white">
+                    <h3 class="text-4xl font-extrabold mb-1">107.7B $</h3>
+                    <p class="text-sm font-medium opacity-90">2029년 예상 글로벌 시장 규모</p>
+                    <div class="mt-6 border-t border-white/30 pt-4">
+                        <p class="font-bold text-sm mb-1">핵심 타겟 지점:</p>
+                        <p class="text-xs opacity-90 leading-relaxed">자율주행 배달, 물류 창고, 순찰 로봇용 H/W 독립적 OS 라이선싱 및 블록체인 보안 모듈 공급.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="md:col-span-2 bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-surface-200">
+                <h3 class="text-lg font-bold mb-6 text-center text-surface-900">글로벌 서비스 로봇 시장 추이</h3>
+                <div class="chart-container">
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-8 bg-surface-100 p-8 rounded-3xl">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-surface-900">딥테크 5D 스케일업 및 수익 전략</h2>
+                <p class="text-surface-800 mt-2">Cash Cow 사업에서 성장 동력(Growth Engine)으로의 구조적 전환</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="bg-white p-6 rounded-2xl border border-surface-200 shadow-md">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-surface-900">Two-Track 매출 포트폴리오</h3>
+                        <p class="text-sm text-surface-600 mt-1">교육 사업의 현금 흐름을 바탕으로 B2B 라이선스 비중 극대화</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-4 flex flex-col justify-center">
+                    <div class="bg-white p-5 rounded-xl border-l-4 border-primary-blue shadow-sm hover:shadow-md transition-shadow">
+                        <h4 class="font-bold text-primary-blue text-lg">D-Mentoring (지식재산권 확보)</h4>
+                        <p class="text-sm text-surface-800 mt-1">블록체인 연동 '제어 권한 토큰' 보안 제어 시스템 미국 및 글로벌 특허 포트폴리오 구축.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border-l-4 border-primary-purple shadow-sm hover:shadow-md transition-shadow">
+                        <h4 class="font-bold text-primary-purple text-lg">D-실험실 (글로벌 PoC 검증)</h4>
+                        <p class="text-sm text-surface-800 mt-1">카자흐스탄/베트남 캠프를 글로벌 필드 테스트베드로 활용, 통신 환경별 Latency 최적화.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border-l-4 border-primary-green shadow-sm hover:shadow-md transition-shadow">
+                        <h4 class="font-bold text-primary-green text-lg">D-라운드 (시리즈 A 투자 유치)</h4>
+                        <p class="text-sm text-surface-800 mt-1">단순 매출 가치가 아닌 축적된 '라벨링 데이터 자산'과 특허를 기반으로 2027년 BEP 및 대규모 투자 달성.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border-l-4 border-primary-pink shadow-sm hover:shadow-md transition-shadow">
+                        <h4 class="font-bold text-primary-pink text-lg">D-써포트 (글로벌 인증)</h4>
+                        <p class="text-sm text-surface-800 mt-1">미국 진출을 위한 FCC/UL 인증 획득, KTL/KCL을 통한 브레인리스 아키텍처 기술 신뢰성 검증.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10">
+             <div class="bg-white p-8 rounded-2xl border border-surface-200 shadow-lg">
+                <h3 class="text-xl font-bold mb-2 text-center text-surface-900">팀 역량: 풀스택(Full-stack) R&D 조직</h3>
+                <p class="text-center text-sm text-surface-800 mb-6 bg-surface-50 py-2 rounded-lg">대표이사 포함 전담 개발 5인 최적화 포메이션</p>
+                <div class="chart-container">
+                    <canvas id="teamChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl border border-surface-200 shadow-lg relative overflow-hidden">
+                <h3 class="text-xl font-bold mb-8 text-surface-900">성장 로드맵 (2025 - 2028)</h3>
+                
+                <div class="absolute left-12 top-24 bottom-12 w-0.5 bg-surface-200 z-0"></div>
+                
+                <div class="space-y-8 relative z-10">
+                    <div class="flex items-start group">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 border-4 border-white shadow-md flex items-center justify-center font-bold text-primary-blue text-sm transition-transform group-hover:scale-110">25</div>
+                        <div class="ml-5 bg-surface-50 p-4 rounded-xl w-full border border-surface-100">
+                            <h4 class="text-surface-900 font-bold mb-1">초기 검증 및 기반 구축</h4>
+                            <p class="text-xs text-surface-800">매출 4.8억 달성. 핵심 기술 TRL 7 단계 진입. 특허 등록 및 딥테크 전환 전략 수립.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start group">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-100 border-4 border-white shadow-md flex items-center justify-center font-bold text-primary-purple text-sm transition-transform group-hover:scale-110">26</div>
+                        <div class="ml-5 bg-surface-50 p-4 rounded-xl w-full border border-surface-100">
+                            <h4 class="text-surface-900 font-bold mb-1">딥테크 사관학교 및 TIPS</h4>
+                            <p class="text-xs text-surface-800">블록체인 연동 OS 베타 론칭. 해외 PoC 완료. Seed/Pre-A 브릿지 라운드 투자 유치.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start group">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 border-4 border-white shadow-md flex items-center justify-center font-bold text-primary-green text-sm transition-transform group-hover:scale-110">27</div>
+                        <div class="ml-5 bg-surface-50 p-4 rounded-xl w-full border border-surface-100">
+                            <h4 class="text-surface-900 font-bold mb-1">본격 스케일업 및 BEP</h4>
+                            <p class="text-xs text-surface-800">B2B 팔로잉 로봇 대상 OS 라이선싱 개시. 손익분기점(BEP) 달성. 기업가치 500억 Series A.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start group">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-pink-100 border-4 border-white shadow-md flex items-center justify-center font-bold text-primary-pink text-sm transition-transform group-hover:scale-110">28</div>
+                        <div class="ml-5 bg-surface-50 p-4 rounded-xl w-full border border-surface-100">
+                            <h4 class="text-surface-900 font-bold mb-1">글로벌 서비스 안착</h4>
+                            <p class="text-xs text-surface-800">CES 참가 및 북미 시장 진출. 활성 OS 기기 10만 대 확보. 차세대 로봇 산업의 안드로이드화.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center text-surface-500 text-sm py-8 border-t border-surface-200 mt-12">
+            <p>&copy; 2026 주식회사 도로(DORO). All Rights Reserved. | 2026 딥테크 창업사관학교 제출용 전략 보고서</p>
+        </footer>
+
+    </main>
+
+    <script>
+        function wrapLabel(label, maxLen = 16) {
+            if (label.length <= maxLen) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLen) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#475569',
+                        font: { family: 'Pretendard', size: 12, weight: 'bold' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleColor: '#ffffff',
+                    bodyColor: '#e2e8f0',
+                    borderColor: '#475569',
+                    borderWidth: 1,
+                    titleFont: { family: 'Pretendard', size: 14 },
+                    bodyFont: { family: 'Pretendard', size: 13 },
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#64748b', font: { family: 'Pretendard' } },
+                    grid: { color: '#f1f5f9' },
+                    border: { display: false }
+                },
+                x: {
+                    ticks: { color: '#64748b', font: { family: 'Pretendard', weight: '500' } },
+                    grid: { display: false },
+                    border: { color: '#cbd5e1' }
+                }
+            }
+        };
+
+        const ctxCost = document.getElementById('costChart').getContext('2d');
+        const costLabels = ['기존 자율주행 로봇 (LiDAR + NPU)', 'Open Road 로봇 (스마트폰 + 클라우드)'];
+        new Chart(ctxCost, {
+            type: 'bar',
+            data: {
+                labels: costLabels.map(l => wrapLabel(l, 20)),
+                datasets: [{
+                    label: '제조 원가 (USD 기준)',
+                    data: [20000, 2000],
+                    backgroundColor: ['#94a3b8', '#2563eb'],
+                    borderRadius: 8,
+                    barThickness: 50
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false }
+                }
+            }
+        });
+
+        const ctxMarket = document.getElementById('marketChart').getContext('2d');
+        new Chart(ctxMarket, {
+            type: 'line',
+            data: {
+                labels: ['2025년', '2026년', '2027년', '2028년', '2029년'],
+                datasets: [{
+                    label: '시장 규모 (Billion USD)',
+                    data: [40, 55, 72, 90, 107.7],
+                    borderColor: '#9333ea',
+                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#9333ea',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: commonOptions
+        });
+
+        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctxRevenue, {
+            type: 'bar',
+            data: {
+                labels: ['25년 (기반구축)', '26년 (피벗/R&D)', '27년 (스케일업)', '28년 (글로벌성장)'].map(l => wrapLabel(l)),
+                datasets: [
+                    {
+                        label: '교육 사업 (Cash Cow)',
+                        data: [100, 80, 50, 30],
+                        backgroundColor: '#059669',
+                        borderRadius: {topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4}
+                    },
+                    {
+                        label: 'OS 라이선싱 (Growth)',
+                        data: [0, 20, 50, 70],
+                        backgroundColor: '#2563eb',
+                        borderRadius: {topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0}
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    x: { stacked: true, ticks: { color: '#64748b' }, grid: { display: false } },
+                    y: { stacked: true, ticks: { display: false }, grid: { display: false }, border: {display: false} }
+                }
+            }
+        });
+
+        const ctxTeam = document.getElementById('teamChart').getContext('2d');
+        new Chart(ctxTeam, {
+            type: 'radar',
+            data: {
+                labels: ['로봇 하드웨어 설계', 'AI 데이터 모델링', '블록체인/서버', '글로벌 사업개발', '임베디드 펌웨어'].map(l => wrapLabel(l)),
+                datasets: [{
+                    label: '주식회사 도로 팀 역량',
+                    data: [9, 8, 9, 7, 10],
+                    backgroundColor: 'rgba(219, 39, 119, 0.15)',
+                    borderColor: '#db2777',
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#db2777',
+                    pointBorderWidth: 2,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: { color: '#334155', font: { family: 'Pretendard', size: 12, weight: 'bold' } },
+                        ticks: { display: false, backdropColor: 'transparent' },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
