@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DORO: 2026 청년창업사관학교 사업계획서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        .chart-container { position: relative; width: 100%; height: 300px; max-height: 400px; }
+        .nav-item.active { background-color: #e0e7ff; color: #4338ca; border-right: 4px solid #4338ca; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .step-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.5rem; }
+        /* Scrollbar hide for cleaner look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+    <!-- Chosen Palette: "Smart Trust" - Indigo/Slate base with Emerald/Amber accents for data differentiation. -->
+    <!-- Application Structure Plan:
+         - Sidebar Navigation: Persistent left column for easy jumping between PSST sections (Problem, Solution, Scale-up, Team).
+         - Dashboard Layout: Main content area displays modular cards.
+         - Interactive Sections:
+           1. Overview: Key Metrics & Concept.
+           2. Problem/Solution: Toggle view to contrast current pain points vs. DORO solution.
+           3. Tech & Journey: Step-by-step interactive flow of the service.
+           4. Market & Finance: Chart.js visualizations for revenue models and budget.
+           5. Roadmap: Timeline view.
+         This structure mimics a modern SaaS dashboard, reflecting the product's own nature.
+    -->
+    <!-- Visualization & Content Choices:
+         - Metrics: Big Number cards for immediate impact (Revenue, Export).
+         - Journey: Clickable stepper to explain the complex O2O flow.
+         - Financials: Doughnut chart for revenue mix, Bar chart for budget.
+         - Tech: Diagrammatic layout using Flexbox/Grid for the LMS architecture.
+         - NO SVG/Mermaid used. Only Unicode icons and CSS shapes.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex h-screen overflow-hidden text-slate-800">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col h-full">
+        <div class="p-6 border-b border-slate-100">
+            <h1 class="text-2xl font-bold text-indigo-700 tracking-tight">DORO</h1>
+            <p class="text-xs text-slate-500 mt-1">2026 청년창업사관학교</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><button onclick="loadSection('overview')" id="nav-overview" class="nav-item active w-full text-left px-6 py-3 font-medium text-slate-600 hover:bg-slate-50 transition-colors">📊 개요 (Dashboard)</button></li>
+                <li><button onclick="loadSection('problem-solution')" id="nav-problem-solution" class="nav-item w-full text-left px-6 py-3 font-medium text-slate-600 hover:bg-slate-50 transition-colors">💡 문제 및 해결방안</button></li>
+                <li><button onclick="loadSection('product')" id="nav-product" class="nav-item w-full text-left px-6 py-3 font-medium text-slate-600 hover:bg-slate-50 transition-colors">🚀 제품 & 기술 (User Journey)</button></li>
+                <li><button onclick="loadSection('market')" id="nav-market" class="nav-item w-full text-left px-6 py-3 font-medium text-slate-600 hover:bg-slate-50 transition-colors">🌍 시장 & 성장전략</button></li>
+                <li><button onclick="loadSection('team')" id="nav-team" class="nav-item w-full text-left px-6 py-3 font-medium text-slate-600 hover:bg-slate-50 transition-colors">👥 팀 & 로드맵</button></li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <div class="bg-indigo-50 rounded-lg p-3 text-xs text-indigo-800">
+                <strong>Status:</strong> 작성 완료<br>
+                <strong>Date:</strong> 2026.02.13
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-slate-50 p-8" id="main-content">
+        <!-- Content injected via JS -->
+    </main>
+
+    <script>
+        // --- Data Store ---
+        const sections = {
+            overview: `
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">사업화 과제 요약</h2>
+                    <p class="text-slate-500 mt-2 text-lg">웹툰형 스토리텔링과 메타버스(DORO BUS) 기반의 몰입형 AI·로봇 에듀테크 구독 플랫폼</p>
+                </header>
+
+                <!-- Key Metrics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="card p-6 border-l-4 border-indigo-500">
+                        <div class="text-sm text-slate-500 font-bold uppercase">2026 매출 목표</div>
+                        <div class="text-3xl font-bold text-indigo-700 mt-2">6억원</div>
+                        <div class="text-xs text-slate-400 mt-1">구독자 1,000명 달성 시</div>
+                    </div>
+                    <div class="card p-6 border-l-4 border-emerald-500">
+                        <div class="text-sm text-slate-500 font-bold uppercase">수출 목표</div>
+                        <div class="text-3xl font-bold text-emerald-700 mt-2">$50,000</div>
+                        <div class="text-xs text-slate-400 mt-1">Amazon US 초도 물량</div>
+                    </div>
+                    <div class="card p-6 border-l-4 border-amber-500">
+                        <div class="text-sm text-slate-500 font-bold uppercase">신규 고용</div>
+                        <div class="text-3xl font-bold text-amber-700 mt-2">3명</div>
+                        <div class="text-xs text-slate-400 mt-1">개발 1, 마케팅 1, 생산 1</div>
+                    </div>
+                    <div class="card p-6 border-l-4 border-rose-500">
+                        <div class="text-sm text-slate-500 font-bold uppercase">핵심 차별성</div>
+                        <div class="text-xl font-bold text-rose-700 mt-2">No In-App Purchase</div>
+                        <div class="text-xs text-slate-400 mt-1">순수 교육 보상형 메타버스</div>
+                    </div>
+                </div>
+
+                <!-- Concept Summary -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card p-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">🏆 아이템 정의</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4">
+                            <strong>DORO</strong>는 정기 배송되는 <span class="text-indigo-600 font-semibold">실물 로봇 교구(Offline)</span>와 자체 세계관이 구현된 <span class="text-indigo-600 font-semibold">메타버스 LMS 'DORO BUS'(Online)</span>를 연동한 O2O 에듀테크 서비스입니다.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="mr-2 text-indigo-500">✔</span> <span><strong>Main Story:</strong> 6개월 주기 대규모 캠프 (Chapter 1~3 완료)</span></li>
+                            <li class="flex items-start"><span class="mr-2 text-indigo-500">✔</span> <span><strong>Spin-off (DLS):</strong> 매월 배송되는 정기 구독 키트</span></li>
+                            <li class="flex items-start"><span class="mr-2 text-indigo-500">✔</span> <span><strong>Metaverse:</strong> 학습 보상으로만 재화 획득 (Play to Learn)</span></li>
+                        </ul>
+                    </div>
+                    <div class="card p-8 bg-gradient-to-br from-indigo-600 to-blue-500 text-white">
+                        <h3 class="text-xl font-bold mb-4 text-white">🎯 Target Market</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="text-indigo-100 text-sm font-bold uppercase mb-1">Domestic (국내)</div>
+                                <div class="text-2xl font-bold">사교육 & 홈스쿨링</div>
+                                <p class="text-indigo-100 text-sm mt-1">방과후 학교 B2B 및 DLS 개인 구독</p>
+                            </div>
+                            <div class="border-t border-indigo-400 pt-4">
+                                <div class="text-indigo-100 text-sm font-bold uppercase mb-1">Global (해외)</div>
+                                <div class="text-2xl font-bold">미주 한인 (Korean-American)</div>
+                                <p class="text-indigo-100 text-sm mt-1">Amazon US 입점, 높은 K-Edu 니즈 공략</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            'problem-solution': `
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">문제인식 및 해결방안 (PS)</h2>
+                    <p class="text-slate-500 mt-2 text-lg">기존 에듀테크의 낮은 완주율과 학부모의 과금 걱정을 동시에 해결합니다.</p>
+                </header>
+
+                <div class="grid md:grid-cols-2 gap-8 h-full">
+                    <!-- Problem Column -->
+                    <div class="card p-8 border-t-4 border-rose-500">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🚨</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">Problem (Pain Points)</h3>
+                                <p class="text-sm text-slate-500">기존 시장의 한계</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-rose-50 p-4 rounded-lg">
+                                <strong class="block text-rose-800 mb-2">1. 낮은 몰입도와 완주율</strong>
+                                <p class="text-slate-700 text-sm">"혼자 하는 온라인 코딩은 지루해요."<br>단순 동영상 시청 방식은 상호작용 부재로 흥미가 빠르게 저하됩니다.</p>
+                            </div>
+                            <div class="bg-rose-50 p-4 rounded-lg">
+                                <strong class="block text-rose-800 mb-2">2. 학부모의 불신 (과금 유도)</strong>
+                                <p class="text-slate-700 text-sm">"게임형 교육은 결국 아이템 결제만 유도하지 않나요?"<br>상업적 메타버스에 대한 학부모의 피로도가 높습니다.</p>
+                            </div>
+                            <div class="bg-rose-50 p-4 rounded-lg">
+                                <strong class="block text-rose-800 mb-2">3. 오프라인 교육의 한계</strong>
+                                <p class="text-slate-700 text-sm">4만 명이 검증한 DORO 캠프의 감동을 시공간 제약 없이 전달할 방법이 필요합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Solution Column -->
+                    <div class="card p-8 border-t-4 border-indigo-500">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">💡</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">DORO Solution</h3>
+                                <p class="text-sm text-slate-500">차별화된 접근</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <strong class="block text-indigo-800 mb-2">1. Storytelling & O2O</strong>
+                                <p class="text-slate-700 text-sm">웹툰형 세계관(DORO BUS)과 실물 교구의 연동으로 압도적 몰입감을 제공합니다.</p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <strong class="block text-indigo-800 mb-2">2. Clean Metaverse (No In-App Purchase)</strong>
+                                <p class="text-slate-700 text-sm"><strong>"돈으로 살 수 없는 보상"</strong><br>재화는 오직 학습 완료로만 획득 가능하여 학부모 신뢰를 확보합니다.</p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <strong class="block text-indigo-800 mb-2">3. AI Agentic LMS</strong>
+                                <p class="text-slate-700 text-sm">학습 행동 데이터를 분석하여 개인 맞춤형 학습 경로를 자동 추천합니다. (R&D 기술 적용)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            product: `
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">제품 및 서비스 경험 (User Journey)</h2>
+                    <p class="text-slate-500 mt-2 text-lg">실물 교구 조립에서 메타버스 미션 수행까지 이어지는 순환 구조</p>
+                </header>
+
+                <!-- Interactive Journey Stepper -->
+                <div class="bg-white p-8 rounded-xl shadow-sm mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                        <button onclick="updateJourney(1)" id="step-btn-1" class="p-4 rounded-xl bg-indigo-50 border-2 border-indigo-500 transition-all hover:bg-indigo-100">
+                            <div class="text-3xl mb-2">📦</div>
+                            <div class="font-bold text-indigo-700">1. 정기 배송</div>
+                        </button>
+                        <button onclick="updateJourney(2)" id="step-btn-2" class="p-4 rounded-xl bg-white border-2 border-slate-200 transition-all hover:bg-slate-50">
+                            <div class="text-3xl mb-2">🤖</div>
+                            <div class="font-bold text-slate-700">2. 조립 & 학습</div>
+                        </button>
+                        <button onclick="updateJourney(3)" id="step-btn-3" class="p-4 rounded-xl bg-white border-2 border-slate-200 transition-all hover:bg-slate-50">
+                            <div class="text-3xl mb-2">🚌</div>
+                            <div class="font-bold text-slate-700">3. DORO BUS</div>
+                        </button>
+                        <button onclick="updateJourney(4)" id="step-btn-4" class="p-4 rounded-xl bg-white border-2 border-slate-200 transition-all hover:bg-slate-50">
+                            <div class="text-3xl mb-2">🏆</div>
+                            <div class="font-bold text-slate-700">4. 보상 & 성장</div>
+                        </button>
+                    </div>
+
+                    <div id="journey-content" class="mt-8 p-6 bg-slate-50 rounded-xl border border-slate-200 min-h-[180px] flex items-center">
+                        <!-- Dynamic Content -->
+                        <div>
+                            <span class="inline-block px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full mb-3">Step 1</span>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">매월 새로운 스토리와 교구 도착</h3>
+                            <p class="text-slate-600">매월 '도로랜드 러닝 시리즈(DLS)' 키트가 집으로 배송됩니다. 단순한 장난감이 아닌, 웹툰형 스토리북과 연계된 AI/로봇 조립 부품이 포함되어 있어 아이들의 호기심을 자극합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Architecture -->
+                <h3 class="text-xl font-bold text-slate-900 mb-4 mt-8">핵심 기술: AI Agentic LMS</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h4 class="font-bold text-slate-800 mb-2">데이터 수집</h4>
+                        <p class="text-sm text-slate-500">학습 로그, 퀴즈 정답률, 미션 수행 시간 등 행동 데이터 실시간 수집</p>
+                    </div>
+                    <div class="card p-6 text-center border-2 border-indigo-100">
+                        <div class="text-4xl mb-4">🧠</div>
+                        <h4 class="font-bold text-indigo-700 mb-2">AI 분석 (Core)</h4>
+                        <p class="text-sm text-slate-500">성취도 분석 및 취약점 파악 (한양대 공동 R&D 알고리즘 적용)</p>
+                    </div>
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h4 class="font-bold text-slate-800 mb-2">맞춤 추천</h4>
+                        <p class="text-sm text-slate-500">개인별 최적화된 학습 경로(Roadmap) 및 보충 미션 자동 생성</p>
+                    </div>
+                </div>
+            `,
+            market: `
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">시장 진입 및 성장 전략 (Scale-up)</h2>
+                    <p class="text-slate-500 mt-2 text-lg">확실한 수익 모델과 글로벌 타겟팅 전략</p>
+                </header>
+
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Business Model Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4">매출 구조 (Business Model)</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-slate-400 mt-4">* DLS 정기 구독료(월 3~5만원)가 핵심 Cash Cow</p>
+                    </div>
+
+                    <!-- Market Strategy -->
+                    <div class="card p-6 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-slate-800 mb-6">단계별 진입 전략</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0 mt-1">
+                                    <span class="flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-600 font-bold rounded-full">1</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">국내: 캠프 DB 활용 & Lock-in</h4>
+                                    <p class="text-sm text-slate-600 mt-1">기존 4만 명 캠프 참여자를 DLS 구독자로 전환. "캠프의 감동을 집에서" 마케팅 전개.</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="flex-shrink-0 mt-1">
+                                    <span class="flex items-center justify-center w-8 h-8 bg-emerald-100 text-emerald-600 font-bold rounded-full">2</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">해외: 미주 한인 타겟 (Amazon US)</h4>
+                                    <p class="text-sm text-slate-600 mt-1">교육열 높은 미주 한인 학부모 공략. Amazon FBA를 통해 물류 해결 및 신뢰도 확보.</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="flex-shrink-0 mt-1">
+                                    <span class="flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-600 font-bold rounded-full">3</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">확장: 글로벌 협동 콘텐츠</h4>
+                                    <p class="text-sm text-slate-600 mt-1">언어 장벽을 넘어선 '협동 코딩 퀘스트(보스 레이드)' 도입으로 글로벌 커뮤니티화.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget Allocation -->
+                <div class="card p-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">자금 소요 계획 (총 1억원)</h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+            `,
+            team: `
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">팀 역량 및 추진 일정</h2>
+                    <p class="text-slate-500 mt-2 text-lg">검증된 실행력과 기술 파트너십</p>
+                </header>
+
+                <!-- Team Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    <div class="card p-6 text-center border-t-4 border-indigo-600">
+                        <div class="w-16 h-16 bg-slate-200 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl">👨‍💼</div>
+                        <h3 class="font-bold text-lg">김진한 대표</h3>
+                        <p class="text-xs text-indigo-600 font-bold mb-2">로봇공학 전공 / 총괄</p>
+                        <p class="text-sm text-slate-500">4만명 학생 교육 운영 경험<br>현장 니즈 기획 역량 보유</p>
+                    </div>
+                    <div class="card p-6 text-center border-t-4 border-slate-600">
+                        <div class="w-16 h-16 bg-slate-200 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl">💻</div>
+                        <h3 class="font-bold text-lg">핵심 개발팀</h3>
+                        <p class="text-xs text-slate-600 font-bold mb-2">LMS / Metaverse</p>
+                        <p class="text-sm text-slate-500">자체 메타버스 연동 기술<br>콘텐츠 50종 이상 개발 완료</p>
+                    </div>
+                    <div class="card p-6 text-center border-t-4 border-emerald-600">
+                        <div class="w-16 h-16 bg-slate-200 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl">🎓</div>
+                        <h3 class="font-bold text-lg">한양대 ERICA</h3>
+                        <p class="text-xs text-emerald-600 font-bold mb-2">산학협력단 (R&D)</p>
+                        <p class="text-sm text-slate-500">AI 추천 알고리즘 공동 개발<br>기술적 신뢰성 확보</p>
+                    </div>
+                </div>
+
+                <!-- Roadmap Timeline -->
+                <h3 class="text-xl font-bold text-slate-900 mb-6">2026 사업 추진 로드맵</h3>
+                <div class="card p-8">
+                    <div class="relative">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-slate-100 rounded"></div>
+                        
+                        <div class="grid grid-cols-3 gap-4 relative z-10">
+                            <!-- Phase 1 -->
+                            <div class="text-center">
+                                <div class="w-8 h-8 bg-indigo-600 rounded-full mx-auto mb-4 border-4 border-white shadow-sm"></div>
+                                <h4 class="font-bold text-slate-800">협약 ~ 3개월</h4>
+                                <div class="bg-indigo-50 rounded p-3 mt-2 text-sm text-slate-600">
+                                    DORO BUS 베타 안정화<br>DLS Ch.4 콘텐츠 개발
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 2 -->
+                            <div class="text-center">
+                                <div class="w-8 h-8 bg-indigo-400 rounded-full mx-auto mb-4 border-4 border-white shadow-sm"></div>
+                                <h4 class="font-bold text-slate-800">4개월 ~ 6개월</h4>
+                                <div class="bg-indigo-50 rounded p-3 mt-2 text-sm text-slate-600">
+                                    Amazon US 입점<br>물류 프로세스 구축
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 3 -->
+                            <div class="text-center">
+                                <div class="w-8 h-8 bg-emerald-500 rounded-full mx-auto mb-4 border-4 border-white shadow-sm"></div>
+                                <h4 class="font-bold text-slate-800">7개월 ~ 종료</h4>
+                                <div class="bg-emerald-50 rounded p-3 mt-2 text-sm text-slate-600">
+                                    글로벌 서비스 런칭<br>수출 $50k 달성
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        // --- Logic ---
+
+        function loadSection(sectionId) {
+            // Update Nav State
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                if(el.id === `nav-${sectionId}`) el.classList.add('active');
+            });
+
+            // Update Content
+            const contentDiv = document.getElementById('main-content');
+            contentDiv.innerHTML = sections[sectionId];
+
+            // Re-initialize Charts if needed
+            if (sectionId === 'market') {
+                renderMarketCharts();
+            }
+        }
+
+        // Journey Stepper Logic
+        const journeyData = {
+            1: { icon: "📦", title: "매월 새로운 스토리와 교구 도착", desc: "매월 '도로랜드 러닝 시리즈(DLS)' 키트가 집으로 배송됩니다. 단순한 장난감이 아닌, 웹툰형 스토리북과 연계된 AI/로봇 조립 부품이 포함되어 있어 아이들의 호기심을 자극합니다." },
+            2: { icon: "🤖", title: "오프라인 조립 & 코딩 학습", desc: "아이들은 배송된 실물 교구를 직접 손으로 조립하고 블록 코딩을 수행하며 하드웨어적 원리를 익힙니다. 화면 밖에서의 촉각적 경험이 두뇌 발달을 돕습니다." },
+            3: { icon: "🚌", title: "DORO BUS 메타버스 접속", desc: "완성된 로봇을 가지고 메타버스 공간에 접속합니다. AI LMS가 학생의 데이터를 분석하여 맞춤형 미션과 퀴즈를 제공하며, 친구들과 소통할 수 있습니다." },
+            4: { icon: "🏆", title: "보상 획득 & 성장 (No Cash)", desc: "미션을 완료하면 '재화'를 얻습니다. 이 재화는 현금으로 절대 살 수 없습니다. 오직 노력으로 얻은 보상으로만 아바타를 꾸밀 수 있어 성취감이 극대화됩니다." }
+        };
+
+        window.updateJourney = function(step) {
+            // Reset buttons
+            for(let i=1; i<=4; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                if(i === step) {
+                    btn.className = "p-4 rounded-xl bg-indigo-50 border-2 border-indigo-500 transition-all shadow-md transform scale-105";
+                    btn.innerHTML = `<div class="text-3xl mb-2">${journeyData[i].icon}</div><div class="font-bold text-indigo-700">${journeyData[i].title.split(' ')[0]}...</div>`;
+                } else {
+                    btn.className = "p-4 rounded-xl bg-white border-2 border-slate-200 transition-all hover:bg-slate-50 opacity-70 hover:opacity-100";
+                    btn.innerHTML = `<div class="text-3xl mb-2">${journeyData[i].icon}</div><div class="font-bold text-slate-700">Step ${i}</div>`;
+                }
+            }
+            
+            // Update Content
+            const content = document.getElementById('journey-content');
+            content.innerHTML = `
+                <div>
+                    <span class="inline-block px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full mb-3">Step ${step}</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">${journeyData[step].title}</h3>
+                    <p class="text-slate-600 leading-relaxed">${journeyData[step].desc}</p>
+                </div>
+            `;
+        }
+
+        // Chart Rendering
+        function renderMarketCharts() {
+            // Revenue Chart
+            const ctxRev = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'doughnut',
+                data: {
+                    labels: ['DLS 정기 구독 (60%)', '캠프/특강 (20%)', '교구 단품/기타 (20%)'],
+                    datasets: [{
+                        data: [60, 20, 20],
+                        backgroundColor: ['#4f46e5', '#818cf8', '#c7d2fe'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+
+            // Budget Chart
+            const ctxBud = document.getElementById('budgetChart').getContext('2d');
+            new Chart(ctxBud, {
+                type: 'bar',
+                data: {
+                    labels: ['플랫폼 고도화', '콘텐츠(금형) 개발', '글로벌 마케팅', '기타 운영'],
+                    datasets: [{
+                        label: '자금 사용 계획 (%)',
+                        data: [40, 30, 20, 10],
+                        backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#cbd5e1'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 50 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Initial Load
+        loadSection('overview');
+
+    </script>
+</body>
+</html>
