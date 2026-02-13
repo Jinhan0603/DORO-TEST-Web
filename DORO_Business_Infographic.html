@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DORO: 사업 전략 및 재무 모델</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #ffffff; color: #1e293b; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px; /* 그래프 크기 확대 */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #0ea5e9, #2563eb, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #2563eb;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        /* 텍스트 가독성 강화 */
+        p { line-height: 1.6; }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation / Header -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200 py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold tracking-tighter text-slate-900">DORO <span class="text-sm font-normal text-slate-500">재무 모델 & 사업 전략</span></h1>
+            <div class="text-base font-bold text-blue-600">2026 - 2030 로드맵</div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="py-24 text-center relative overflow-hidden bg-slate-50">
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight text-slate-900">
+                데이터 기반 <br/><span class="gradient-text">AI 로봇 에이전트</span>
+            </h2>
+            <p class="text-2xl text-slate-600 max-w-3xl mx-auto mb-12 font-medium">
+                하드웨어와 SaaS가 결합된 에듀테크 플랫폼.<br>
+                생성형 AI 미션과 실시간 데이터 분석으로<br>
+                <strong>미국 프리미엄 홈러닝 시장($2.4B)</strong>을 혁신합니다.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="bg-white px-8 py-4 rounded-full border border-slate-200 shadow-sm">
+                    <span class="text-pink-600 font-bold text-lg">객단가(ARPU) 17만원</span>
+                </div>
+                <div class="bg-white px-8 py-4 rounded-full border border-slate-200 shadow-sm">
+                    <span class="text-blue-600 font-bold text-lg">2년 차 흑자 전환</span>
+                </div>
+                <div class="bg-white px-8 py-4 rounded-full border border-slate-200 shadow-sm">
+                    <span class="text-indigo-600 font-bold text-lg">목표 점유율 0.25%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="container mx-auto px-4 md:px-8 pb-24 grid grid-cols-1 gap-24 mt-12">
+
+        <!-- Section 1: Market Opportunity (TAM/SAM/SOM) -->
+        <section>
+            <div class="mb-10 border-l-8 border-blue-500 pl-6">
+                <h3 class="text-4xl font-bold mb-3 text-slate-900">시장 기회 (Market Opportunity)</h3>
+                <p class="text-xl text-slate-600">
+                    단순 완구가 아닌 <strong>'프리미엄 AI 홈러닝'</strong> 시장으로 정의했습니다. <br>
+                    진입 전략: 교육열과 구매력이 높은($93k) <strong>미국 내 한인(Korean-American) 시장</strong>을 비치헤드(Beachhead)로 선점하여 초기 확산 검증.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <!-- Plotly Treemap Container -->
+                <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100">
+                    <div id="marketTreemap" class="w-full h-96"></div>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="card p-8 rounded-xl bg-white">
+                        <div class="flex justify-between items-end mb-3">
+                            <h4 class="text-2xl font-bold text-slate-800">TAM (전체 시장)</h4>
+                            <span class="text-4xl font-bold text-pink-600">$2.44 B</span>
+                        </div>
+                        <p class="text-lg text-slate-500">미국 6~17세 자녀 가구 × 상위 15% 소득 × 연 $720 지불 의향</p>
+                    </div>
+                    <div class="card p-8 rounded-xl bg-white">
+                        <div class="flex justify-between items-end mb-3">
+                            <h4 class="text-2xl font-bold text-slate-800">SAM (유효 시장)</h4>
+                            <span class="text-4xl font-bold text-purple-600">$1.22 B</span>
+                        </div>
+                        <p class="text-lg text-slate-500">아마존 및 온라인 커뮤니티를 통해 도달 가능한 시장 (TAM의 50%)</p>
+                    </div>
+                    <div class="card p-8 rounded-xl bg-white border-l-8 border-blue-500">
+                        <div class="flex justify-between items-end mb-3">
+                            <h4 class="text-2xl font-bold text-slate-800">Beachhead (초기 거점)</h4>
+                            <span class="text-4xl font-bold text-blue-600">$6.4 M</span>
+                        </div>
+                        <p class="text-lg text-slate-500">미국 내 한인 고소득 가정 얼리어답터 (5% 침투). <br><strong>1년 차 핵심 타깃.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Pricing & Unit Economics (New Graph Request) -->
+        <section>
+            <div class="mb-10 border-l-8 border-green-500 pl-6">
+                <h3 class="text-4xl font-bold mb-3 text-slate-900">가격 정책 및 수익성 분석</h3>
+                <p class="text-xl text-slate-600">
+                    고객의 니즈에 맞춘 이원화된 가격 정책으로 수익을 극대화합니다.<br>
+                    <strong>'교보재 + DLS 결합 상품'</strong>은 월 17만원의 높은 객단가로 강력한 수익 엔진 역할을 합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Pricing Structure Chart -->
+                <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100">
+                    <h4 class="text-2xl font-bold text-slate-800 mb-6 text-center">월 구독 모델별 수익 구조 비교</h4>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="pricingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pricing Details Cards -->
+                <div class="space-y-6">
+                    <div class="card p-8 rounded-xl border-l-8 border-cyan-500">
+                        <h5 class="text-2xl font-bold text-slate-800 mb-2">📦 Basic: 교보재 단독</h5>
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span class="text-4xl font-bold text-slate-900">50,000원</span>
+                            <span class="text-lg text-slate-500">/ 월</span>
+                        </div>
+                        <p class="text-lg text-slate-600">
+                            하드웨어 키트만 정기 배송.<br>
+                            가볍게 시작하고 싶은 입문자용 플랜.
+                        </p>
+                    </div>
+
+                    <div class="card p-8 rounded-xl border-l-8 border-pink-500 bg-pink-50/50">
+                        <h5 class="text-2xl font-bold text-slate-800 mb-2">💎 Premium: 교보재 + DLS (AI)</h5>
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span class="text-4xl font-bold text-pink-600">170,000원</span>
+                            <span class="text-lg text-slate-500">/ 월</span>
+                        </div>
+                        <p class="text-lg text-slate-600">
+                            <strong>주력 상품.</strong> 키트 + AI 맞춤형 미션 + 데이터 리포트.<br>
+                            높은 마진율과 강력한 학습 효과 제공.
+                        </p>
+                    </div>
+
+                    <div class="card p-8 rounded-xl border-l-8 border-indigo-500">
+                        <h5 class="text-2xl font-bold text-slate-800 mb-2">⛺ 오프라인 캠프</h5>
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span class="text-4xl font-bold text-indigo-600">450,000원</span>
+                            <span class="text-lg text-slate-500">/ 1인 (1박 2일)</span>
+                        </div>
+                        <p class="text-lg text-slate-600">
+                            집중 몰입 교육 및 커뮤니티 형성.<br>
+                            브랜드 충성도를 높이는 핵심 이벤트.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Business Roadmap -->
+        <section>
+            <div class="mb-10 border-l-8 border-purple-500 pl-6">
+                <h3 class="text-4xl font-bold mb-3 text-slate-900">성장 로드맵 (Scale-Up)</h3>
+                <p class="text-xl text-slate-600">
+                    아마존(Amazon)을 통해 <strong>초기 현금 흐름(Cash Cow)</strong>을 확보하고,<br>
+                    고마진 <strong>구독 모델(Lock-in)</strong>로 확장하는 단계별 성장 전략입니다.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-100">
+                <div class="chart-container">
+                    <canvas id="roadmapChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <div class="card p-6 rounded-xl text-center bg-white">
+                    <div class="text-4xl mb-3">🚀</div>
+                    <h5 class="text-xl font-bold text-slate-900 mb-2">1년 차 (2026)</h5>
+                    <p class="text-base text-slate-500">시장 검증 & 비치헤드 진입</p>
+                    <div class="mt-4 text-blue-600 font-bold text-xl">판매 500건 / 구독 200명</div>
+                </div>
+                <div class="card p-6 rounded-xl text-center bg-white">
+                    <div class="text-4xl mb-3">📈</div>
+                    <h5 class="text-xl font-bold text-slate-900 mb-2">3년 차 (2028)</h5>
+                    <p class="text-base text-slate-500">성장 가속화 & 흑자 안착</p>
+                    <div class="mt-4 text-blue-600 font-bold text-xl">판매 4,000건 / 구독 1,200명</div>
+                </div>
+                <div class="card p-6 rounded-xl text-center bg-white">
+                    <div class="text-4xl mb-3">🌍</div>
+                    <h5 class="text-xl font-bold text-slate-900 mb-2">5년 차 (2030)</h5>
+                    <p class="text-base text-slate-500">글로벌 스케일업</p>
+                    <div class="mt-4 text-blue-600 font-bold text-xl">판매 1.2만건 / 구독 3,000명</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Financial Projections -->
+        <section>
+            <div class="mb-10 border-l-8 border-pink-500 pl-6">
+                <h3 class="text-4xl font-bold mb-3 text-slate-900">재무 추정 (Financial Projection)</h3>
+                <p class="text-xl text-slate-600">
+                    상향된 객단가(17만원 모델 확대)를 반영한 J-Curve 성장입니다.<br>
+                    1년 차에는 과감한 투자를, 2년 차부터는 가파른 이익 성장을 실현하여 <strong>5년 차 매출 약 85억 원</strong>을 달성합니다.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-100">
+                <div class="chart-container">
+                    <canvas id="financialChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-6 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-8 text-base">
+                <div class="flex-1">
+                    <strong class="text-slate-900 text-lg block mb-2">💡 1년 차 전략 (투자 구간)</strong>
+                    <span class="text-slate-600">초기 금형비, 아마존 FBA 재고 확보, 한인 커뮤니티 마케팅에 집중 투자하여 계획된 적자를 감수합니다. 이는 고객 확보를 위한 필수 투자입니다.</span>
+                </div>
+                <div class="flex-1">
+                    <strong class="text-slate-900 text-lg block mb-2">🏆 5년 차 성과 (이익 실현)</strong>
+                    <span class="text-slate-600">구독 유저 누적 효과와 고마진 프리미엄 플랜(17만원) 확대로 영업이익률이 35% 이상으로 개선됩니다. 현금 흐름이 안정화되는 시기입니다.</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 py-12 text-center mt-12">
+        <p class="text-slate-500 text-base">
+            본 자료는 2026-2030년 추정 재무 제표를 기반으로 작성되었습니다. <br>
+            대외비 문서이므로 무단 배포를 금합니다.
+        </p>
+    </footer>
+
+    <!-- Script Handling Data & Charts -->
+    <script>
+        // --- 유틸리티 함수 ---
+        // 긴 라벨 줄바꿈 처리
+        function splitLabel(label) {
+            if (typeof label !== 'string' || label.length <= 10) return label; // 한글은 더 짧게
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= 12) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Chart.js 툴팁 설정 (필수)
+        Chart.defaults.plugins.tooltip.callbacks.title = function(tooltipItems) {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            } else {
+                return label;
+            }
+        };
+
+        // 색상 팔레트 (선명한 색상, 흰 배경용)
+        const colors = {
+            pink: '#db2777', // vibrant pink
+            purple: '#7c3aed', // vibrant purple
+            blue: '#2563eb', // vibrant blue
+            cyan: '#06b6d4', // vibrant cyan
+            darkBlue: '#1e3a8a',
+            green: '#059669', // emerald green
+            red: '#dc2626',
+            slate: '#64748b'
+        };
+
+        Chart.defaults.color = '#334155'; // Darker text for white bg
+        Chart.defaults.borderColor = '#e2e8f0'; // Light grid lines
+        Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        // --- 차트 1: 시장 규모 트리맵 (Plotly.js) ---
+        const marketData = [{
+            type: "treemap",
+            labels: ["전체 시장 (TAM)", "유효 시장 (SAM)", "비치헤드 (초기거점)", "기타"],
+            parents: ["", "전체 시장 (TAM)", "유효 시장 (SAM)", "전체 시장 (TAM)"],
+            values: [2440, 1220, 6.46, 1219.5], // 백만 달러 단위
+            textinfo: "label+value+percent parent",
+            texttemplate: "<b>%{label}</b><br>$%{value}M",
+            hovertemplate: "<b>%{label}</b><br>규모: $%{value}M<extra></extra>",
+            marker: {
+                colors: ["#eff6ff", "#dbeafe", "#3b82f6", "#f1f5f9"], // 블루 계열 그라데이션
+                line: { width: 1, color: '#94a3b8' }
+            },
+            branchvalues: "total"
+        }];
+
+        const marketLayout = {
+            margin: { t: 0, l: 0, r: 0, b: 0 },
+            paper_bgcolor: "rgba(0,0,0,0)",
+            font: { family: "Noto Sans KR", color: "#1e293b", size: 14 }
+        };
+
+        if (document.getElementById('marketTreemap')) {
+            Plotly.newPlot('marketTreemap', marketData, marketLayout, {displayModeBar: false, responsive: true});
+        }
+
+        // --- 차트 2: 가격 정책 및 수익성 비교 (New Chart) ---
+        const pricingCtx = document.getElementById('pricingChart').getContext('2d');
+        new Chart(pricingCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Basic (교보재 단독)', 'Premium (교보재+DLS)'],
+                datasets: [
+                    {
+                        label: '비용 (원가)',
+                        data: [35000, 45000], // 가정: 3만원 제조 + 5천원 배송 / DLS는 서버/운영비 추가
+                        backgroundColor: '#cbd5e1', // Grey
+                        stack: 'Stack 0',
+                    },
+                    {
+                        label: '이익 (마진)',
+                        data: [15000, 125000], // 50,000 - 35,000 = 15,000 / 170,000 - 45,000 = 125,000
+                        backgroundColor: [colors.cyan, colors.pink],
+                        stack: 'Stack 0',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            afterBody: function(context) {
+                                return `총 가격: ${context[0].parsed.y + context[0].raw + (context[1] ? context[1].raw : 0)}원`; // 단순 합계 아님, 스택 차트 특성상 보여주기용
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '월 구독 상품별 이익 구조 (Premium 전환 시 이익 8배 급증)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: { 
+                        grid: { display: false },
+                        ticks: { font: { size: 14, weight: 'bold' } }
+                    },
+                    y: {
+                        stacked: true,
+                        title: { display: true, text: '금액 (KRW)' },
+                        ticks: { callback: function(value) { return value.toLocaleString() + '원'; } }
+                    }
+                }
+            }
+        });
+
+
+        // --- 차트 3: 로드맵 (Chart.js Grouped Bar) ---
+        const roadmapCtx = document.getElementById('roadmapChart').getContext('2d');
+        new Chart(roadmapCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2026 (1년차)', '2027 (2년차)', '2028 (3년차)', '2029 (4년차)', '2030 (5년차)'],
+                datasets: [
+                    {
+                        label: '아마존 판매량 (개)',
+                        data: [500, 1500, 4000, 8000, 12000],
+                        backgroundColor: colors.cyan,
+                        yAxisID: 'y',
+                        borderRadius: 6
+                    },
+                    {
+                        label: '유료 구독자 (명)',
+                        data: [200, 600, 1200, 2000, 3000],
+                        backgroundColor: colors.purple,
+                        yAxisID: 'y1',
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { labels: { font: { size: 14 } } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 14 } } },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: '판매량 (Unit)' },
+                        grid: { color: '#f1f5f9' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: '구독자 (명)' },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+
+        // --- 차트 4: 재무 추정 (Chart.js Mixed - Recalculated for Higher Pricing) ---
+        // 기존 약 6.5만원 ARPU -> 12~13만원 ARPU (믹스 감안) -> 매출 약 2배 상향 조정
+        const finCtx = document.getElementById('financialChart').getContext('2d');
+        new Chart(finCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2026', '2027', '2028', '2029', '2030'],
+                datasets: [
+                    {
+                        label: '총 매출 (억 원)',
+                        // 기존 값의 약 2.1배 적용 (가격 인상분 반영)
+                        data: [3.3, 11.8, 28.7, 53.3, 85.0], 
+                        backgroundColor: colors.blue,
+                        order: 2,
+                        borderRadius: 6
+                    },
+                    {
+                        label: '영업 이익 (억 원)',
+                        // 마진율 개선 반영
+                        data: [-1.2, 1.5, 8.5, 18.2, 32.1],
+                        borderColor: colors.green,
+                        backgroundColor: colors.green,
+                        type: 'line',
+                        borderWidth: 4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: colors.green,
+                        pointRadius: 6,
+                        order: 1,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 14 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + '억';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 14 } } },
+                    y: {
+                        beginAtZero: false, 
+                        grid: { color: '#f1f5f9' },
+                        title: { display: true, text: '금액 (억 원)' }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
