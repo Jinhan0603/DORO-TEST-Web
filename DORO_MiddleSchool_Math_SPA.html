@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DORO: 중등 자유학기 수학 동기부여 전략</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #1c1917; /* stone-900 */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Chart Container Styling - Mandatory per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar for the list view */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+
+        /* Card Hover Effects */
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid #ea580c; /* orange-600 */
+            color: #ea580c;
+            font-weight: 700;
+        }
+        .tab-btn {
+            color: #78716c;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn:hover:not(.active) {
+            color: #44403c;
+            border-bottom: 3px solid #d6d3d1;
+        }
+
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) as base for a calm, academic yet modern feel. Deep Blue (#1e3a8a) for trust/intelligence (Math/Engineering). Vibrant Orange (#ea580c) for motivation/energy (DORO brand accent). -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: Sets the context - converting the "gap" of free semesters into an "opportunity" using Engineering Identity.
+         2. Philosophy Dashboard: Interactive overview of the 3-step strategy (Experience -> Maintain -> Identity).
+         3. 12-Week Curriculum Explorer: The core interactive module. Users select weeks to see the Engineering Mission <-> Math Concept mapping. A Radar Chart visualizes the skill balance (Engineering vs Math vs Soft Skills) for each phase.
+         4. Math-Engineering Nexus: Tabbed interface connecting abstract concepts (Functions, Geometry, Stats) to concrete robot/coding tasks.
+         5. Routine Simulator: Interactive demos of the "Micro Routine" (Quiz) and "Home Quest" to show parents/teachers exactly what students do.
+         6. Communication Lab: A toggle interface to compare "Student" vs "Parent" feedback styles, demonstrating the pedagogical difference.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Skill Radar Chart (Chart.js):
+            - Goal: Inform/Analyze.
+            - Context: Shows how the focus shifts from Team Building (Soft Skill) to Coding (Engineering) to Data Analysis (Math) over 12 weeks.
+            - Justification: Radar charts are excellent for comparing multi-dimensional attributes like skill sets.
+         2. Interactive Curriculum List:
+            - Goal: Organize/Explore.
+            - Context: Allows users to traverse the 12-week plan without being overwhelmed by a giant table.
+            - Interaction: Click list item -> Update chart and details panel.
+         3. Communication Tone Toggle:
+            - Goal: Compare.
+            - Context: Instantly contrasts the "Supportive Mentor" tone vs. the "Evidence-Based Expert" tone.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-black text-blue-900 tracking-tighter">DORO</span>
+                        <span class="ml-2 text-sm font-bold text-orange-600 uppercase tracking-widest border border-orange-600 px-2 py-0.5 rounded">Strategy</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#philosophy" class="text-stone-500 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium transition">핵심 철학</a>
+                    <a href="#curriculum" class="text-stone-500 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium transition">12주 커리큘럼</a>
+                    <a href="#nexus" class="text-stone-500 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium transition">교과 연결</a>
+                    <a href="#routines" class="text-stone-500 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium transition">데일리 루틴</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold text-stone-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+                시험 없는 중1, <span class="text-blue-900">수학 공백</span>을<br>
+                <span class="text-orange-600">공학적 정체성</span>으로 채우다
+            </h1>
+            <p class="mt-5 max-w-xl mx-auto text-xl text-stone-500">
+                문제풀이 강요가 아닌, <strong>"내 로봇을 움직이기 위한 도구"</strong>로서의 수학.<br>
+                DORO의 중등 자유학기 동기부여 전략을 소개합니다.
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button onclick="document.getElementById('curriculum').scrollIntoView({behavior: 'smooth'})" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-900 hover:bg-blue-800 md:py-4 md:text-lg md:px-10 shadow-lg transition">
+                    전략 커리큘럼 보기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Strategy Philosophy Section -->
+    <section id="philosophy" class="py-16 bg-stone-50 border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-base font-bold text-orange-600 tracking-wide uppercase">Core Philosophy</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-stone-900 sm:text-4xl">
+                    경험에서 정체성까지, 3단계 로드맵
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-stone-500 mx-auto">
+                    단발성 흥미(Trigger)를 넘어 지속적인 학습 동기(Maintenance)와 자아(Identity)를 형성합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white overflow-hidden shadow rounded-2xl interactive-card border-t-4 border-blue-500">
+                    <div class="px-4 py-5 sm:p-6 text-center">
+                        <div class="text-5xl mb-4">🏕️</div>
+                        <h3 class="text-lg leading-6 font-bold text-stone-900">1. 경험 (Camp)</h3>
+                        <div class="mt-2 text-sm text-stone-500">
+                            <p class="font-medium text-blue-600 mb-2">"이거 왜 배워요?" 해결</p>
+                            수학이 공학 미션 해결의 핵심 도구임을 강렬하게 체험하는 단계입니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white overflow-hidden shadow rounded-2xl interactive-card border-t-4 border-orange-500">
+                    <div class="px-4 py-5 sm:p-6 text-center">
+                        <div class="text-5xl mb-4">🏠</div>
+                        <h3 class="text-lg leading-6 font-bold text-stone-900">2. 유지 (Home Quest)</h3>
+                        <div class="mt-2 text-sm text-stone-500">
+                            <p class="font-medium text-orange-600 mb-2">"집에서도 해볼까?" 유도</p>
+                            캠프 직후 3일간의 골든타임. 스스로 관찰하고 변수를 바꿔보는 작은 성공 경험.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white overflow-hidden shadow rounded-2xl interactive-card border-t-4 border-stone-800">
+                    <div class="px-4 py-5 sm:p-6 text-center">
+                        <div class="text-5xl mb-4">🚀</div>
+                        <h3 class="text-lg leading-6 font-bold text-stone-900">3. 정체성 (DLS Project)</h3>
+                        <div class="mt-2 text-sm text-stone-500">
+                            <p class="font-medium text-stone-800 mb-2">"나는 공학 하는 사람"</p>
+                            12주 장기 프로젝트를 통해 수학을 도구로 자유자재로 사용하는 메이커로 성장.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12-Week Curriculum Section -->
+    <section id="curriculum" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10 md:flex md:items-end md:justify-between">
+                <div>
+                    <h2 class="text-base font-bold text-blue-600 tracking-wide uppercase">Curriculum Explorer</h2>
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-stone-900">
+                        [DLS-중등] 자율주행 로봇 트랙
+                    </p>
+                    <p class="mt-4 max-w-2xl text-lg text-stone-500">
+                        주차별 프로젝트 미션과 연결된 중등 수학 개념을 탐색해보세요.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                <!-- Sidebar List -->
+                <div class="lg:col-span-5 xl:col-span-4 bg-stone-50 rounded-xl border border-stone-200 h-[600px] overflow-hidden flex flex-col">
+                    <div class="p-4 bg-stone-100 border-b border-stone-200 font-bold text-stone-700">
+                        주차별 로드맵 (Click to view)
+                    </div>
+                    <div class="overflow-y-auto custom-scrollbar flex-1 p-2 space-y-2" id="week-list">
+                        <!-- JS Generated Content -->
+                    </div>
+                </div>
+
+                <!-- Detail View -->
+                <div class="mt-8 lg:mt-0 lg:col-span-7 xl:col-span-8 flex flex-col">
+                    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 mb-6 flex-1">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <span id="detail-badge" class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    Week 1
+                                </span>
+                                <h3 id="detail-title" class="text-2xl font-bold text-stone-900 mt-2">나의 수학 맵 & 팀 빌딩</h3>
+                            </div>
+                            <div class="text-right hidden sm:block">
+                                <span class="text-xs text-stone-400 uppercase font-bold">Key Math Concept</span>
+                                <p id="detail-math" class="text-xl font-bold text-orange-600">좌표평면</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Text Content -->
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wide border-b border-stone-100 pb-1 mb-2">
+                                        Engineering Mission
+                                    </h4>
+                                    <p id="detail-mission-desc" class="text-stone-600 leading-relaxed">
+                                        내가 만들고 싶은 로봇을 구상하고, 팀 내에서 역할을 분담합니다. 나의 강점과 약점을 좌표 위에 표현해봅니다.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wide border-b border-stone-100 pb-1 mb-2">
+                                        Core Activity
+                                    </h4>
+                                    <ul id="detail-activity" class="list-disc list-inside text-stone-600 space-y-1">
+                                        <li>강점/약점 분석</li>
+                                        <li>팀 역할 분배</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                                    <p class="text-sm font-bold text-orange-800 mb-1">💡 Mentor's Insight</p>
+                                    <p id="detail-insight" class="text-sm text-orange-900">
+                                        "수학은 단순한 계산이 아니라, 나와 세상을 표현하는 언어임을 깨닫는 첫 시간입니다."
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Chart -->
+                            <div class="flex flex-col items-center justify-center bg-stone-50 rounded-xl p-4 border border-stone-100">
+                                <h4 class="text-xs font-bold text-stone-400 uppercase mb-4 w-full text-center">Skill Focus Analysis</h4>
+                                <div class="chart-container">
+                                    <canvas id="radarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Math-Engineering Nexus Section -->
+    <section id="nexus" class="py-16 bg-stone-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-base font-bold text-blue-400 tracking-wide uppercase">The Connection</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white">
+                    교과 개념 ↔ 공학 연결 매핑
+                </p>
+                <p class="mt-4 max-w-2xl text-lg text-stone-400 mx-auto">
+                    아이들이 "이거 왜 배워요?"라고 물을 때, 우리는 이렇게 대답합니다.
+                </p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <button onclick="renderConnection('func')" class="nexus-tab active px-6 py-3 rounded-full border border-blue-500 bg-blue-900 text-white font-bold hover:bg-blue-800 transition" data-target="func">
+                    함수 (Functions)
+                </button>
+                <button onclick="renderConnection('geom')" class="nexus-tab px-6 py-3 rounded-full border border-stone-600 text-stone-300 hover:border-white hover:text-white transition" data-target="geom">
+                    기하 (Geometry)
+                </button>
+                <button onclick="renderConnection('stat')" class="nexus-tab px-6 py-3 rounded-full border border-stone-600 text-stone-300 hover:border-white hover:text-white transition" data-target="stat">
+                    통계 (Statistics)
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div id="nexus-content" class="bg-stone-800 rounded-2xl p-8 border border-stone-700 min-h-[300px]">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Routines & Communication Section -->
+    <section id="routines" class="py-16 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Daily Routines -->
+                <div>
+                    <h3 class="text-2xl font-bold text-stone-900 mb-6 flex items-center">
+                        <span class="bg-orange-100 text-orange-600 p-2 rounded-lg mr-3 text-xl">⏰</span>
+                        매일 10분 마이크로 루틴
+                    </h3>
+                    <p class="text-stone-500 mb-6">시험 대신 '회상'과 '연결'을 돕는 DLS 퀴즈 시스템 체험.</p>
+
+                    <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+                        <div class="flex space-x-2 mb-4">
+                            <span class="px-2 py-1 bg-stone-100 text-stone-600 text-xs font-bold rounded">Day 1: Concept</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded">Day 2: Action</span>
+                            <span class="px-2 py-1 bg-stone-100 text-stone-600 text-xs font-bold rounded">Day 3: Insight</span>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-stone-800 font-bold text-lg">Q. 로봇이 너무 느려. y=ax에서 a를 2에서 5로 바꾸면 그래프 기울기는 어떻게 변할까?</p>
+                        </div>
+                        <div class="space-y-3">
+                            <button onclick="alert('정답! a(기울기)가 커지면 그래프가 더 가파르게 서고, 로봇의 속도 변화도 급격해집니다.')" class="w-full text-left p-3 rounded-lg border border-stone-200 hover:bg-blue-50 hover:border-blue-300 transition text-stone-600">
+                                1. 완만하게 변한다 (속도가 천천히 변한다)
+                            </button>
+                            <button onclick="alert('정답! a(기울기)가 커지면 그래프가 더 가파르게 서고, 로봇의 속도 변화도 급격해집니다.')" class="w-full text-left p-3 rounded-lg border border-stone-200 hover:bg-blue-50 hover:border-blue-300 transition text-stone-600 font-bold">
+                                2. 가파르게 변한다 (속도가 급격히 변한다)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Communication Guide -->
+                <div>
+                    <h3 class="text-2xl font-bold text-stone-900 mb-6 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3 text-xl">💬</span>
+                        소통 가이드 (Feedback Lab)
+                    </h3>
+                    <p class="text-stone-500 mb-6">대상에 따라 달라지는 피드백의 온도를 확인하세요.</p>
+
+                    <div class="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm">
+                        <div class="flex border-b border-stone-200">
+                            <button onclick="switchComm('student')" id="btn-student" class="flex-1 py-3 text-sm font-bold bg-blue-50 text-blue-700 border-b-2 border-blue-700 transition">
+                                학생용 (Support)
+                            </button>
+                            <button onclick="switchComm('parent')" id="btn-parent" class="flex-1 py-3 text-sm font-bold text-stone-500 hover:bg-stone-50 transition">
+                                학부모용 (Evidence)
+                            </button>
+                        </div>
+                        <div class="p-6 min-h-[200px] flex flex-col justify-between">
+                            <p id="comm-text" class="text-stone-800 text-lg leading-relaxed italic">
+                                "OO아, 오늘 로봇 움직임 진짜 멋졌어. 오차 났을 때 포기 안 하고 센서값 다시 확인한 거 봤어? 그게 진짜 엔지니어의 자세야."
+                            </p>
+                            <div id="comm-tags" class="mt-4 flex gap-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold">#과정칭찬</span>
+                                <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-bold">#정체성부여</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-stone-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="text-2xl font-black text-stone-300 tracking-tighter">DORO</span>
+                <p class="text-stone-500 text-sm mt-1">수학이 필요해지는 공학 미션을 만듭니다.</p>
+            </div>
+            <div class="text-stone-400 text-sm">
+                &copy; 2026 DORO Education Strategy.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data ---
+        const curriculumData = [
+            { week: 1, title: "나의 수학 맵 & 팀 빌딩", math: "좌표평면 (중1)", mission: "내가 만들고 싶은 로봇 구상, 나의 강점/약점 분석", activity: ["강점/약점 분석", "팀 역할 분배", "좌표 위에 나 표현하기"], insight: "수학은 단순한 계산이 아니라, 나와 세상을 표현하는 언어입니다.", skills: [20, 20, 90] },
+            { week: 2, title: "로봇의 위치를 숫자로", math: "정수와 유리수", mission: "로봇의 위치 데이터를 로그로 찍어보기", activity: ["센서값(양수/음수) 읽기", "수직선 이해", "데이터 로깅"], insight: "음수(-) 개념이 현실의 '방향'을 나타내는 데 필수적임을 배웁니다.", skills: [40, 30, 50] },
+            { week: 3, title: "기본 주행: 정확한 거리", math: "문자와 식 (변수)", mission: "바퀴 지름과 회전수를 계산해 거리 제어", activity: ["speed, time 변수 설정", "원주율 활용", "명령어 구조화"], insight: "변수(x)를 사용하는 것이 매번 숫자를 바꾸는 것보다 효율적임을 깨닫습니다.", skills: [50, 40, 40] },
+            { week: 4, title: "장애물 회피 알고리즘", math: "부등식의 영역", mission: "거리가 10cm 이하(x < 10)면 멈춰라", activity: ["조건문(if) 작성", "부등식 매핑", "안전거리 확보"], insight: "부등식은 로봇의 '판단 기준'을 만드는 핵심 논리입니다.", skills: [60, 40, 60] },
+            { week: 5, title: "속도와 시간의 제어", math: "함수와 그래프 (중1)", mission: "시간에 따른 속도 변화 그래프 그리기", activity: ["등속/가속 주행", "그래프 해석", "x축(시간)-y축(속도)"], insight: "그래프의 모양이 실제 로봇의 움직임과 어떻게 연결되는지 눈으로 확인합니다.", skills: [60, 60, 40] },
+            { week: 6, title: "라인 트레이싱 최적화", math: "일차함수, 기울기", mission: "변화율(기울기)에 따른 조향각 보정", activity: ["P제어 기초", "비례식 활용", "기울기(a) 튜닝"], insight: "기울기 개념이 제어의 '민감도(Sensitivity)'를 결정합니다.", skills: [80, 70, 30] },
+            { week: 7, title: "오차 수정 (Debugging)", math: "오차, 근사값", mission: "이론값과 실제 주행 거리 차이 분석", activity: ["오차 원인 분석", "근사값 처리", "물리적 마찰 고려"], insight: "수학적 이상과 현실의 차이를 좁혀가는 것이 공학의 본질입니다.", skills: [70, 50, 60] },
+            { week: 8, title: "미션 확장: 최단 경로", math: "피타고라스 정리", mission: "맵의 대각선 거리 계산 및 루트 설계", activity: ["직각삼각형 찾기", "거리 계산", "최적화"], insight: "도형의 성질을 알면 더 빠르고 효율적인 길을 찾을 수 있습니다.", skills: [50, 70, 50] },
+            { week: 9, title: "데이터 분석", math: "통계 (자료의 정리)", mission: "10회 주행 기록 평균/편차 분석", activity: ["평균값 산출", "이상치 제거", "안정성 평가"], insight: "데이터를 통해 '느낌'이 아닌 '팩트'로 성능을 증명합니다.", skills: [30, 80, 40] },
+            { week: 10, title: "최종 미션 (타임어택)", math: "복합 문제해결", mission: "팀별 전략 수립 (속도 vs 안정성)", activity: ["트레이드오프 분석", "최종 코드 튜닝", "전략 회의"], insight: "정답이 없는 문제에서 최선의 해를 찾아가는 종합 예술입니다.", skills: [70, 60, 80] },
+            { week: 11, title: "Showcase & 발표", math: "논리적 말하기", mission: "'내 로봇에 쓰인 수학 3가지' 발표", activity: ["데모 데이", "학부모 초청", "설명하기"], insight: "내가 만든 것을 논리적으로 남에게 설명하는 힘을 기릅니다.", skills: [20, 30, 90] },
+            { week: 12, title: "회고 및 로드맵", math: "진로 설계", mission: "포트폴리오 정리 및 다음 목표 설정", activity: ["노션 정리", "멘토링", "후속 학습 계획"], insight: "이번 프로젝트의 경험이 앞으로의 학습에 어떤 자산이 될지 정의합니다.", skills: [20, 20, 80] }
+        ];
+
+        const nexusData = {
+            func: {
+                title: "함수 (Functions) ↔ 움직임 제어",
+                color: "text-blue-400",
+                bg: "bg-blue-900",
+                concepts: ["y = ax + b", "기울기", "그래프 개형"],
+                apps: [
+                    { t: "게임/로봇 이동", d: "조이스틱 입력값(x)에 따른 캐릭터 이동 속도(y) 제어." },
+                    { t: "센서 보정", d: "센서의 원본 데이터(x)를 우리가 보기 편한 cm단위(y)로 변환하는 보정 공식." },
+                    { t: "민감도(Sensitivity)", d: "기울기(a)가 클수록 로봇이 작은 입력에도 더 급격하게 회전함." }
+                ]
+            },
+            geom: {
+                title: "기하 (Geometry) ↔ 설계와 공간",
+                color: "text-green-400",
+                bg: "bg-green-900",
+                concepts: ["피타고라스", "삼각비", "닮음"],
+                apps: [
+                    { t: "3D 모델링", d: "로봇 팔이 닿을 수 있는 작업 반경 계산 (반지름과 좌표)." },
+                    { t: "구조적 안정성", d: "3D 프린팅 시 무너지지 않는 지지대 각도 계산 (삼각형의 안정성)." },
+                    { t: "거리 측정", d: "초음파 센서와 벽 사이의 각도에 따른 실제 거리 계산 (삼각비)." }
+                ]
+            },
+            stat: {
+                title: "통계 (Statistics) ↔ 의사결정",
+                color: "text-purple-400",
+                bg: "bg-purple-900",
+                concepts: ["평균", "분산", "상관관계"],
+                apps: [
+                    { t: "AI 신뢰도 판단", d: "'이 사진이 고양이일 확률 80%'의 의미 해석과 판단 기준 설정." },
+                    { t: "노이즈 필터링", d: "센서값 중 튀는 값(이상치)을 버리고 평균값으로 주행 안정화." },
+                    { t: "성능 AB 테스트", d: "'A모터가 B모터보다 성능이 좋다'를 데이터로 증명하기." }
+                ]
+            }
+        };
+
+        const commData = {
+            student: {
+                text: `"OO아, 오늘 로봇 움직임 진짜 멋졌어. 오차 났을 때 포기 안 하고 센서값 다시 확인한 거 봤어? 그게 진짜 엔지니어의 자세야. 너는 좌표 감각이 좋아서 나중에 3D 게임 만드는 쪽으로 가면 진짜 잘하겠다."`,
+                tags: ['#과정칭찬', '#정체성부여', '#잠재력발견'],
+                btnColor: 'text-blue-700 bg-blue-50 border-blue-700'
+            },
+            parent: {
+                text: `"어머니, 오늘 OO이가 로봇 주행 미션을 완수했습니다. 점수가 아닌 '포기하지 않고 3번 재시도하여 오차를 줄인 점'이 오늘 가장 큰 성과입니다. 오늘 로봇 속도 계산에 '일차함수 원리'를 스스로 사용했으니, 댁에서도 한번 물어봐주세요."`,
+                tags: ['#구체적증거', '#학습연결', '#불안해소'],
+                btnColor: 'text-stone-700 bg-stone-50 border-stone-600'
+            }
+        };
+
+        // --- Chart Setup ---
+        let radarChart;
+
+        function initChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Engineering (구현)', 'Math (원리)', 'Soft Skill (소통)'],
+                    datasets: [{
+                        label: 'Skill Focus',
+                        data: [20, 20, 90], // Initial data
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue-500 low opacity
+                        borderColor: 'rgba(30, 58, 138, 1)', // Blue-900
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(234, 88, 12, 1)', // Orange-600
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(234, 88, 12, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e5e7eb' },
+                            grid: { color: '#e5e7eb' },
+                            pointLabels: {
+                                font: { size: 12, family: 'Noto Sans KR', weight: 'bold' },
+                                color: '#4b5563'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false, stepSize: 20 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { family: 'Noto Sans KR' },
+                            bodyFont: { family: 'Noto Sans KR' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Logic ---
+
+        function renderCurriculumList() {
+            const container = document.getElementById('week-list');
+            container.innerHTML = curriculumData.map((item, index) => `
+                <div onclick="updateCurriculum(${index})" class="group p-4 bg-white rounded-lg border border-stone-200 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition ${index === 0 ? 'border-l-4 border-l-blue-600 ring-1 ring-blue-100' : ''}" id="week-item-${index}">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-bold text-blue-600 uppercase">Week ${item.week}</span>
+                        <span class="text-xs text-stone-400 group-hover:text-blue-400">View Details →</span>
+                    </div>
+                    <h4 class="font-bold text-stone-800 text-sm group-hover:text-blue-900">${item.title}</h4>
+                    <p class="text-xs text-stone-500 mt-1 truncate">${item.math}</p>
+                </div>
+            `).join('');
+            
+            // Set initial state
+            updateCurriculum(0);
+        }
+
+        function updateCurriculum(index) {
+            const data = curriculumData[index];
+            
+            // UI Highlight
+            document.querySelectorAll('[id^="week-item-"]').forEach(el => {
+                el.classList.remove('border-l-4', 'border-l-blue-600', 'ring-1', 'ring-blue-100', 'bg-blue-50');
+            });
+            const activeItem = document.getElementById(`week-item-${index}`);
+            activeItem.classList.add('border-l-4', 'border-l-blue-600', 'ring-1', 'ring-blue-100', 'bg-blue-50');
+
+            // Update Text
+            document.getElementById('detail-badge').textContent = `Week ${data.week}`;
+            document.getElementById('detail-title').textContent = data.title;
+            document.getElementById('detail-math').textContent = data.math;
+            document.getElementById('detail-mission-desc').textContent = data.mission;
+            document.getElementById('detail-activity').innerHTML = data.activity.map(a => `<li>${a}</li>`).join('');
+            document.getElementById('detail-insight').textContent = `"${data.insight}"`;
+
+            // Update Chart
+            radarChart.data.datasets[0].data = data.skills;
+            radarChart.update();
+        }
+
+        function renderConnection(key) {
+            const data = nexusData[key];
+            const container = document.getElementById('nexus-content');
+            
+            // Tab Styles
+            document.querySelectorAll('.nexus-tab').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-900', 'text-white', 'bg-green-900', 'bg-purple-900', 'border-blue-500');
+                btn.classList.add('text-stone-300', 'border-stone-600');
+            });
+            
+            const activeBtn = document.querySelector(`button[data-target="${key}"]`);
+            activeBtn.classList.remove('text-stone-300', 'border-stone-600');
+            activeBtn.classList.add('active', 'text-white', 'border-white', data.bg.replace('900', '600')); // Use lighter shade for border visually if needed, but keeping simple
+
+            // Content Injection
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="flex items-baseline mb-6">
+                        <h3 class="text-2xl font-bold text-white mr-4">${data.title}</h3>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Math Concepts</span>
+                        <div class="flex gap-2">
+                            ${data.concepts.map(c => `<span class="px-3 py-1 bg-stone-700 text-stone-200 rounded text-sm">${c}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-widest block mb-3">Engineering Applications</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${data.apps.map(app => `
+                                <div class="bg-stone-700/50 p-4 rounded-lg border border-stone-600 hover:border-stone-400 transition">
+                                    <h5 class="font-bold ${data.color} mb-2 text-sm">${app.t}</h5>
+                                    <p class="text-stone-300 text-sm leading-snug">${app.d}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchComm(type) {
+            const data = commData[type];
+            
+            // Buttons
+            const btnS = document.getElementById('btn-student');
+            const btnP = document.getElementById('btn-parent');
+            
+            if(type === 'student') {
+                btnS.className = "flex-1 py-3 text-sm font-bold bg-blue-50 text-blue-700 border-b-2 border-blue-700 transition";
+                btnP.className = "flex-1 py-3 text-sm font-bold text-stone-500 hover:bg-stone-50 transition";
+            } else {
+                btnP.className = "flex-1 py-3 text-sm font-bold bg-stone-50 text-stone-800 border-b-2 border-stone-800 transition";
+                btnS.className = "flex-1 py-3 text-sm font-bold text-stone-500 hover:bg-stone-50 transition";
+            }
+
+            // Content
+            const textEl = document.getElementById('comm-text');
+            const tagContainer = document.getElementById('comm-tags');
+
+            textEl.style.opacity = 0;
+            setTimeout(() => {
+                textEl.innerText = data.text;
+                tagContainer.innerHTML = data.tags.map(t => {
+                    const color = type === 'student' ? 'bg-blue-100 text-blue-800' : 'bg-stone-200 text-stone-700';
+                    return `<span class="px-2 py-1 ${color} text-xs rounded-full font-bold">${t}</span>`;
+                }).join('');
+                textEl.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            renderCurriculumList();
+            renderConnection('func'); // Default tab
+        });
+
+    </script>
+</body>
+</html>
