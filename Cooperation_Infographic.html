@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주관기관 및 협력기관 협력구조 인포그래픽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* Chart Container Utilities */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Constraint for large screens */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Custom connection lines for the Org Chart */
+        .connector-vertical {
+            width: 2px;
+            background-color: #cbd5e1; /* slate-300 */
+            margin: 0 auto;
+        }
+        
+        .connector-branch {
+            border-top: 2px solid #cbd5e1;
+            width: 50%;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .connector-branch::before, .connector-branch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 20px;
+            background-color: #cbd5e1;
+        }
+        
+        .connector-branch::before { left: 0; }
+        .connector-branch::after { right: 0; }
+
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+    </style>
+    <!-- 
+        Palette: "Electric Intelligence"
+        Primary (Lead/Hanyang): #4F46E5 (Indigo)
+        Secondary (RoboWorks/Tech): #06B6D4 (Cyan)
+        Accent (Doro/HR): #F43F5E (Rose)
+        Background: #F8FAFC
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation / Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight">AI·SW 교육 컨소시엄 협력 구조</h1>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#structure" class="hover:text-cyan-400 transition">추진체계</a>
+                <a href="#roles" class="hover:text-cyan-400 transition">역할분담</a>
+                <a href="#governance" class="hover:text-cyan-400 transition">거버넌스</a>
+                <a href="#process" class="hover:text-cyan-400 transition">운영프로세스</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-indigo-800 to-indigo-600 text-white py-16 md:py-24">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-cyan-500 text-xs font-bold tracking-wider mb-4 uppercase">Project Consortium</span>
+            <h2 class="text-3xl md:text-5xl font-black mb-6 leading-tight">
+                유기적 협력을 통한<br>
+                <span class="text-cyan-300">완벽한 사업 수행</span>
+            </h2>
+            <p class="text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-10">
+                주관기관(한양대ERICA)의 강력한 PMO 리더십 아래,<br>
+                현장 전문성(도로)과 기술력(로보웍스)이 결합된 3각 편대 구조
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left max-w-3xl mx-auto">
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20">
+                    <div class="text-cyan-300 font-bold mb-1">✔ 승인 기반 추진</div>
+                    <div class="text-xs opacity-80">재단 승인 후 프로세스 진행 및 실적 인정</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20">
+                    <div class="text-cyan-300 font-bold mb-1">✔ 월별 정기 논의</div>
+                    <div class="text-xs opacity-80">계획/결과 공유 및 상시 모니터링 체계</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20">
+                    <div class="text-cyan-300 font-bold mb-1">✔ 책임 관리·감독</div>
+                    <div class="text-xs opacity-80">주관기관 중심의 예산 교부 및 투명한 정산</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+        <!-- 1. Organizational Structure (Diagram) -->
+        <section id="structure">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-900 mb-4">사업 추진 체계</h3>
+                <p class="text-slate-600 max-w-2xl mx-auto">
+                    과기정통부와 창의재단의 승인을 바탕으로, 주관기관이 사업을 총괄하고 두 개의 전문 협력기관이 각각 인력과 기술을 전담하는 수직·수평적 협력 모델입니다.
+                </p>
+            </div>
+
+            <!-- CSS-based Org Chart -->
+            <div class="relative w-full max-w-4xl mx-auto">
+                
+                <!-- Level 1: Ministry -->
+                <div class="flex justify-center mb-2">
+                    <div class="bg-slate-800 text-white px-8 py-4 rounded-lg shadow-lg text-center w-64 border-l-4 border-slate-500">
+                        <div class="text-xs text-slate-400 font-bold mb-1">발주 및 승인</div>
+                        <div class="font-bold">과기정통부 · 창의재단</div>
+                    </div>
+                </div>
+                
+                <!-- Connector -->
+                <div class="h-8 connector-vertical"></div>
+                
+                <!-- Level 2: Lead Agency -->
+                <div class="flex justify-center mb-2 relative">
+                    <!-- Annotation Box -->
+                    <div class="absolute right-0 top-0 hidden md:block w-48 text-xs text-indigo-600 bg-indigo-50 p-2 rounded border border-indigo-100">
+                        <strong>월별 논의 & 승인</strong><br>
+                        재단 ↔ 주관기관 간<br>긴밀한 소통 채널 가동
+                    </div>
+
+                    <div class="bg-indigo-600 text-white px-8 py-6 rounded-lg shadow-xl text-center w-80 md:w-96 border-b-4 border-indigo-800 z-10">
+                        <div class="text-xs text-indigo-200 font-bold mb-2">주관기관 (PMO / 총괄)</div>
+                        <div class="text-xl font-bold mb-2">한양대학교 ERICA</div>
+                        <div class="text-xs text-indigo-100 leading-relaxed text-left pl-4 border-l border-indigo-400">
+                            • 사업 총괄 및 대외 대응<br>
+                            • 예산 교부/정산 및 품질관리(QA)<br>
+                            • 성과지표 관리 및 모니터링 환류
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connector Branch -->
+                <div class="h-8 connector-vertical"></div>
+                <div class="h-4 connector-branch"></div>
+                
+                <!-- Level 3: Partners -->
+                <div class="grid grid-cols-2 gap-8 md:gap-16 mt-0">
+                    <!-- Partner 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="h-6 connector-vertical w-px bg-slate-300 mb-2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-rose-500 w-full max-w-xs relative overflow-hidden group hover:shadow-xl transition duration-300">
+                            <div class="absolute top-0 right-0 bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-1 rounded-bl">인력/운영</div>
+                            <h4 class="font-bold text-lg text-rose-600 mb-1">(주) 도로</h4>
+                            <p class="text-xs text-slate-400 mb-3">협력기관 1</p>
+                            <ul class="text-sm text-slate-600 space-y-1 list-disc pl-4 marker:text-rose-500">
+                                <li><strong>강사 파견·관리</strong> (예산 집중)</li>
+                                <li>강사/멘토 연수 프로그램</li>
+                                <li>대학생 멘토링단 운영</li>
+                                <li>해커톤 현장 운영</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Partner 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="h-6 connector-vertical w-px bg-slate-300 mb-2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-cyan-500 w-full max-w-xs relative overflow-hidden group hover:shadow-xl transition duration-300">
+                            <div class="absolute top-0 right-0 bg-cyan-100 text-cyan-600 text-[10px] font-bold px-2 py-1 rounded-bl">기술/교구</div>
+                            <h4 class="font-bold text-lg text-cyan-600 mb-1">(주) 로보웍스</h4>
+                            <p class="text-xs text-slate-400 mb-3">협력기관 2</p>
+                            <ul class="text-sm text-slate-600 space-y-1 list-disc pl-4 marker:text-cyan-500">
+                                <li><strong>피지컬 AI 프로그램 개발</strong></li>
+                                <li>IoT 제어보드(ESP32) 공급</li>
+                                <li>분과 수업 현장 운영 총괄</li>
+                                <li>데모데이/페스티벌 기술지원</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connector to Field -->
+                <div class="flex justify-center mt-4">
+                    <div class="h-8 connector-vertical"></div>
+                </div>
+
+                <!-- Level 4: Field -->
+                <div class="flex justify-center">
+                    <div class="bg-slate-100 text-slate-600 px-6 py-3 rounded-full shadow-inner border border-slate-200 text-sm font-medium">
+                        ▼ 현장 운영: 학교/동아리 ↔ 학생팀 ↔ 대학생 멘토(도로)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Detailed Role Analysis (Radar Chart) -->
+        <section id="roles" class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-slate-100">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div>
+                    <h3 class="text-2xl font-bold text-indigo-900 mb-6">기관별 핵심 역량 및 역할 분담</h3>
+                    <p class="text-slate-600 mb-6">
+                        각 기관은 중복 없이 명확하게 역할을 분담하고 있습니다. 
+                        <strong>한양대</strong>는 관리와 기획, 
+                        <strong>도로</strong>는 인적 자원과 현장 케어, 
+                        <strong>로보웍스</strong>는 하드웨어와 기술 지원에 집중하여 
+                        상호 보완적인 시너지를 창출합니다.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="w-3 h-3 rounded-full bg-indigo-600 mt-2 mr-3 flex-shrink-0"></span>
+                            <div>
+                                <strong class="text-indigo-700 block">한양대 ERICA (PMO)</strong>
+                                <span class="text-sm text-slate-500">사업 총괄, 예산 통제권, 성과 및 품질 관리 (QA) 전담</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="w-3 h-3 rounded-full bg-rose-500 mt-2 mr-3 flex-shrink-0"></span>
+                            <div>
+                                <strong class="text-rose-600 block">(주)도로 (People & Care)</strong>
+                                <span class="text-sm text-slate-500">주/보조 강사 파견, 멘토링단 운영, 해커톤 안전관리 등 인력 중심</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="w-3 h-3 rounded-full bg-cyan-500 mt-2 mr-3 flex-shrink-0"></span>
+                            <div>
+                                <strong class="text-cyan-600 block">(주)로보웍스 (Tech & Content)</strong>
+                                <span class="text-sm text-slate-500">피지컬 AI 프로그램 개발, IoT 교구 공급, 기술지원 및 A/S 전담</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization: Radar Chart -->
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <h4 class="text-center text-sm font-bold text-slate-400 mb-4 tracking-wider uppercase">기관별 기능 특화도 분석</h4>
+                    <div class="chart-container">
+                        <canvas id="roleRadarChart"></canvas>
+                    </div>
+                    <div class="text-center mt-2 text-xs text-slate-400">
+                        * 각 축은 해당 업무에 대한 수행 비중과 책임 강도를 나타냄
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Governance Model -->
+        <section id="governance">
+            <h3 class="text-2xl font-bold text-indigo-900 mb-8 text-center">운영 거버넌스 및 협업 프로세스</h3>
+            
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- TF 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-indigo-500 hover:-translate-y-1 transition duration-300">
+                    <div class="text-indigo-500 font-black text-sm mb-2">TF 01</div>
+                    <h4 class="font-bold text-lg mb-3">교육기획 · 평가 TF</h4>
+                    <div class="text-sm text-slate-600 mb-2 font-medium">리드: 한양대 ERICA</div>
+                    <p class="text-xs text-slate-500">운영계획 수립, 성과지표 설계, 모니터링 환류 및 프로그램 표준화 패키징</p>
+                </div>
+                
+                <!-- TF 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-rose-500 hover:-translate-y-1 transition duration-300">
+                    <div class="text-rose-500 font-black text-sm mb-2">TF 02</div>
+                    <h4 class="font-bold text-lg mb-3">현장운영 · 인력 TF</h4>
+                    <div class="text-sm text-slate-600 mb-2 font-medium">리드: (주) 도로</div>
+                    <p class="text-xs text-slate-500">강사/멘토 파견, 교육 품질 관리, 해커톤 현장 운영 및 학습데이터 취합</p>
+                </div>
+                
+                <!-- TF 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-cyan-500 hover:-translate-y-1 transition duration-300">
+                    <div class="text-cyan-500 font-black text-sm mb-2">TF 03</div>
+                    <h4 class="font-bold text-lg mb-3">플랫폼 · 기술지원 TF</h4>
+                    <div class="text-sm text-slate-600 mb-2 font-medium">리드: (주) 로보웍스</div>
+                    <p class="text-xs text-slate-500">IoT 교구 공급/AS, 기술 Q&A 대응, 프로그램 현장 적용 기술 지원</p>
+                </div>
+            </div>
+
+            <!-- Communication Rhythm Bar -->
+            <div class="bg-slate-800 text-white rounded-xl p-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="font-bold text-lg mr-4">Communication<br>Rhythm</div>
+                
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                    <div class="bg-slate-700 rounded px-4 py-2 flex items-center">
+                        <span class="text-cyan-400 font-bold text-xl mr-3">W</span>
+                        <div class="text-xs">
+                            <strong class="block text-slate-200">주간(Weekly) 내부회의</strong>
+                            현장 이슈 해결, 문제학교 집중지원
+                        </div>
+                    </div>
+                    <div class="bg-slate-700 rounded px-4 py-2 flex items-center">
+                        <span class="text-rose-400 font-bold text-xl mr-3">P</span>
+                        <div class="text-xs">
+                            <strong class="block text-slate-200">단계별(Phase) 점검</strong>
+                            분과수업→해커톤 등 전환 시 사전점검
+                        </div>
+                    </div>
+                    <div class="bg-slate-700 rounded px-4 py-2 flex items-center">
+                        <span class="text-indigo-400 font-bold text-xl mr-3">M</span>
+                        <div class="text-xs">
+                            <strong class="block text-slate-200">월간(Monthly) 재단보고</strong>
+                            결과 승인 및 개선요청 반영
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. RACI Matrix & Process Flow -->
+        <section id="process" class="pb-12">
+            <h3 class="text-2xl font-bold text-indigo-900 mb-6">5단계 프로세스별 책임 매트릭스 (RACI)</h3>
+            <p class="text-slate-600 mb-8 max-w-3xl">
+                5단계 운영 프로세스(분과수업 ~ 성과공유)에서 각 기관의 업무 비중과 책임을 시각화했습니다. 
+                <span class="text-indigo-600 font-bold">한양대(PMO)</span>는 전 과정의 최종 책임(Accountable)을 지며, 
+                실무 주도(Responsible)는 단계별 특성에 따라 <span class="text-rose-500 font-bold">도로(인력)</span>와 
+                <span class="text-cyan-600 font-bold">로보웍스(운영/기술)</span>가 분담합니다.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Stacked Bar Chart for RACI Load -->
+                <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+                    <h4 class="font-bold text-slate-700 mb-4">단계별 업무 주도권 및 책임 비중</h4>
+                    <div class="chart-container">
+                        <canvas id="raciChart"></canvas>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-4 justify-center text-xs text-slate-500">
+                        <div class="flex items-center"><span class="w-2 h-2 bg-indigo-600 rounded-full mr-1"></span> 한양대: 총괄/승인</div>
+                        <div class="flex items-center"><span class="w-2 h-2 bg-rose-500 rounded-full mr-1"></span> 도로: 강사/멘토/인력</div>
+                        <div class="flex items-center"><span class="w-2 h-2 bg-cyan-500 rounded-full mr-1"></span> 로보웍스: 기술/운영/행사</div>
+                    </div>
+                </div>
+
+                <!-- Process Highlight List -->
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-slate-400 shadow-sm">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Phase 1</div>
+                        <h5 class="font-bold text-slate-800">분과 수업</h5>
+                        <p class="text-xs text-slate-600 mt-1">도로(강사파견)와 로보웍스(수업운영)의 협업이 가장 활발한 단계</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-slate-400 shadow-sm">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Phase 2</div>
+                        <h5 class="font-bold text-slate-800">해커톤 (예선)</h5>
+                        <p class="text-xs text-slate-600 mt-1">도로가 현장 안전/멘토 관리를, 로보웍스가 운영 시스템을 주도</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-slate-400 shadow-sm">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Phase 3</div>
+                        <h5 class="font-bold text-slate-800">자율 탐구</h5>
+                        <p class="text-xs text-slate-600 mt-1">학생 주도 활동을 도로(대학생 멘토링)가 집중 지원</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-slate-400 shadow-sm">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Phase 4 & 5</div>
+                        <h5 class="font-bold text-slate-800">데모데이 & 성과공유</h5>
+                        <p class="text-xs text-slate-600 mt-1">한양대의 성과 관리와 로보웍스의 행사 운영 역량 결합</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+        <p>&copy; 2024 AI·SW Education Consortium. All rights reserved.</p>
+        <p class="mt-2 text-xs">본 인포그래픽은 사업계획서의 협력 구조 파트를 시각화하기 위해 제작되었습니다.</p>
+    </footer>
+
+    <!-- Chart Scripts -->
+    <script>
+        // === Common Utils for Wrapping & Tooltips ===
+        const wrapLabel = (str, limit = 12) => {
+            if (str.length <= limit) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= limit) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        };
+
+        const commonTooltipOptions = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) return label.join(' ');
+                    return label;
+                }
+            }
+        };
+
+        // === 1. Radar Chart: Role Competency ===
+        const ctxRadar = document.getElementById('roleRadarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: [
+                    '사업총괄/PMO', 
+                    '강사/멘토 인력풀', 
+                    '현장 안전관리', 
+                    'HW/교구 기술', 
+                    '프로그램 개발', 
+                    '성과/품질관리'
+                ].map(l => wrapLabel(l, 10)), // Apply wrapping
+                datasets: [
+                    {
+                        label: '한양대 ERICA',
+                        data: [10, 2, 4, 1, 6, 10], // Strong in PMO & QA
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)', // Indigo
+                        borderColor: '#4F46E5',
+                        pointBackgroundColor: '#4F46E5',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '(주) 도로',
+                        data: [2, 10, 9, 1, 3, 5], // Strong in HR & Field Safety
+                        backgroundColor: 'rgba(244, 63, 94, 0.2)', // Rose
+                        borderColor: '#F43F5E',
+                        pointBackgroundColor: '#F43F5E',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '(주) 로보웍스',
+                        data: [2, 1, 5, 10, 10, 5], // Strong in Tech & Dev
+                        backgroundColor: 'rgba(6, 182, 212, 0.2)', // Cyan
+                        borderColor: '#06B6D4',
+                        pointBackgroundColor: '#06B6D4',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 11, family: "'Noto Sans KR', sans-serif" },
+                            color: '#475569'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        ticks: { display: false } // Hide numbers for cleaner look
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: "'Noto Sans KR', sans-serif" }
+                        }
+                    }
+                }
+            }
+        });
+
+        // === 2. Stacked Bar Chart: RACI Workload ===
+        // Concept: A=1, C=1, R=3 (R indicates active workload)
+        // Data derived from RACI Matrix in source
+        const ctxBar = document.getElementById('raciChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['사전기획', '1.분과수업', '2.해커톤', '3.자율탐구', '4.데모데이/성과'],
+                datasets: [
+                    {
+                        label: '한양대 (총괄/승인)',
+                        data: [4, 2, 2, 2, 4], // Consistent oversight, heavy at start/end
+                        backgroundColor: '#4F46E5', // Indigo
+                        borderRadius: 4
+                    },
+                    {
+                        label: '도로 (인력/멘토)',
+                        data: [1, 5, 5, 5, 2], // Heavy in middle phases (Class, Hackathon, Inquiry)
+                        backgroundColor: '#F43F5E', // Rose
+                        borderRadius: 4
+                    },
+                    {
+                        label: '로보웍스 (기술/운영)',
+                        data: [5, 4, 4, 1, 5], // Heavy in Prep, Class, Demo Day
+                        backgroundColor: '#06B6D4', // Cyan
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: "'Noto Sans KR', sans-serif" } }
+                    },
+                    y: {
+                        display: false, // Hide Y axis as it's relative "Intensity"
+                        grid: { display: false },
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: { display: false }, // Custom legend used in HTML
+                    title: {
+                        display: false
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            }
+        });
+    </script>
+</body>
+</html>
