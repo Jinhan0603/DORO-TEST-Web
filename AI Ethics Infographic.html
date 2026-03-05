@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 윤리: 사람을 고려한 지혜 - 개발자 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background-color: #f1f5f9;
+        }
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1); }
+        .gradient-text { background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-12">
+        
+        <!-- 1. 헤더 & 핵심 메시지 -->
+        <header class="text-center space-y-6">
+            <div class="inline-block bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-bold tracking-wide shadow-md">
+                지식이 아닌 '사람을 고려한 지혜'
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 break-keep leading-tight">
+                AI는 똑똑한 기술이 아니라, <br class="hidden md:block"/>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 gradient-text">사람의 삶에 '영향'을 주는 시스템</span>이다.
+            </h1>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto font-medium break-keep">
+                "윤리 없는 AI는 '서비스'가 아니라 '사고'를 만듭니다.<br>
+                우리가 만드는 건 코드가 아니라 <b>'결정'</b>이고, 그 결정은 누군가에게 결과로 돌아갑니다."
+            </p>
+
+            <!-- AI 영향 경로 도식 -->
+            <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mt-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 w-fit mx-auto">
+                <div class="flex flex-col items-center"><div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-2"><i data-lucide="database" class="w-6 h-6 text-slate-600"></i></div><span class="font-bold text-slate-700">데이터</span></div>
+                <i data-lucide="arrow-right" class="hidden md:block w-6 h-6 text-slate-400"></i><i data-lucide="arrow-down" class="md:hidden w-6 h-6 text-slate-400"></i>
+                <div class="flex flex-col items-center"><div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-2"><i data-lucide="cpu" class="w-6 h-6 text-indigo-600"></i></div><span class="font-bold text-slate-700">AI 모델</span></div>
+                <i data-lucide="arrow-right" class="hidden md:block w-6 h-6 text-slate-400"></i><i data-lucide="arrow-down" class="md:hidden w-6 h-6 text-slate-400"></i>
+                <div class="flex flex-col items-center"><div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mb-2"><i data-lucide="git-merge" class="w-6 h-6 text-rose-600"></i></div><span class="font-bold text-slate-700">결정(판단)</span></div>
+                <i data-lucide="arrow-right" class="hidden md:block w-6 h-6 text-slate-400"></i><i data-lucide="arrow-down" class="md:hidden w-6 h-6 text-slate-400"></i>
+                <div class="flex flex-col items-center"><div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-2"><i data-lucide="users" class="w-6 h-6 text-emerald-600"></i></div><span class="font-bold text-slate-700">사람/사회 (영향)</span></div>
+            </div>
+        </header>
+
+        <!-- 2. 공통적으로 터지는 6가지 사고 유형 -->
+        <section class="bg-slate-900 text-white rounded-3xl p-8 md:p-10 shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <i data-lucide="siren" class="text-rose-400 w-8 h-8"></i>
+                AI 사고는 보통 이 6가지에서 터집니다
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- 1 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-blue-400 font-bold mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i>프라이버시</div>
+                    <p class="text-sm text-slate-300">얼굴, 대화, 위치 등 "나를 설명하는 정보"가 동의 없이 수집/유출</p>
+                </div>
+                <!-- 2 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-purple-400 font-bold mb-2"><i data-lucide="scale-3d" class="w-5 h-5"></i>편향과 차별</div>
+                    <p class="text-sm text-slate-300">데이터가 치우쳐 특정 사람/그룹에게만 오류나 불이익이 집중됨</p>
+                </div>
+                <!-- 3 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-rose-400 font-bold mb-2"><i data-lucide="heart-crack" class="w-5 h-5"></i>안전 (물리적)</div>
+                    <p class="text-sm text-slate-300">AI의 실수가 교통사고, 작물 폐사 등 현실의 '물리적 충돌'로 이어짐</p>
+                </div>
+                <!-- 4 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold mb-2"><i data-lucide="unlock" class="w-5 h-5"></i>보안 취약성</div>
+                    <p class="text-sm text-slate-300">원격 제어가 해킹되어 기기가 조종당하거나 시스템 전체가 마비됨</p>
+                </div>
+                <!-- 5 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold mb-2"><i data-lucide="bot-off" class="w-5 h-5"></i>과신과 허위(환각)</div>
+                    <p class="text-sm text-slate-300">AI도 틀릴 수 있는데, 사람이 AI의 거짓/오류를 '정답'으로 맹신함</p>
+                </div>
+                <!-- 6 -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="flex items-center gap-2 text-slate-400 font-bold mb-2"><i data-lucide="user-x" class="w-5 h-5"></i>책임 회피</div>
+                    <p class="text-sm text-slate-300">사고 발생 시 "AI가 한 일이라 모른다"며 책임을 미루어 신뢰 붕괴</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 4가지 산출물별 분석 (그리드) -->
+        <h2 class="text-3xl font-extrabold text-center text-slate-800 pt-8 border-t border-slate-300">
+            실제 산출물에 적용해보기
+        </h2>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+            <!-- [1] 모빌리티 (현대모비스) -->
+            <div class="bg-white rounded-2xl shadow-md border-t-4 border-rose-500 overflow-hidden card-hover flex flex-col">
+                <div class="p-6 md:p-8 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-rose-100 text-rose-600 rounded-lg"><i data-lucide="car-front" class="w-6 h-6"></i></div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">모빌리티: 안면인식 졸음운전 방지</h3>
+                                <p class="text-sm text-slate-500">현실 예시: 현대모비스 DSW</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Robo AI</span>
+                    </div>
+                    
+                    <!-- 위험 시나리오 -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-rose-600 mb-3 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>윤리 없이 개발하면 생길 문제</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="text-rose-500 font-bold">1.</span> <b>감시 사회화:</b> 안전 목적의 카메라 영상이 근태 감시나 보험료 할증 등 동의 없는 프라이버시 침해로 악용됨</li>
+                            <li class="flex items-start gap-2"><span class="text-rose-500 font-bold">2.</span> <b>인구집단 편향:</b> 안경 낀 사람, 특정 피부톤 등에게만 오탐률이 높아 "특정 사람만 자꾸 졸음으로 찍히는" 불공정 발생</li>
+                            <li class="flex items-start gap-2"><span class="text-rose-500 font-bold">3.</span> <b>치명적 안전사고:</b> 졸음인데 정상으로 판단(False Negative)하여 사고가 나거나, 정상인데 과도하게 경고해(False Positive) 놀라서 사고 유발</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 책임 개발 포인트 -->
+                <div class="bg-rose-50 p-6 border-t border-rose-100">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>책임감 있는 개발 포인트</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 font-medium">
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>데이터 최소화 (영상 비저장)</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>다양한 조건(안경/조명) 오탐 테스트</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>목적 외 사용 엄격 제한</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>위험하지 않은 사람 중심 UX 경고 설계</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- [2] 에듀테크 (듀오링고) -->
+            <div class="bg-white rounded-2xl shadow-md border-t-4 border-blue-500 overflow-hidden card-hover flex flex-col">
+                <div class="p-6 md:p-8 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">에듀테크: 맞춤형 학습 튜터 웹앱</h3>
+                                <p class="text-sm text-slate-500">현실 예시: 듀오링고 Max (GPT-4 연동)</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Code AI</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-blue-600 mb-3 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>윤리 없이 개발하면 생길 문제</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">1.</span> <b>과신(틀린 설명):</b> AI가 그럴듯하게 꾸며낸 거짓말(환각)을 사실로 믿어 오개념이 굳어짐 (검증 불가)</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">2.</span> <b>민감 데이터 노출:</b> 미성년자의 성적표보다 예민한 '학습 습관, 사적 대화' 등이 제3자에게 유출/타겟팅 광고에 악용</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">3.</span> <b>중독 설계(다크패턴):</b> 학습 성취가 아닌 "앱 체류 시간 늘리기"를 목표로 삼아 학생들의 과도한 몰입/중독을 유도</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-6 border-t border-blue-100">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>책임감 있는 개발 포인트 (검증·기록·설명)</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 font-medium">
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>근거 제시 기능 (출처/예시/반례)</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>오류 신고 및 개선 피드백 루프</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>AI와 대화 중임을 명확히 고지(투명성)</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>체류시간이 아닌 '학습 성취'를 KPI로 설정</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- [3] 기후테크 (구글 Flood Hub) -->
+            <div class="bg-white rounded-2xl shadow-md border-t-4 border-emerald-500 overflow-hidden card-hover flex flex-col">
+                <div class="p-6 md:p-8 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-emerald-100 text-emerald-600 rounded-lg"><i data-lucide="globe-2" class="w-6 h-6"></i></div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">기후테크: 기후 위기 글로벌 예측</h3>
+                                <p class="text-sm text-slate-500">현실 예시: 구글 Flood Hub</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Data AI</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-emerald-600 mb-3 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>윤리 없이 개발하면 생길 문제</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">1.</span> <b>예측의 맹신이 낳는 재난:</b> 오차를 숨기고 정답처럼 발표하면, 과잉 대응(패닉/경제 손실)이나 과소 대응(대피 실패)을 초래함</li>
+                            <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">2.</span> <b>지역 불평등:</b> 데이터 인프라가 없는 개발도상국은 예측 정확도가 낮아져, '기술의 빈익빈 부익부' 현상 발생</li>
+                            <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">3.</span> <b>결과 악용:</b> 대시보드에서 '위험'으로 표시된 지역 거주민에게 보험료 폭등, 대출 제한 등 사회경제적 차별 가해짐</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 p-6 border-t border-emerald-100">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>책임감 있는 개발 포인트</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 font-medium">
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>불확실성(확률/오차) 필수 표기</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>기상청/재난 전문가와 데이터 협업</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>보험/대출 등 고위험 결정을 위한 직접 악용 금지</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>큰 사건 후 사후 성능 모니터링 체계</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- [4] 애그테크 (그린랩스 팜모닝) -->
+            <div class="bg-white rounded-2xl shadow-md border-t-4 border-amber-500 overflow-hidden card-hover flex flex-col">
+                <div class="p-6 md:p-8 flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 bg-amber-100 text-amber-600 rounded-lg"><i data-lucide="tractor" class="w-6 h-6"></i></div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">애그테크: 원격 제어 스마트팜</h3>
+                                <p class="text-sm text-slate-500">현실 예시: 그린랩스 팜모닝</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Robo AI</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-amber-600 mb-3 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>윤리 없이 개발하면 생길 문제</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="text-amber-500 font-bold">1.</span> <b>보안 사고(물리적 피해):</b> 해킹으로 온도/환기/물 제어 권한이 넘어가면 한겨울에 온실 천장이 열려 작물이 전멸할 수 있음</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 font-bold">2.</span> <b>데이터 소유권 착취:</b> 농가 경쟁력의 핵심인 '재배 노하우 데이터'를 플랫폼이 동의 없이 독점해 상업적으로 판매/이용</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 font-bold">3.</span> <b>알고리즘 오판과 생계 위협:</b> "AI가 시키는 대로 물을 줬다가" 농사를 망쳐도 책임은 고스란히 농민이 짐</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-amber-50 p-6 border-t border-amber-100">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>책임감 있는 개발 포인트</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 font-medium">
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>서버 마비 대비 수동 조작(비상 스위치) 필수</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>원격 접속 권한 및 로그 추적 (보안 기본)</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>설명 가능한 추천 ("왜 물을 주라고 했는가")</li>
+                        <li class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-slate-400"></i>농민 중심 데이터 소유권 가이드라인 마련</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 4. 결론: 학생용 체크리스트 -->
+        <section class="mt-16 bg-white border border-slate-200 rounded-3xl p-8 md:p-12 shadow-lg relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 text-slate-50 opacity-50"><i data-lucide="list-checks" class="w-64 h-64"></i></div>
+            
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold text-slate-900 mb-2">개발 전 스스로 던져야 할 <span class="text-indigo-600">7가지 질문</span></h2>
+                <p class="text-slate-500 mb-8">안전하고 신뢰받는 프로젝트를 위해 코드 작성 전 반드시 확인하세요.</p>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">1</div>
+                        <p class="text-slate-800 font-medium">이 기능이 직·간접적으로 <b>영향을 주는 사람(이해관계자)</b>은 누구인가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">2</div>
+                        <p class="text-slate-800 font-medium">목적 달성을 위해 <b>꼭 필요한 데이터만 최소한으로</b> 수집하고 있는가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">3</div>
+                        <p class="text-slate-800 font-medium">수집된 데이터는 유출되지 않도록 <b>안전하게 보호</b>되고 있는가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">4</div>
+                        <p class="text-slate-800 font-medium">AI가 <b>특정 사람이나 그룹에게 더 자주 틀리지 않는지</b>(편향) 테스트했는가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">5</div>
+                        <p class="text-slate-800 font-medium">시스템이 오류를 일으키거나 멈췄을 때를 대비한 <b>안전장치(비상 스위치)</b>가 있는가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">6</div>
+                        <p class="text-slate-800 font-medium">AI가 왜 그런 결정을 내렸는지 사용자에게 <b>투명하게 설명(기록/로그)</b>할 수 있는가?</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">7</div>
+                        <p class="text-slate-800 font-medium">출시(배포) 후에도 사람들의 피드백을 받아 <b>계속 모니터링하고 개선</b>할 계획이 있는가?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
