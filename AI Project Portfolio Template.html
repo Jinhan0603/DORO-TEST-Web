@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1-Page AI Project Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* CSS Reset & Global Rules */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll */
+            font-family: 'Lato', sans-serif;
+        }
+        p, h1, h2, h3, h4, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Fixed Dimensions for Presentation Slide */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #f8fafc;
+            border-radius: 16px;
+            overflow: hidden; /* STRICTLY NO SCROLLING */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            transform-origin: center center;
+            flex-shrink: 0;
+        }
+
+        /* 1. Header (Top Navigation Area) */
+        .header {
+            height: 110px; /* slightly reduced to give main content more room */
+            background-color: #0f172a;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #3b82f6;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .header-badge span.school {
+            color: #cbd5e1;
+            font-weight: 700;
+            margin-left: 8px;
+            border-left: 1px solid rgba(147, 197, 253, 0.4);
+            padding-left: 10px;
+            letter-spacing: 0;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+        .header h1 span {
+            color: #60a5fa;
+        }
+        .header p {
+            color: #e2e8f0;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: right;
+            position: relative;
+            z-index: 1;
+        }
+        .header p strong {
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* 2. Main Body Grid (1280x610 available) */
+        .main-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 3fr 5fr 4fr; /* Split layout into 3 columns */
+            gap: 16px;
+            padding: 16px 30px 20px 30px;
+            height: 610px;
+            overflow: hidden;
+        }
+        
+        /* Column Wrappers */
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Card Elements */
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .card-stretch {
+            flex: 1; /* Fills remaining column space */
+        }
+        
+        /* Card Titles */
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .card-title i.blue { color: #3b82f6; }
+        .card-title i.red { color: #ef4444; }
+        .card-title i.indigo { color: #6366f1; }
+        .card-title i.yellow { color: #eab308; }
+        .card-title i.emerald { color: #10b981; }
+
+        /* --- Column 1: Basic Info & Problem --- */
+        .field-group {
+            margin-bottom: 12px;
+        }
+        .field-group:last-child {
+            margin-bottom: 0;
+        }
+        .field-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .field-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            border-bottom: 2px dashed #e2e8f0;
+            padding-bottom: 4px;
+        }
+        .field-value.desc {
+            font-weight: 400;
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .qa-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .qa-box {
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .qa-box.highlight {
+            background-color: #fef2f2;
+            border-color: #fee2e2;
+            margin-top: auto; /* Push to bottom of flex container */
+        }
+        .qa-q {
+            font-size: 11px;
+            font-weight: 900;
+            color: #334155;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .qa-a {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        .qa-box.highlight .qa-q { color: #b91c1c; }
+        .qa-box.highlight .qa-a { color: #ef4444; font-weight: 700;}
+
+        /* --- Column 2: Architecture & Pitch --- */
+        .architecture-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            flex: 1;
+            gap: 12px;
+            overflow: hidden;
+        }
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .pipeline-title {
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pipeline-title.code { color: #4338ca; }
+        .pipeline-title.data { color: #047857; }
+        .pipeline-title.robo { color: #b45309; }
+        
+        .pipe-icon-wrapper {
+            background: rgba(0,0,0,0.05);
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .pipeline-track {
+            display: flex;
+            align-items: stretch;
+            gap: 6px;
+        }
+        .pipe-node {
+            flex: 1;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .pipe-node.focus-code { background: #6366f1; border-color: #4f46e5; flex: 1.5; }
+        .pipe-node.focus-code .node-label { color: #c7d2fe; }
+        .pipe-node.focus-code .node-val { color: #ffffff; }
+        
+        .pipe-node.focus-data { background: #10b981; border-color: #059669; }
+        .pipe-node.focus-data .node-label { color: #a7f3d0; }
+        .pipe-node.focus-data .node-val { color: #ffffff; }
+
+        .pipe-node.focus-robo { background: #f59e0b; border-color: #d97706; }
+        .pipe-node.focus-robo .node-label { color: #fde68a; }
+        .pipe-node.focus-robo .node-val { color: #ffffff; }
+
+        .node-label {
+            font-size: 8px;
+            font-weight: 900;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .node-val {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .pipe-arrow {
+            display: flex;
+            align-items: center;
+            color: #cbd5e1;
+            font-size: 10px;
+        }
+
+        /* Dark Elevator Pitch Card */
+        .pitch-card {
+            background-color: #1e293b;
+            border-color: #0f172a;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .pitch-card::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .pitch-card .card-title {
+            color: #facc15;
+            border-bottom-color: rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 8px;
+        }
+        .pitch-text-box {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .pitch-text {
+            font-size: 13px;
+            font-weight: 400;
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        .pitch-hl {
+            font-weight: 700;
+            border-bottom: 2px solid;
+            padding-bottom: 1px;
+        }
+        .pitch-hl.b-blue { color: #93c5fd; border-color: rgba(147, 197, 253, 0.5); }
+        .pitch-hl.b-green { color: #6ee7b7; border-color: rgba(110, 231, 183, 0.5); }
+        .pitch-hl.b-yellow { color: #fcd34d; border-color: rgba(252, 211, 77, 0.5); }
+
+        /* --- Column 3: Verification, Iteration, Concepts --- */
+        .split-container {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .split-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .split-divider {
+            width: 1px;
+            background-color: #e2e8f0;
+        }
+        .split-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+        .split-title.t-green { color: #059669; }
+        .split-title.t-amber { color: #d97706; }
+        
+        .box-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .b-label { font-size: 9px; font-weight: 900; color: #94a3b8; }
+        .b-text { font-size: 11px; color: #334155; font-weight: 700; }
+        
+        .status-box {
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .status-box.error { background-color: #fef2f2; border: 1px solid #fee2e2; }
+        .status-box.error .b-label { color: #ef4444; }
+        .status-box.error .b-text { color: #b91c1c; }
+        
+        .status-box.success { background-color: #f0fdf4; border: 1px solid #dcfce3; }
+        .status-box.success .b-label { color: #10b981; }
+        .status-box.success .b-text { color: #047857; }
+
+        .tags-area {
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+        .tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .tag {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .speech-box {
+            background-color: #f5f3ff;
+            border: 1px solid #ede9fe;
+            border-radius: 10px;
+            padding: 12px;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .speech-box i.bg-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 24px;
+            color: #ddd6fe;
+        }
+        .speech-title {
+            font-size: 11px;
+            font-weight: 900;
+            color: #6d28d9;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .speech-list {
+            list-style: none;
+        }
+        .speech-list li {
+            font-size: 11px;
+            color: #5b21b6;
+            margin-bottom: 4px;
+            padding-left: 10px;
+            position: relative;
+            line-height: 1.4;
+        }
+        .speech-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-size: 14px;
+            top: -1px;
+        }
+        .speech-list li strong {
+            color: #4c1d95;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container" id="slide1">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-badge">
+                <i class="fa-solid fa-layer-group"></i> 1-PAGE AI PROJECT PORTFOLIO
+                <span class="school">부산광역시교육청 정보영재교육원</span>
+            </div>
+            <h1>올해가 끝날 때, 완벽하게 <span>설명할 수 있는</span> 나만의 프로젝트</h1>
+        </div>
+        <p>단순히 만든 것을 넘어,<br><strong>✔어떻게(구조) ✔왜(문제) ✔해결(검증)</strong> 했는지 기록합니다.</p>
+    </div>
+
+    <!-- Main Grid Content -->
+    <div class="main-grid">
+        
+        <!-- Column 1: Info & Problem -->
+        <div class="col">
+            <!-- Basic Info -->
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-bullseye blue"></i> 1. 프로젝트 기본 정보</div>
+                <div class="field-group">
+                    <span class="field-label">프로젝트 제목</span>
+                    <div class="field-value">AI가 공부 계획을 만들어주는 웹앱</div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">한 줄 설명</span>
+                    <div class="field-value desc">LLM을 활용해 개인 맞춤형 학습 스케줄을 자동 생성하는 웹 서비스</div>
+                </div>
+            </div>
+
+            <!-- Problem Definition -->
+            <div class="card card-stretch">
+                <div class="card-title"><i class="fa-solid fa-circle-question red"></i> 2. 문제 정의 (Problem)</div>
+                <div class="qa-container">
+                    <div class="qa-box">
+                        <span class="qa-q">Q. 어떤 사람이 이 문제를 겪나요?</span>
+                        <div class="qa-a">시험 기간에 계획을 세우는 데 시간이 너무 오래 걸리는 중학생들</div>
+                    </div>
+                    <div class="qa-box">
+                        <span class="qa-q">Q. 기존 방법의 문제는 무엇인가요?</span>
+                        <div class="qa-a">플래너를 손으로 쓰면 일정이 바뀔 때마다 다시 수정해야 해서 불편함</div>
+                    </div>
+                    <div class="qa-box highlight">
+                        <span class="qa-q">💡 왜 이 문제를 해결하고 싶었나요?</span>
+                        <div class="qa-a">공부할 시간을 계획 짜는 데 낭비하지 않고, 효율적으로 학습에만 집중하게 만들고 싶어서</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2: Architecture & Elevator Pitch -->
+        <div class="col">
+            <!-- Architecture -->
+            <div class="card card-stretch">
+                <div class="card-title"><i class="fa-solid fa-sliders indigo"></i> 3. 프로젝트 구조 (Architecture)</div>
+                <div class="architecture-container">
+                    
+                    <!-- Code AI -->
+                    <div class="pipeline">
+                        <div class="pipeline-title code">
+                            <span class="pipe-icon-wrapper"><i class="fa-solid fa-code"></i></span> Code AI 설계 (입력-처리-출력)
+                        </div>
+                        <div class="pipeline-track">
+                            <div class="pipe-node">
+                                <span class="node-label">Input</span>
+                                <span class="node-val">공부 목표/시간</span>
+                            </div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node focus-code">
+                                <span class="node-label">Process (알고리즘)</span>
+                                <span class="node-val">일정 생성 알고리즘</span>
+                            </div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node">
+                                <span class="node-label">Output</span>
+                                <span class="node-val">학습 계획표</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data AI -->
+                    <div class="pipeline" style="opacity: 0.8;">
+                        <div class="pipeline-title data">
+                            <span class="pipe-icon-wrapper"><i class="fa-solid fa-database"></i></span> Data AI 설계 (분석 흐름)
+                        </div>
+                        <div class="pipeline-track">
+                            <div class="pipe-node"><span class="node-label">수집</span><span class="node-val">세계기온</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">전처리</span><span class="node-val">결측치</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node focus-data"><span class="node-label">분석</span><span class="node-val">선형회귀</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">시각화</span><span class="node-val">그래프</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">해석</span><span class="node-val">온도예측</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Robo AI -->
+                    <div class="pipeline" style="opacity: 0.8;">
+                        <div class="pipeline-title robo">
+                            <span class="pipe-icon-wrapper"><i class="fa-solid fa-robot"></i></span> Robo AI 설계 (하드웨어 제어)
+                        </div>
+                        <div class="pipeline-track">
+                            <div class="pipe-node"><span class="node-label">센서</span><span class="node-val">카메라</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">데이터</span><span class="node-val">영상입력</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node focus-robo"><span class="node-label">AI</span><span class="node-val">얼굴인식</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">제어</span><span class="node-val">경고알림</span></div>
+                            <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div class="pipe-node"><span class="node-label">경험</span><span class="node-val">졸음방지</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Elevator Pitch -->
+            <div class="card pitch-card">
+                <div class="card-title"><i class="fa-solid fa-flag"></i> 8. 1-Minute Elevator Pitch</div>
+                <div class="pitch-text-box">
+                    <p class="pitch-text">
+                        "<span class="pitch-hl b-blue">공부 계획 작성의 비효율</span> 문제를 해결하기 위해,<br>
+                        <span class="pitch-hl b-green">LLM API와 일정 생성 알고리즘</span> 기술을 사용해서,<br>
+                        <span class="pitch-hl b-yellow">자동 맞춤형 학습 스케줄러 웹앱</span> 결과를 만들었다."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3: Verification, Iteration, Concepts -->
+        <div class="col">
+            <!-- Verification & Iteration -->
+            <div class="card card-stretch">
+                <div class="split-container">
+                    <!-- Verification -->
+                    <div class="split-col">
+                        <div class="split-title t-green"><i class="fa-solid fa-circle-check"></i> 4. 검증(Test)</div>
+                        <div class="box-info">
+                            <span class="b-label">테스트 과정</span>
+                            <span class="b-text">과목 3개를 입력하고 5번 반복 테스트 진행</span>
+                        </div>
+                        <div class="status-box error" style="margin-top:auto;">
+                            <span class="b-label">발견된 오류</span>
+                            <span class="b-text">API 응답 형태가 깨짐</span>
+                        </div>
+                    </div>
+                    
+                    <div class="split-divider"></div>
+
+                    <!-- Iteration -->
+                    <div class="split-col">
+                        <div class="split-title t-amber"><i class="fa-solid fa-rotate"></i> 5. 개선(Iterate)</div>
+                        <div class="box-info">
+                            <span class="b-label">문제 원인 파악</span>
+                            <span class="b-text">프롬프트의 출력 형식 지정 누락</span>
+                        </div>
+                        <div class="status-box success" style="margin-top:auto;">
+                            <span class="b-label">해결 및 결과</span>
+                            <span class="b-text">JSON 구조로 응답 수정 ➔ 100% 정상 출력</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts & Explain -->
+            <div class="card card-stretch">
+                <div class="card-title"><i class="fa-solid fa-lightbulb yellow"></i> 6. 배운 개념 &nbsp;&nbsp; <i class="fa-solid fa-microphone" style="color:#a855f7;"></i> 7. 설명 역량</div>
+                
+                <div class="tags-area">
+                    <span class="b-label">이번 프로젝트 핵심 기술 태그</span>
+                    <div class="tags-wrapper">
+                        <span class="tag">#알고리즘_설계</span>
+                        <span class="tag">#프롬프트_엔지니어링</span>
+                        <span class="tag">#JSON_데이터처리</span>
+                    </div>
+                </div>
+
+                <div class="speech-box">
+                    <i class="fa-solid fa-microphone bg-icon"></i>
+                    <span class="speech-title">🗣 친구에게 설명한다면?</span>
+                    <ul class="speech-list">
+                        <li>내가 <strong>어떤 문제</strong>를 해결했는지</li>
+                        <li>이 코드가 <strong>어떻게 작동</strong>하는지</li>
+                        <li>오류를 <strong>어떻게 해결</strong>했는지</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function scaleSlide() {
+        const slide = document.getElementById('slide1');
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        // Base dimensions of the slide
+        const baseWidth = 1280;
+        const baseHeight = 720;
+        
+        // Calculate scaling ratios
+        const scaleX = windowWidth / baseWidth;
+        const scaleY = windowHeight / baseHeight;
+        
+        // Use the smaller ratio to fit the entire slide in the viewport, 
+        // multiplied by 0.96 to leave a tiny uniform margin.
+        let scale = Math.min(scaleX, scaleY) * 0.96;
+        
+        // Apply the CSS transform
+        slide.style.transform = `scale(${scale})`;
+    }
+
+    // Run on load and whenever the window resizes
+    window.addEventListener('resize', scaleSlide);
+    window.addEventListener('DOMContentLoaded', scaleSlide);
+    scaleSlide(); // Initial call
+</script>
+
+</body>
+</html>
+```
