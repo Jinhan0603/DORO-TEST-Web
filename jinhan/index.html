@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>김진한 대표 프로필 | DORO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-lang="ko">
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <span class="brand-mark">DORO</span>
+          <p class="brand-copy" data-copy="eyebrow"></p>
+        </div>
+        <div class="actions">
+          <div class="language-toggle" role="tablist" aria-label="Language selection">
+            <button class="lang-btn is-active" type="button" data-lang="ko">KR</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+          <button class="print-btn" type="button" id="printButton">Print / PDF</button>
+        </div>
+      </header>
+
+      <main class="profile-sheet">
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="sheet-label" data-copy="sheetLabel"></p>
+            <h1 class="sheet-title" data-copy="name"></h1>
+            <p class="sheet-subtitle">
+              <span data-copy="titleKo"></span>
+              <span class="subtitle-divider"></span>
+              <span data-copy="titleEn"></span>
+            </p>
+
+            <ul class="contact-list">
+              <li>
+                <span class="contact-label" data-copy="contactEmailLabel"></span>
+                <span class="contact-value" data-copy="email"></span>
+              </li>
+              <li>
+                <span class="contact-label" data-copy="contactPhoneLabel"></span>
+                <span class="contact-value" data-copy="phone"></span>
+              </li>
+              <li>
+                <span class="contact-label" data-copy="contactWebLabel"></span>
+                <span class="contact-value" data-copy="website"></span>
+              </li>
+            </ul>
+
+            <p class="summary" data-copy="profile"></p>
+
+            <div class="tag-row" id="systemTags"></div>
+
+            <section class="platform-block">
+              <p class="platform-title" data-copy="linksTitle"></p>
+              <div class="platform-links" id="platformLinks"></div>
+            </section>
+          </div>
+
+          <figure class="portrait-card">
+            <img id="portraitImage" src="assets/profile-photo.svg" alt="" />
+            <figcaption data-copy="portraitCaption"></figcaption>
+          </figure>
+        </section>
+
+        <section class="stats-panel">
+          <div class="section-head mini">
+            <span data-copy="statsTitle"></span>
+            <p data-copy="statsNote"></p>
+          </div>
+          <div class="highlights-grid" id="highlightCards"></div>
+        </section>
+
+        <section class="content-grid">
+          <div class="content-main">
+            <section class="panel">
+              <div class="section-head">
+                <span data-copy="impactTitle"></span>
+              </div>
+              <ul class="bullet-list" id="impactList"></ul>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <span data-copy="partnershipTitle"></span>
+              </div>
+              <ul class="bullet-list" id="partnershipList"></ul>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <span data-copy="educationTitle"></span>
+              </div>
+              <ul class="bullet-list" id="educationList"></ul>
+            </section>
+          </div>
+
+          <aside class="content-rail">
+            <section class="panel compact-panel">
+              <div class="section-head">
+                <span data-copy="managementTitle"></span>
+              </div>
+              <ul class="bullet-list bullet-list-compact" id="managementList"></ul>
+            </section>
+
+            <section class="panel compact-panel">
+              <div class="section-head">
+                <span data-copy="cesTitle"></span>
+              </div>
+              <ul class="bullet-list bullet-list-compact" id="cesList"></ul>
+            </section>
+          </aside>
+        </section>
+
+        <section class="visual-grid">
+          <figure class="visual-card visual-card-wide">
+            <img id="trainingImage" src="assets/training-scene.svg" alt="" />
+            <figcaption>
+              <strong data-copy="trainingTitle"></strong>
+              <p data-copy="trainingCaption"></p>
+            </figcaption>
+          </figure>
+
+          <div class="visual-column">
+            <figure class="visual-card visual-card-asset">
+              <img id="kitImage" src="assets/kit-photo.svg" alt="" />
+              <figcaption>
+                <strong data-copy="kitTitle"></strong>
+                <p data-copy="kitCaption"></p>
+              </figcaption>
+            </figure>
+
+            <section class="diagram-card">
+              <div class="section-head mini">
+                <span data-copy="diagramTitle"></span>
+              </div>
+              <div class="flow" id="diagramFlow"></div>
+              <p class="diagram-note" data-copy="diagramNote"></p>
+            </section>
+          </div>
+        </section>
+      </main>
+
+      <footer class="sheet-footer" data-copy="footerNote"></footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
