@@ -234,6 +234,11 @@ body::before {
   line-height: 1.72;
 }
 
+.hero-copy {
+  display: grid;
+  align-content: start;
+}
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;
@@ -253,12 +258,24 @@ body::before {
   font-weight: 700;
 }
 
-.platform-block {
+.platform-block,
+.ip-block {
   margin-top: 16px;
   padding: 14px 16px 16px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.68);
   border: 1px solid rgba(23, 33, 39, 0.07);
+}
+
+.ip-summary {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.ip-list {
+  margin-top: 0;
 }
 
 .platform-title {
@@ -274,6 +291,10 @@ body::before {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.rail-links {
+  grid-template-columns: 1fr;
 }
 
 .platform-link {
@@ -411,6 +432,10 @@ body::before {
   gap: 14px;
 }
 
+.platform-panel {
+  padding-bottom: 16px;
+}
+
 .panel,
 .diagram-card {
   padding: 18px;
@@ -474,6 +499,13 @@ body::before {
   width: 100%;
   height: 210px;
   object-fit: cover;
+  object-position: top center;
+}
+
+.gallery-card img[src$=".svg"] {
+  object-fit: contain;
+  background: #ffffff;
+  padding: 10px;
 }
 
 .gallery-card figcaption {
@@ -513,6 +545,7 @@ body::before {
 .visual-card-wide img {
   height: 100%;
   min-height: 346px;
+  object-position: top center;
 }
 
 .visual-card strong {
