@@ -83,6 +83,40 @@ const profileData = {
     kitCaption:
       "교구, 미션 카드, 키트 부품, 리포트 산출물을 함께 제시해 자체 콘텐츠와 실습형 운영 구조가 어떻게 연결되는지 보여줍니다.",
     kitAlt: "DOROLAND 키트 및 프로그램 자산 구성",
+    galleryTitle: "주요 현장 이미지",
+    galleryNote: "해외 협력, CES, 문화교류 캠프, 키트 운영 장면",
+    galleryItems: [
+      {
+        src: "assets/25.04 Participation in the Korean Business Conference in Atlanta, U.S.jpg",
+        title: "해외 비즈니스 현장",
+        caption: "2025 미국 애틀랜타 세계한인비즈니스대회 참가 현장",
+      },
+      {
+        src: "assets/ces1.jpg",
+        title: "CES 2026 현장 1",
+        caption: "국제 전시 현장에서의 제품·운영 메시지 검증 장면",
+      },
+      {
+        src: "assets/ces2.jpg",
+        title: "CES 2026 현장 2",
+        caption: "바이어 및 비즈니스 미팅이 이루어진 현장 이미지",
+      },
+      {
+        src: "assets/cultural exchange camp1.jpg",
+        title: "해외 문화교류 캠프 1",
+        caption: "캠프형 교육 운영과 참여자 경험이 드러나는 장면",
+      },
+      {
+        src: "assets/cultural exchange camp2.jpg",
+        title: "해외 문화교류 캠프 2",
+        caption: "실습과 교류가 결합된 프로그램 현장 장면",
+      },
+      {
+        src: "assets/kit-photo2.png",
+        title: "키트 및 교구 구성",
+        caption: "미션 카드, 부품, 완성 키트까지 포함한 프로그램 자산 구성",
+      },
+    ],
     diagramTitle: "파일럿 운영 흐름",
     diagramSteps: ["기관 협의", "선발·양성", "운영·배치", "검증·환류"],
     diagramNote:
@@ -174,6 +208,40 @@ const profileData = {
     kitCaption:
       "Kits, mission cards, parts, and reporting assets together show how original content and hands-on delivery are packaged as an operational system.",
     kitAlt: "DOROLAND kit and program asset system",
+    galleryTitle: "Field Image Gallery",
+    galleryNote: "International outreach, CES, camp delivery, and kit operations",
+    galleryItems: [
+      {
+        src: "assets/25.04 Participation in the Korean Business Conference in Atlanta, U.S.jpg",
+        title: "International Business Outreach",
+        caption: "Scene from the 2025 World Korean Business Convention in Atlanta",
+      },
+      {
+        src: "assets/ces1.jpg",
+        title: "CES 2026 Scene 1",
+        caption: "On-site validation of product and operating messages at CES 2026",
+      },
+      {
+        src: "assets/ces2.jpg",
+        title: "CES 2026 Scene 2",
+        caption: "Field image from buyer and business meeting activity",
+      },
+      {
+        src: "assets/cultural exchange camp1.jpg",
+        title: "International Camp 1",
+        caption: "Camp-format delivery with hands-on learning and participant engagement",
+      },
+      {
+        src: "assets/cultural exchange camp2.jpg",
+        title: "International Camp 2",
+        caption: "Program scene showing practice, exchange, and group participation",
+      },
+      {
+        src: "assets/kit-photo2.png",
+        title: "Kit and Asset System",
+        caption: "Mission cards, parts, and completed kits presented as one program system",
+      },
+    ],
     diagramTitle: "Pilot Operating Flow",
     diagramSteps: ["Partner Brief", "Select & Train", "Operate & Deploy", "Verify & Loop"],
     diagramNote:
@@ -209,6 +277,8 @@ const copyFields = [
   "trainingCaption",
   "kitTitle",
   "kitCaption",
+  "galleryTitle",
+  "galleryNote",
   "diagramTitle",
   "diagramNote",
   "footerNote",
@@ -359,6 +429,31 @@ function renderStats(lang) {
   });
 }
 
+function renderGallery(lang) {
+  const grid = document.getElementById("galleryGrid");
+  grid.innerHTML = "";
+
+  profileData[lang].galleryItems.forEach((item) => {
+    const figure = document.createElement("figure");
+    figure.className = "gallery-card";
+
+    const image = document.createElement("img");
+    image.src = item.src;
+    image.alt = item.title;
+    image.loading = "lazy";
+
+    const caption = document.createElement("figcaption");
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+    const text = document.createElement("p");
+    text.textContent = item.caption;
+
+    caption.append(title, text);
+    figure.append(image, caption);
+    grid.appendChild(figure);
+  });
+}
+
 function renderFlow(lang) {
   const flow = document.getElementById("diagramFlow");
   flow.innerHTML = "";
@@ -396,6 +491,7 @@ async function renderPage(lang) {
   renderList("educationList", profileData[lang].education);
   renderList("managementList", profileData[lang].managementItems);
   renderList("cesList", profileData[lang].cesItems);
+  renderGallery(lang);
   renderFlow(lang);
   await renderImages(lang);
 
