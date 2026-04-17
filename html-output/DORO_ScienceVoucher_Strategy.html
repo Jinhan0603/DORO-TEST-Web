@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024~2025 과학문화바우처 선정상품 분석과 DORO 신청 전략</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                    },
+                    colors: {
+                        doro: {
+                            blue: '#1E3A8A',
+                            accent: '#F97316',
+                            light: '#EFF6FF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            scroll-behavior: smooth;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem 1rem;
+        }
+
+        .slide {
+            background-color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .slide {
+                aspect-ratio: 16 / 9;
+                padding: 4rem;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .slide {
+                padding: 2rem;
+                min-height: 80vh;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="slide-container">
+
+        <!-- Slide 1: Executive Summary -->
+        <section class="slide fade-in justify-center">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-doro-blue to-doro-accent"></div>
+
+            <div class="flex flex-col items-center text-center space-y-6 max-w-4xl mx-auto">
+                <span class="px-4 py-1.5 bg-doro-light text-doro-blue font-bold rounded-full text-sm tracking-wider">EXECUTIVE SUMMARY</span>
+                <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+                    2024~2025 과학문화바우처<br>
+                    <span class="text-doro-blue">선정상품 분석과 DORO 신청 전략</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mt-4 leading-relaxed font-medium">
+                    "핵심 결론: <strong class="text-gray-900">상품 이원화 전략</strong>이 합격의 열쇠입니다."
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-10">
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-8 flex flex-col items-center text-center shadow-sm">
+                        <div class="w-16 h-16 bg-blue-100 text-doro-blue rounded-full flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">온라인 포인트몰</h3>
+                        <p class="text-gray-600">
+                            순수 강의보다 배송 가능한 <strong>"실물 교구형 상품"</strong> 중심 진입
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-8 flex flex-col items-center text-center shadow-sm">
+                        <div class="w-16 h-16 bg-orange-100 text-doro-accent rounded-full flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">찾아가는 바우처</h3>
+                        <p class="text-gray-600">
+                            현장 경험과 피드백이 남는 <strong>"방문형 체험 프로그램"</strong> 집중
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-gray-400 scroll-indicator">
+                <span class="text-xs font-bold mb-1 tracking-widest">SCROLL</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Slide 2: Market Analysis -->
+        <section class="slide fade-in flex flex-col justify-between">
+            <div>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 bg-doro-blue text-white rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold">온라인몰 시장 분석: <span class="text-doro-accent">실물 재화의 압도적 강세</span></h2>
+                </div>
+
+                <p class="text-gray-600 mb-8 text-lg">
+                    2024년 대비 2025년 통계를 보면, '교육 자체'보다 <strong>'배송·보관이 쉬운 실물 상품'</strong>의 선호도가 뚜렷하게 나타납니다.
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
+                    <!-- Chart 2024 -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold mb-4 text-center">2024년 카테고리 비중 (총 605개)</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm font-semibold mb-1">
+                                    <span>교구(키트) & 도서</span>
+                                    <span>85.8%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-doro-blue h-4 rounded-full" style="width: 85.8%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">키트 280개 + 도서 239개</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm font-semibold mb-1">
+                                    <span>교육·강연 & 공연</span>
+                                    <span>14.2%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-gray-400 h-4 rounded-full" style="width: 14.2%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2025 -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm border-t-4 border-t-doro-accent">
+                        <h3 class="text-xl font-bold mb-4 text-center">2025년 카테고리 비중 (총 622개)</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm font-bold mb-1 text-doro-blue">
+                                    <span>교구(키트) & 도서 (지속 증가)</span>
+                                    <span>95.3%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-doro-blue h-4 rounded-full" style="width: 95.3%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">키트 301개 + 도서 292개</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm font-semibold mb-1 text-red-500">
+                                    <span>교육·강연 (84.2% 급감)</span>
+                                    <span>1.4%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-red-400 h-4 rounded-full" style="width: 1.4%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">강연 단 9개</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-lg mt-8 flex items-start space-x-3 border border-blue-100">
+                <i class="fa-solid fa-lightbulb text-doro-accent mt-1"></i>
+                <p class="text-sm font-medium text-doro-blue">
+                    <strong>인사이트:</strong> 2025년 포인트몰은 사실상 '실물 재화 중심 시장'입니다. 심사 합격과 판매를 위해서는 '추상적 과학지식'보다 <strong>고객이 즉시 가치를 느낄 수 있는 패키지 설계(번들형)</strong>가 필수적입니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 3: TOP 5 Strategy -->
+        <section class="slide fade-in">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-doro-accent text-white rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-ranking-star"></i>
+                </div>
+                <h2 class="text-3xl font-bold">DORO 맞춤 신청 전략: <span class="text-doro-blue">우선순위 TOP 5</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 h-full">
+
+                <!-- Online Mall Track -->
+                <div class="lg:col-span-3 flex flex-col space-y-4">
+                    <h3 class="font-bold text-lg text-doro-blue flex items-center"><i class="fa-solid fa-cart-shopping mr-2"></i> 온라인몰 트랙 (키트 강세 대응)</h3>
+
+                    <div class="bg-white border-2 border-doro-blue/20 p-4 rounded-xl shadow-sm relative hover:border-doro-blue transition-colors flex-1">
+                        <span class="absolute -top-3 -left-3 bg-doro-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow">1</span>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg">AI 로봇팔 미션 키트</h4>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-sm font-semibold">49,000원</span>
+                        </div>
+                        <p class="text-sm text-gray-600">3개의 서보모터 조립 + AI 분류 연동 미션 해결형 키트</p>
+                    </div>
+
+                    <div class="bg-white border-2 border-doro-blue/20 p-4 rounded-xl shadow-sm relative hover:border-doro-blue transition-colors flex-1">
+                        <span class="absolute -top-3 -left-3 bg-doro-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow">2</span>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg">DLS DIMC 스타터 키트</h4>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-sm font-semibold">39,000원</span>
+                        </div>
+                        <p class="text-sm text-gray-600">1인 5만 포인트 최적화 저가 진입형. 디지털·AI 입문</p>
+                    </div>
+
+                    <div class="bg-white border-2 border-doro-blue/20 p-4 rounded-xl shadow-sm relative hover:border-doro-blue transition-colors flex-1">
+                        <span class="absolute -top-3 -left-3 bg-doro-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow">3</span>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg">Safari Lite 로봇제어 패키지</h4>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-sm font-semibold">79,000원</span>
+                        </div>
+                        <p class="text-sm text-gray-600">가족 합산 포인트 타겟. 미션/코딩 결합 스토리형 번들</p>
+                    </div>
+                </div>
+
+                <!-- Visiting Track -->
+                <div class="lg:col-span-2 flex flex-col space-y-4">
+                    <h3 class="font-bold text-lg text-doro-accent flex items-center"><i class="fa-solid fa-truck-fast mr-2"></i> 찾아가는 트랙 (현장형)</h3>
+
+                    <div class="bg-white border-2 border-doro-accent/20 p-4 rounded-xl shadow-sm relative hover:border-doro-accent transition-colors flex-1">
+                        <span class="absolute -top-3 -right-3 bg-doro-accent text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow">4</span>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg">블록으로 움직이는 로봇팔</h4>
+                            <span class="bg-orange-50 px-2 py-1 rounded text-sm text-doro-accent font-semibold">회당 ~70만</span>
+                        </div>
+                        <p class="text-sm text-gray-600">초등 고학년 타겟 명확. 공학 원리를 배우는 현장 체험 특화</p>
+                    </div>
+
+                    <div class="bg-white border-2 border-doro-accent/20 p-4 rounded-xl shadow-sm relative hover:border-doro-accent transition-colors flex-1">
+                        <span class="absolute -top-3 -right-3 bg-doro-accent text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow">5</span>
+                        <div class="flex flex-col mb-2">
+                            <h4 class="font-bold text-lg">로봇팔 진로탐색<br>+ DIMC 진단</h4>
+                            <span class="bg-orange-50 px-2 py-1 w-max rounded text-sm text-doro-accent font-semibold mt-1">회당 ~90만</span>
+                        </div>
+                        <p class="text-sm text-gray-600">단순 체험을 넘어선 역량 진단 연계로 타기관 대비 압도적 차별성 확보</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Slide 4: Operations Model -->
+        <section class="slide fade-in">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-gray-800 text-white rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+                <h2 class="text-3xl font-bold">찾아가는 프로그램 <span class="text-gray-600">표준 운영 모델</span></h2>
+            </div>
+
+            <div class="flex flex-col h-full justify-center space-y-8">
+
+                <!-- Process Flow -->
+                <div class="flex flex-col md:flex-row items-center justify-between bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                    <div class="text-center w-full md:w-1/5 mb-4 md:mb-0">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow mb-2 text-doro-blue"><i class="fa-solid fa-flag"></i></div>
+                        <p class="font-bold">도입</p>
+                        <p class="text-xs text-gray-500">10분</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                    <div class="text-center w-full md:w-1/5 mb-4 md:mb-0">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow mb-2 text-doro-blue"><i class="fa-solid fa-lightbulb"></i></div>
+                        <p class="font-bold">원리 이해</p>
+                        <p class="text-xs text-gray-500">15분</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                    <div class="text-center w-full md:w-1/5 mb-4 md:mb-0">
+                        <div class="w-12 h-12 bg-doro-blue rounded-full flex items-center justify-center mx-auto shadow-lg mb-2 text-white"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <p class="font-bold text-doro-blue">조립/실습</p>
+                        <p class="text-xs text-gray-500">35~50분 (핵심)</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                    <div class="text-center w-full md:w-1/5 mb-4 md:mb-0">
+                        <div class="w-12 h-12 bg-doro-accent rounded-full flex items-center justify-center mx-auto shadow-lg mb-2 text-white"><i class="fa-solid fa-rocket"></i></div>
+                        <p class="font-bold text-doro-accent">미션 수행</p>
+                        <p class="text-xs text-gray-500">20분</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                    <div class="text-center w-full md:w-1/5">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow mb-2 text-gray-600"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <p class="font-bold">정리/피드백</p>
+                        <p class="text-xs text-gray-500">10분</p>
+                    </div>
+                </div>
+
+                <!-- Detail Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 flex items-start space-x-4">
+                        <div class="text-2xl text-gray-400 mt-1"><i class="fa-solid fa-users-gear"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">기본 제원</h4>
+                            <p class="text-sm text-gray-600 mt-1"><strong>권장 인원:</strong> 20~25명/회</p>
+                            <p class="text-sm text-gray-600"><strong>권장 시간:</strong> 90분 표준형, 120분 확장형</p>
+                            <p class="text-sm text-gray-600"><strong>인력:</strong> 주강사 1 + 보조강사 1 (공구 시 TA 1 추가)</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 flex items-start space-x-4">
+                        <div class="text-2xl text-green-500 mt-1"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">안전 및 평가</h4>
+                            <p class="text-sm text-gray-600 mt-1"><strong>안전:</strong> 5V 저전압 중심, 사전 장비점검표 필수</p>
+                            <p class="text-sm text-gray-600"><strong>평가:</strong> 사전/사후 이해도 3문항, 만족도 척도</p>
+                            <p class="text-sm text-gray-600"><strong>산출물:</strong> 결과물 1종 + 활동지 + 피드백 시트</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Roadmap & Risks -->
+        <section class="slide fade-in">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-gradient-to-r from-doro-blue to-purple-600 text-white rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-road"></i>
+                </div>
+                <h2 class="text-3xl font-bold">실행 로드맵 및 <span class="text-transparent bg-clip-text bg-gradient-to-r from-doro-blue to-purple-600">리스크 대응</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
+                <!-- Roadmap -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 border-b pb-2">6주 상품화 로드맵</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-16 font-bold text-doro-blue">1~2주차</div>
+                            <div class="flex-1 bg-blue-50 p-3 rounded-r-lg border-l-4 border-doro-blue">
+                                <p class="font-bold text-sm">상품 4종 선정, 시제품 및 파일럿 테스트</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-16 font-bold text-purple-600">3~4주차</div>
+                            <div class="flex-1 bg-purple-50 p-3 rounded-r-lg border-l-4 border-purple-500">
+                                <p class="font-bold text-sm">제출 서류안 및 사용자 매뉴얼/안전 가이드 제작</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-16 font-bold text-doro-accent">5~6주차</div>
+                            <div class="flex-1 bg-orange-50 p-3 rounded-r-lg border-l-4 border-doro-accent">
+                                <p class="font-bold text-sm">영상 편집/상세페이지 제작 및 최종 제출</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 text-right">* 예상 소요 비용: 390만 ~ 630만 원 (내부 자산 활용 기준)</p>
+                </div>
+
+                <!-- Risk Management -->
+                <div class="bg-gray-800 text-white p-6 rounded-2xl flex flex-col justify-center">
+                    <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fa-solid fa-triangle-exclamation text-yellow-400 mr-2"></i> 핵심 리스크 및 대응 방안</h3>
+
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-bold text-sm text-yellow-200">온라인몰 교육상품 비중 급감 현상</p>
+                                <p class="text-sm opacity-80">모든 온라인몰 제출안에 실물 키트와 결과물을 반드시 포함시킵니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-bold text-sm text-yellow-200">1인 5만원 포인트 구조의 한계</p>
+                                <p class="text-sm opacity-80">3.9만 원 / 4.9만 원 앵커 상품을 전면 배치하고 고가 상품은 번들로 구성합니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-bold text-sm text-yellow-200">제품 파손 및 현장 운영 안정성 리스크</p>
+                                <p class="text-sm opacity-80">출고 전 QC표, 예비부품 3% 동봉 및 강사 표준 매뉴얼을 고도화합니다.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.fade-in').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,9 @@
     "allow": [
       "Read(C:/Users/User/Documents/Jindex/DORO-TEST-Web/*)",
       "Write(C:/Users/User/Documents/Jindex/DORO-TEST-Web/*)",
-      "Edit(C:/Users/User/Documents/Jindex/DORO-TEST-Web/*)"
+      "Edit(C:/Users/User/Documents/Jindex/DORO-TEST-Web/*)",
+      "Bash(python3 *)",
+      "Bash(cmd *)"
     ]
   }
 }
