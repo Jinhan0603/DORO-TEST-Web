@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DORO 결과물 포털</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #F97316;
+      --orange-dark: #EA580C;
+      --orange-light: #FFF7ED;
+      --bg: #F9FAFB;
+      --card-bg: #FFFFFF;
+      --text-primary: #111827;
+      --text-secondary: #6B7280;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-hover: 0 10px 25px rgba(249,115,22,0.15), 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1C1917 0%, #292524 50%, #1C1917 100%);
+      padding: 56px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(249,115,22,0.18) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 20%, rgba(249,115,22,0.10) 0%, transparent 50%);
+    }
+    .hero-inner { position: relative; max-width: 800px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.35);
+      color: #FB923C; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
+      margin-bottom: 18px;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: #F97316; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px); font-weight: 900;
+      color: #FFFFFF; line-height: 1.2; margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+    .hero h1 em { color: var(--orange); font-style: normal; }
+    .hero p { color: #A8A29E; font-size: 15px; line-height: 1.7; }
+
+    .stats-row {
+      display: flex; justify-content: center; gap: 32px; margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 900; color: #FFFFFF; }
+    .stat-num em { color: var(--orange); font-style: normal; }
+    .stat-label { font-size: 11px; color: #78716C; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+    /* ── MAIN ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* ── SEARCH + FILTER ── */
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 28px; }
+    .search-wrap { flex: 1; min-width: 220px; position: relative; }
+    .search-wrap input {
+      width: 100%; padding: 11px 16px 11px 42px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      background: white; font-size: 14px; font-family: inherit;
+      color: var(--text-primary); outline: none; transition: border .2s;
+    }
+    .search-wrap input:focus { border-color: var(--orange); }
+    .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+    .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-tab {
+      padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
+      border: 1.5px solid var(--border); background: white; color: var(--text-secondary);
+      cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit;
+    }
+    .filter-tab:hover { border-color: var(--orange); color: var(--orange); }
+    .filter-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
+    .filter-tab .cnt {
+      display: inline-block; background: rgba(0,0,0,0.1); border-radius: 99px;
+      padding: 1px 7px; font-size: 11px; margin-left: 4px;
+    }
+    .filter-tab.active .cnt { background: rgba(255,255,255,0.25); }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 700; color: var(--text-secondary);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin: 32px 0 16px;
+    }
+    .section-header::before {
+      content: ''; display: block; width: 3px; height: 16px;
+      background: var(--orange); border-radius: 2px;
+    }
+    .section-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 20px;
+      display: flex; flex-direction: column; gap: 12px;
+      text-decoration: none; color: inherit;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--orange-light), transparent);
+      opacity: 0; transition: opacity .2s; pointer-events: none;
+    }
+    .card:hover { border-color: var(--orange); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .card:hover::after { opacity: 1; }
+
+    .card-top { display: flex; align-items: flex-start; gap: 12px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .card-meta { flex: 1; min-width: 0; }
+    .card-category {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;
+    }
+    .card h3 {
+      font-size: 15px; font-weight: 700; line-height: 1.35;
+      color: var(--text-primary); transition: color .15s;
+    }
+    .card:hover h3 { color: var(--orange-dark); }
+    .card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-filename {
+      font-size: 10.5px; color: var(--text-muted); font-family: 'Courier New', monospace;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;
+    }
+    .card-arrow {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--orange-light); color: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s; flex-shrink: 0;
+    }
+    .card:hover .card-arrow { background: var(--orange); color: white; }
+
+    /* ── CATEGORY COLOURS ── */
+    .cat-ai    { background:#EFF6FF; color:#3B82F6; } .icon-ai    { background:#EFF6FF; }
+    .cat-biz   { background:#F0FDF4; color:#16A34A; } .icon-biz   { background:#F0FDF4; }
+    .cat-edu   { background:#FFF7ED; color:#EA580C; } .icon-edu   { background:#FFF7ED; }
+    .cat-road  { background:#F5F3FF; color:#7C3AED; } .icon-road  { background:#F5F3FF; }
+    .cat-collab{ background:#FDF4FF; color:#A21CAF; } .icon-collab{ background:#FDF4FF; }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty svg { margin: 0 auto 12px; opacity: .4; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 24px;
+      border-top: 1px solid var(--border); color: var(--text-muted); font-size: 12px;
+    }
+
+    /* ── HIDDEN ── */
+    [data-hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span></span> DORO 내부 산출물 포털</div>
+    <h1>DORO <em>결과물</em> 아카이브</h1>
+    <p>팀원 누구나 바로 열어볼 수 있는 인터랙티브 결과물 모음입니다.<br>카테고리 필터 또는 검색으로 원하는 자료를 찾아보세요.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num" id="total-cnt"><em>16</em></div><div class="stat-label">전체 문서</div></div>
+      <div class="stat"><div class="stat-num"><em>5</em></div><div class="stat-label">카테고리</div></div>
+      <div class="stat"><div class="stat-num"><em>2026</em></div><div class="stat-label">최신 업데이트</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="결과물 검색 (예: 컨설팅, AI, 사업 계획…)">
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">16</span></button>
+      <button class="filter-tab" data-cat="ai">AI·컨설팅 <span class="cnt" id="cnt-ai">2</span></button>
+      <button class="filter-tab" data-cat="biz">사업·전략 <span class="cnt" id="cnt-biz">4</span></button>
+      <button class="filter-tab" data-cat="edu">교육 프로그램 <span class="cnt" id="cnt-edu">4</span></button>
+      <button class="filter-tab" data-cat="road">Open Road <span class="cnt" id="cnt-road">3</span></button>
+      <button class="filter-tab" data-cat="collab">산학연·협력 <span class="cnt" id="cnt-collab">3</span></button>
+    </div>
+  </div>
+
+  <!-- CARDS DATA (rendered by JS) -->
+  <div id="cards-root"></div>
+
+  <div class="empty" id="empty-state" data-hidden>
+    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+    <p>검색 결과가 없습니다.</p>
+  </div>
+</div>
+
+<footer>© 2026 DORO Co., Ltd. — 내부 산출물 아카이브</footer>
+
+<script>
+const ITEMS = [
+  /* ── AI·컨설팅 ── */
+  {
+    cat: 'ai', icon: '🤖', iconCls: 'icon-ai', catLabel: 'AI·컨설팅', catCls: 'cat-ai',
+    title: 'DORO TEAM AI 업무 자산화 컨설팅 실행안',
+    desc: '4주 커리큘럼으로 구성된 DORO 팀 AI 업무 자산화 실행 계획. 인터랙티브 앱 형식.',
+    file: 'DORO_AI_Action_Plan_App.html'
+  },
+  {
+    cat: 'ai', icon: '🖼️', iconCls: 'icon-ai', catLabel: 'AI·컨설팅', catCls: 'cat-ai',
+    title: 'DORO TEAM AI 업무 자산화 컨설팅 시각화',
+    desc: 'AI 업무 자산화 컨설팅 전 과정을 한눈에 볼 수 있는 인포그래픽 시각화 자료.',
+    file: 'DORO_AI_Consulting_Infographic.html'
+  },
+
+  /* ── 사업·전략 ── */
+  {
+    cat: 'biz', icon: '📊', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
+    title: '강사 관리 전략 대시보드 (IMS)',
+    desc: 'DORO 강사 채용·관리·성과 전략을 시각화한 인터랙티브 대시보드.',
+    file: 'DORO_IMS_Strategy_Dashboard.html'
+  },
+  {
+    cat: 'biz', icon: '📋', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
+    title: 'DORO 사업 계획 (SPA)',
+    desc: 'DORO의 단계별 사업 전략, 수익 모델, 시장 분석을 담은 SPA 형식의 사업계획서.',
+    file: 'DORO_Business_Plan_SPA.html'
+  },
+  {
+    cat: 'biz', icon: '📈', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
+    title: 'DORO 비즈니스 인포그래픽',
+    desc: 'DORO 사업 구조·성장 지표·핵심 수치를 인포그래픽으로 정리한 시각 자료.',
+    file: 'DORO_Business_Infographic.html'
+  },
+  {
+    cat: 'biz', icon: '🏝️', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
+    title: 'DOROLAND 랜딩 페이지',
+    desc: 'DOROLAND 서비스 소개를 위한 마케팅 랜딩 페이지 시안.',
+    file: 'DOROLAND_Landing_Page.html'
+  },
+
+  /* ── 교육 프로그램 ── */
+  {
+    cat: 'edu', icon: '🏫', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
+    title: '2025 DORO 콘텐츠맵 고등부',
+    desc: '2025년 고등부 교육 프로그램 전체 맵. 과목별·학기별 커리큘럼 시각화.',
+    file: '2025 High School Program Map.html'
+  },
+  {
+    cat: 'edu', icon: '📐', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
+    title: '도로 중학교 수학 프로그램 (SPA)',
+    desc: '중학교 수학 커리큘럼을 기반으로 한 인터랙티브 SPA 교육 자료.',
+    file: 'DORO_MiddleSchool_Math_SPA.html'
+  },
+  {
+    cat: 'edu', icon: '🤔', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
+    title: 'AI 윤리 인포그래픽',
+    desc: 'AI 사용 윤리 원칙, 편향·프라이버시·책임 문제를 학습자 친화형으로 시각화.',
+    file: 'AI Ethics Infographic.html'
+  },
+  {
+    cat: 'edu', icon: '📃', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
+    title: 'AI 프로젝트 포트폴리오 템플릿',
+    desc: '학생이 AI 프로젝트를 기록·발표할 수 있는 표준화된 포트폴리오 템플릿.',
+    file: 'AI Project Portfolio Template.html'
+  },
+
+  /* ── Open Road ── */
+  {
+    cat: 'road', icon: '💡', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
+    title: 'Open Road 전략적 IP 분석',
+    desc: 'Open Road 프로젝트의 지식재산(IP) 현황·전략 방향을 인포그래픽으로 분석.',
+    file: 'DORO_Open_Road_Infographic.html'
+  },
+  {
+    cat: 'road', icon: '🏗️', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
+    title: 'Open Road 아키텍처 인포그래픽',
+    desc: 'Open Road 시스템 아키텍처 전체 구조를 시각화한 기술 인포그래픽.',
+    file: 'Open Road Architecture Infographic.html'
+  },
+  {
+    cat: 'road', icon: '🦾', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
+    title: 'Open Road 딥테크 사업 계획',
+    desc: 'Open Road 딥테크 사업화 전략·기술 로드맵·투자 포인트를 담은 인포그래픽.',
+    file: 'Open Road Deep Tech Business Plan Infographic.html'
+  },
+
+  /* ── 산학연·협력 ── */
+  {
+    cat: 'collab', icon: '🔬', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
+    title: '2026 산학연 콜라보 계획',
+    desc: '2026년 산학연 연계 AI Agent 및 LMS 협력 프로젝트 전략 인포그래픽.',
+    file: 'AI_Agent_LMS_Infographic.html'
+  },
+  {
+    cat: 'collab', icon: '🤝', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
+    title: '협력 인포그래픽',
+    desc: 'DORO의 기관·기업 협력 구조와 파트너십 전략을 한눈에 볼 수 있는 시각 자료.',
+    file: 'Cooperation_Infographic.html'
+  },
+  {
+    cat: 'collab', icon: '⭐', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
+    title: 'AI Together',
+    desc: 'AI 기술 협력 비전과 함께하는 미래 교육·사업 방향을 담은 시각화 자료.',
+    file: 'AI together.html'
+  },
+];
+
+const SECTIONS = [
+  { cat: 'ai',    label: 'AI · 컨설팅' },
+  { cat: 'biz',   label: '사업 · 전략' },
+  { cat: 'edu',   label: '교육 프로그램' },
+  { cat: 'road',  label: 'Open Road' },
+  { cat: 'collab',label: '산학연 · 협력' },
+];
+
+function renderCards(filter = 'all', query = '') {
+  const q = query.trim().toLowerCase();
+  const root = document.getElementById('cards-root');
+  root.innerHTML = '';
+  let totalVisible = 0;
+
+  SECTIONS.forEach(({ cat, label }) => {
+    if (filter !== 'all' && filter !== cat) return;
+    const items = ITEMS.filter(it => {
+      if (it.cat !== cat) return false;
+      if (!q) return true;
+      return (it.title + it.desc + it.file + it.catLabel).toLowerCase().includes(q);
+    });
+    if (!items.length) return;
+    totalVisible += items.length;
+
+    const sec = document.createElement('div');
+    sec.innerHTML = `<div class="section-header">${label}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    items.forEach(it => {
+      grid.innerHTML += `
+        <a href="${it.file}" class="card" data-cat="${it.cat}">
+          <div class="card-top">
+            <div class="card-icon ${it.iconCls}">${it.icon}</div>
+            <div class="card-meta">
+              <span class="card-category ${it.catCls}">${it.catLabel}</span>
+              <h3>${it.title}</h3>
+            </div>
+          </div>
+          <p class="card-desc">${it.desc}</p>
+          <div class="card-footer">
+            <span class="card-filename">${it.file}</span>
+            <span class="card-arrow">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+              </svg>
+            </span>
+          </div>
+        </a>`;
+    });
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+
+  const empty = document.getElementById('empty-state');
+  if (totalVisible === 0) {
+    empty.removeAttribute('data-hidden');
+  } else {
+    empty.setAttribute('data-hidden', '');
+  }
+}
+
+// Filter tabs
+let activeFilter = 'all';
+let activeQuery = '';
+
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.cat;
+    renderCards(activeFilter, activeQuery);
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  activeQuery = e.target.value;
+  renderCards(activeFilter, activeQuery);
+});
+
+renderCards();
+</script>
+</body>
+</html>
