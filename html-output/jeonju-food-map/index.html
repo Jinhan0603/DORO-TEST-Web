@@ -158,10 +158,50 @@
   .clear-btn.visible { display: block; }
   .clear-btn:hover { color: var(--vermilion); }
 
+  /* 필터 토글 바 */
+  .filter-toggle-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 28px;
+    background: var(--paper-dim); border: 0;
+    border-bottom: 1px solid var(--line-soft);
+    border-top: 1px solid var(--line-soft);
+    width: 100%; cursor: pointer;
+    transition: background .12s;
+    flex-shrink: 0;
+  }
+  .filter-toggle-bar:hover { background: var(--paper-deep); }
+  .ftb-left { display: flex; align-items: center; gap: 8px; }
+  .ftb-text {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--ink-soft);
+  }
+  .ftb-badge {
+    display: none; align-items: center; justify-content: center;
+    min-width: 17px; height: 17px; padding: 0 5px;
+    background: var(--vermilion); color: #fff;
+    border-radius: 999px; font-size: 10px;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .ftb-badge.visible { display: inline-flex; }
+  .ftb-chevron {
+    width: 14px; height: 14px; color: var(--ink-mute);
+    transition: transform .22s ease; flex-shrink: 0;
+  }
+  .filter-toggle-bar.open .ftb-chevron { transform: rotate(180deg); }
+
   /* 필터 */
   .filters {
     padding: 12px 28px 8px;
     border-bottom: 1px solid var(--line-soft);
+    overflow: hidden;
+    max-height: 600px;
+    transition: max-height .3s ease, padding .3s ease, opacity .25s ease;
+    opacity: 1;
+  }
+  .filters.collapsed {
+    max-height: 0;
+    padding-top: 0; padding-bottom: 0;
+    opacity: 0;
   }
   .filter-section { margin-bottom: 12px; }
   .filter-label {
@@ -323,6 +363,34 @@
   /* ================== 지도 ================== */
   .map-wrap { position: relative; background: #e3dcc9; overscroll-behavior: none; }
   #map { width: 100%; height: 100%; }
+
+  /* 지역 레이블 */
+  .area-label { background: transparent !important; border: none !important; }
+  .area-label-inner {
+    font-family: "Gowun Batang", serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--ink-soft);
+    background: rgba(241,233,217,.82);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+    letter-spacing: -.2px;
+    box-shadow: 0 1px 4px rgba(40,30,20,.12);
+    transition: all .2s;
+    cursor: default;
+    user-select: none;
+  }
+  .area-label.active .area-label-inner {
+    color: var(--vermilion);
+    background: rgba(241,233,217,.97);
+    border-color: var(--vermilion);
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(158,42,43,.25);
+  }
+  .area-label.dimmed .area-label-inner {
+    opacity: .35;
+  }
 
   /* 지도 톤 조정 (한지 느낌으로) */
   .leaflet-tile-pane { filter: sepia(.25) saturate(.85) brightness(.96) contrast(1.02); }
@@ -489,9 +557,12 @@
     .panel.hidden { transform: translateY(100%); }
     .mobile-toggle { display: block; }
     .map-wrap { grid-row: 1; grid-column: 1; }
-    .header { padding: 20px 22px 16px; }
-    h1.title { font-size: 28px; }
-    .search-wrap, .filters, .meta-bar, .entry { padding-left: 22px; padding-right: 22px; }
+    .header { padding: 14px 22px 12px; }
+    h1.title { font-size: 24px; margin: 4px 0 2px; }
+    .title-en { font-size: 12px; }
+    .subtitle { display: none; }
+    .search-wrap { padding: 10px 22px 8px; }
+    .filter-toggle-bar, .filters, .meta-bar, .entry { padding-left: 22px; padding-right: 22px; }
     .map-legend { bottom: 74px; left: 12px; font-size: 10px; padding: 10px 12px; }
   }
 
@@ -535,7 +606,15 @@
       </div>
     </div>
 
-    <div class="filters">
+    <button class="filter-toggle-bar open" id="filter-toggle-bar">
+      <span class="ftb-left">
+        <span class="ftb-text">카테고리 · 지역 필터</span>
+        <span class="ftb-badge" id="ftb-badge">0</span>
+      </span>
+      <svg class="ftb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+
+    <div class="filters" id="filters-panel">
       <div class="filter-section">
         <div class="filter-label">카테고리 Category</div>
         <div class="chips" id="cat-chips"></div>
@@ -595,6 +674,19 @@
     { key: "카페빵",    label: "카페·빵",    color: "#c07c8e" },
     { key: "아시아기타",label: "아시아·기타",color: "#4a6b4e" },
   ];
+
+  const AREA_CENTERS = {
+    "중화산동":  { lat: 35.8195, lng: 127.1228, zoom: 15, r: 600 },
+    "덕진·금암": { lat: 35.8458, lng: 127.1468, zoom: 15, r: 700 },
+    "고사·경원": { lat: 35.8193, lng: 127.1455, zoom: 15, r: 500 },
+    "한옥마을":  { lat: 35.8143, lng: 127.1531, zoom: 16, r: 450 },
+    "신시가지":  { lat: 35.8363, lng: 127.1192, zoom: 15, r: 650 },
+    "효자·시청": { lat: 35.8293, lng: 127.1078, zoom: 15, r: 700 },
+    "아중리":    { lat: 35.8521, lng: 127.1592, zoom: 15, r: 500 },
+    "중앙시장":  { lat: 35.8218, lng: 127.1478, zoom: 16, r: 380 },
+    "서신동":    { lat: 35.8313, lng: 127.1298, zoom: 15, r: 500 },
+    "하가지구":  { lat: 35.7952, lng: 127.1068, zoom: 15, r: 480 },
+  };
 
   const state = {
     q: "",
@@ -661,6 +753,70 @@
     markerMap.set(r.id, m);
   });
 
+  // ============ 지역 오버레이 (원 + 레이블) ============
+  const areaCircleMap = new Map();
+  const areaLabelMap  = new Map();
+
+  Object.entries(AREA_CENTERS).forEach(([name, { lat, lng, r }]) => {
+    const circle = L.circle([lat, lng], {
+      radius: r,
+      color: "#9e2a2b", fillColor: "#9e2a2b",
+      fillOpacity: .04, weight: 1.2,
+      dashArray: "5 4", opacity: .25,
+      interactive: false,
+    }).addTo(map);
+    areaCircleMap.set(name, circle);
+
+    const icon = L.divIcon({
+      className: "area-label",
+      html: `<div class="area-label-inner">${name}</div>`,
+      iconAnchor: [0, 0],
+    });
+    const lm = L.marker([lat, lng], { icon, interactive: false, zIndexOffset: -200 }).addTo(map);
+    areaLabelMap.set(name, lm);
+  });
+
+  function updateAreaOverlays() {
+    const active = state.areas;
+    const hasActive = active.size > 0;
+
+    areaCircleMap.forEach((circle, name) => {
+      const isActive = active.has(name);
+      circle.setStyle(isActive
+        ? { color: "#9e2a2b", fillOpacity: .12, opacity: .7, weight: 2, dashArray: "5 3" }
+        : { color: "#9e2a2b", fillOpacity: .04, opacity: .25, weight: 1.2, dashArray: "5 4" }
+      );
+    });
+
+    areaLabelMap.forEach((lm, name) => {
+      const el = lm.getElement();
+      if (!el) return;
+      if (!hasActive) {
+        el.classList.remove("active", "dimmed");
+      } else if (active.has(name)) {
+        el.classList.add("active");
+        el.classList.remove("dimmed");
+      } else {
+        el.classList.add("dimmed");
+        el.classList.remove("active");
+      }
+    });
+
+    // 지도 이동: 선택된 지역 중심으로
+    if (active.size === 1) {
+      const name = [...active][0];
+      const c = AREA_CENTERS[name];
+      if (c) map.setView([c.lat, c.lng], c.zoom, { animate: true });
+    } else if (active.size > 1) {
+      const bounds = [...active]
+        .filter(n => AREA_CENTERS[n])
+        .map(n => [AREA_CENTERS[n].lat, AREA_CENTERS[n].lng]);
+      if (bounds.length) map.fitBounds(bounds, { padding: [60, 60], animate: true });
+    } else {
+      map.setView([35.824, 127.148], 13, { animate: true });
+    }
+  }
+
   // ============ 필터 UI ============
   function renderCatChips() {
     const el = document.getElementById("cat-chips");
@@ -678,7 +834,7 @@
       if (!b) return;
       const k = b.dataset.cat;
       if (state.cats.has(k)) state.cats.delete(k); else state.cats.add(k);
-      renderCatChips(); applyFilter();
+      renderCatChips(); applyFilter(); updateFilterBadge();
     };
   }
   function renderAreaChips() {
@@ -696,7 +852,7 @@
       if (!b) return;
       const k = b.dataset.area;
       if (state.areas.has(k)) state.areas.delete(k); else state.areas.add(k);
-      renderAreaChips(); applyFilter();
+      renderAreaChips(); applyFilter(); updateAreaOverlays(); updateFilterBadge();
     };
   }
 
@@ -824,7 +980,39 @@
     state.cats.clear(); state.areas.clear();
     state.focusedId = null;
     renderCatChips(); renderAreaChips(); applyFilter();
+    updateAreaOverlays();
+    updateFilterBadge();
     map.setView([35.824, 127.148], 13);
+  });
+
+  // ============ 필터 토글 ============
+  function updateFilterBadge() {
+    const total = state.cats.size + state.areas.size;
+    const badge = document.getElementById("ftb-badge");
+    badge.textContent = total;
+    badge.classList.toggle("visible", total > 0);
+    const bar = document.getElementById("filter-toggle-bar");
+    const label = bar.querySelector(".ftb-text");
+    if (total > 0) {
+      const parts = [];
+      if (state.cats.size) parts.push(`카테고리 ${state.cats.size}`);
+      if (state.areas.size) parts.push(`지역 ${state.areas.size}`);
+      label.textContent = parts.join(" · ");
+    } else {
+      label.textContent = "카테고리 · 지역 필터";
+    }
+  }
+
+  const filterToggleBar = document.getElementById("filter-toggle-bar");
+  const filtersPanel    = document.getElementById("filters-panel");
+  // 모바일은 기본 닫힘
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    filtersPanel.classList.add("collapsed");
+    filterToggleBar.classList.remove("open");
+  }
+  filterToggleBar.addEventListener("click", () => {
+    const isOpen = filterToggleBar.classList.toggle("open");
+    filtersPanel.classList.toggle("collapsed", !isOpen);
   });
 
   // 모바일 토글
@@ -922,6 +1110,8 @@
   renderAreaChips();
   renderLegend();
   applyFilter();
+  updateAreaOverlays();
+  updateFilterBadge();
 </script>
 </body>
 </html>
