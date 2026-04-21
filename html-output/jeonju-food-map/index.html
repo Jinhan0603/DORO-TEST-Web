@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>전주 맛집 지도 · 全州味房</title>
+<meta name="description" content="전주 청창사 대표들을 위한 전주 맛집 아카이브. 지역·카테고리·검색으로 104곳을 둘러보세요." />
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<style>
+  :root {
+    --paper: #f1e9d9;
+    --paper-dim: #e8dfc9;
+    --paper-deep: #dccdb0;
+    --ink: #1a1613;
+    --ink-soft: #3d352e;
+    --ink-mute: #756b5e;
+    --line: #cbbfa3;
+    --line-soft: #d8cdb5;
+    --vermilion: #9e2a2b;   /* 도장 붉은색 */
+    --vermilion-soft: #c4443e;
+    --ochre: #b5894d;       /* 황동 */
+    --jade: #4a6b4e;
+    --indigo: #2c3e5a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans KR", "Gowun Batang", system-ui, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* 한지 텍스처 느낌 */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(155,120,70,.05) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(110,80,50,.04) 0, transparent 50%);
+    mix-blend-mode: multiply;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  /* ================== 사이드 패널 ================== */
+  .panel {
+    background: var(--paper);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    position: relative;
+    z-index: 500;
+  }
+
+  .header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dim) 100%);
+    position: relative;
+  }
+  .header::after {
+    content: ""; position: absolute; left: 28px; right: 28px; bottom: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--vermilion) 20%, var(--vermilion) 80%, transparent);
+    opacity: .4;
+  }
+
+  .brand-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 10px; margin-bottom: 4px;
+  }
+  .stamp {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px;
+    background: var(--vermilion); color: #fdf3e3;
+    font-family: "Gowun Batang", serif;
+    font-weight: 700; font-size: 18px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+    transform: rotate(-4deg);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 3px 0 rgba(158,42,43,.3);
+  }
+  .kicker {
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 12px; letter-spacing: .08em;
+    color: var(--ink-mute);
+    text-transform: lowercase;
+  }
+  h1.title {
+    font-family: "Gowun Batang", serif;
+    font-weight: 700; font-size: 34px; letter-spacing: -1px;
+    margin: 8px 0 4px; line-height: 1.05;
+    color: var(--ink);
+  }
+  .title-en {
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 14px; color: var(--ink-mute);
+    font-weight: 400;
+  }
+  .subtitle {
+    margin-top: 14px;
+    font-size: 13px; line-height: 1.6; color: var(--ink-soft);
+    padding-left: 10px;
+    border-left: 2px solid var(--ochre);
+  }
+
+  /* 검색창 */
+  .search-wrap {
+    padding: 16px 28px 12px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .search {
+    position: relative;
+    display: flex; align-items: center;
+  }
+  .search input {
+    flex: 1;
+    padding: 12px 14px 12px 40px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: inherit; font-size: 14px;
+    color: var(--ink);
+    transition: border-color .15s, background .15s;
+  }
+  .search input:focus {
+    outline: none;
+    border-color: var(--vermilion);
+    background: rgba(255,255,255,.3);
+  }
+  .search input::placeholder { color: var(--ink-mute); font-weight: 300; }
+  .search svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; color: var(--ink-mute);
+  }
+  .clear-btn {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: 0; cursor: pointer;
+    color: var(--ink-mute); font-size: 16px;
+    padding: 4px 8px;
+    display: none;
+  }
+  .clear-btn.visible { display: block; }
+  .clear-btn:hover { color: var(--vermilion); }
+
+  /* 필터 */
+  .filters {
+    padding: 12px 28px 8px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .filter-section { margin-bottom: 12px; }
+  .filter-label {
+    font-family: "Fraunces", serif;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .filter-label::after {
+    content: ""; flex: 1; height: 1px; background: var(--line-soft);
+  }
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: inherit; font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all .12s ease;
+    white-space: nowrap;
+  }
+  .chip:hover {
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .chip.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .chip .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--c, var(--ochre));
+    display: inline-block;
+  }
+  .chip .count {
+    font-size: 10px; opacity: .65;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* 카운터 & 리셋 */
+  .meta-bar {
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--paper-dim);
+  }
+  .meta-count {
+    font-family: "Fraunces", serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .meta-count b {
+    font-weight: 800; color: var(--vermilion);
+    font-feature-settings: "tnum";
+  }
+  .reset-btn {
+    background: none; border: 0;
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 12px; color: var(--ink-mute);
+    cursor: pointer; padding: 2px 4px;
+  }
+  .reset-btn:hover { color: var(--vermilion); text-decoration: underline; }
+
+  /* 리스트 */
+  .list {
+    flex: 1; overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .list::-webkit-scrollbar { width: 8px; }
+  .list::-webkit-scrollbar-track { background: var(--paper); }
+  .list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  .list::-webkit-scrollbar-thumb:hover { background: var(--ink-mute); }
+
+  .entry {
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    transition: background .12s;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .entry:hover { background: var(--paper-dim); }
+  .entry.focused { background: var(--paper-deep); }
+  .entry.focused::before {
+    content: ""; position: absolute; left: 0; width: 3px; height: 100%; top: 0;
+    background: var(--vermilion);
+  }
+  .entry { position: relative; }
+
+  .entry-num {
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 18px; color: var(--ink-mute);
+    font-feature-settings: "tnum";
+    line-height: 1;
+    padding-top: 4px;
+    text-align: right;
+  }
+  .entry-body h3 {
+    margin: 0 0 3px;
+    font-family: "Gowun Batang", serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -.3px;
+  }
+  .entry-desc {
+    font-size: 12.5px; color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .entry-meta {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    font-size: 11px; color: var(--ink-mute);
+  }
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 7px;
+    background: rgba(255,255,255,.4);
+    border: 1px solid var(--line-soft);
+    border-radius: 2px;
+    font-family: "Fraunces", serif;
+    font-size: 10.5px;
+  }
+  .tag .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c, var(--ochre));
+  }
+  .entry-addr {
+    font-size: 11px; color: var(--ink-mute);
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: -.2px;
+  }
+
+  .empty {
+    padding: 60px 28px; text-align: center;
+    color: var(--ink-mute);
+    font-family: "Fraunces", serif; font-style: italic;
+  }
+  .empty h3 {
+    font-family: "Gowun Batang", serif; font-style: normal;
+    font-size: 18px; margin: 0 0 6px; color: var(--ink-soft);
+  }
+
+  /* ================== 지도 ================== */
+  .map-wrap { position: relative; background: #e3dcc9; }
+  #map { width: 100%; height: 100%; }
+
+  /* 지도 톤 조정 (한지 느낌으로) */
+  .leaflet-tile-pane { filter: sepia(.25) saturate(.85) brightness(.96) contrast(1.02); }
+
+  /* 맵 위 오버레이 */
+  .map-legend {
+    position: absolute; bottom: 24px; left: 16px; z-index: 500;
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 12px 14px;
+    font-size: 11px; line-height: 1.7;
+    box-shadow: 0 4px 16px rgba(40,30,20,.15);
+    max-width: 220px;
+  }
+  .legend-title {
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .legend-row { display: flex; align-items: center; gap: 7px; }
+  .legend-row .dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* 커스텀 마커 */
+  .rest-marker {
+    background: transparent !important; border: none !important;
+  }
+  .rest-marker .pin {
+    width: 26px; height: 26px;
+    border-radius: 50% 50% 50% 2px;
+    transform: rotate(-45deg);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    transition: transform .15s;
+  }
+  .rest-marker .pin::after {
+    content: attr(data-num);
+    transform: rotate(45deg);
+    color: white; font-family: "Fraunces", serif;
+    font-weight: 600; font-size: 11px;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+  }
+  .rest-marker.focused .pin {
+    transform: rotate(-45deg) scale(1.3);
+    box-shadow: 0 4px 12px rgba(158,42,43,.6);
+    border-color: var(--paper);
+    z-index: 999;
+  }
+
+  /* Leaflet 팝업 커스터마이징 */
+  .leaflet-popup-content-wrapper {
+    background: var(--paper);
+    border-radius: 2px;
+    box-shadow: 0 6px 24px rgba(40,30,20,.3);
+    padding: 0;
+  }
+  .leaflet-popup-tip { background: var(--paper); }
+  .leaflet-popup-content {
+    margin: 0; padding: 14px 16px 12px;
+    font-family: "Noto Sans KR", sans-serif;
+    min-width: 200px;
+  }
+  .popup-num {
+    font-family: "Fraunces", serif; font-style: italic;
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: .08em;
+    margin-bottom: 2px;
+  }
+  .popup-name {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: 17px; color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -.3px;
+  }
+  .popup-desc {
+    font-size: 12.5px; color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .popup-addr {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px; color: var(--ink-mute);
+    padding-top: 6px;
+    border-top: 1px dashed var(--line-soft);
+    word-break: keep-all;
+  }
+  .popup-links {
+    display: flex; gap: 6px; margin-top: 8px;
+  }
+  .popup-links a {
+    font-size: 11px;
+    padding: 4px 8px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    border-radius: 2px;
+    font-family: "Fraunces", serif;
+  }
+  .popup-links a:hover { background: var(--vermilion); }
+
+  /* ================== 모바일 ================== */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    z-index: 800;
+    background: var(--ink); color: var(--paper);
+    border: 0; padding: 10px 22px;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: 14px;
+    border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    cursor: pointer;
+  }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .panel {
+      position: fixed; inset: 0;
+      transform: translateY(0);
+      transition: transform .25s ease;
+      z-index: 700;
+    }
+    .panel.hidden { transform: translateY(100%); }
+    .mobile-toggle { display: block; }
+    .map-wrap { grid-row: 1; grid-column: 1; }
+    .header { padding: 20px 22px 16px; }
+    h1.title { font-size: 28px; }
+    .search-wrap, .filters, .meta-bar, .entry { padding-left: 22px; padding-right: 22px; }
+    .map-legend { bottom: 74px; left: 12px; font-size: 10px; padding: 10px 12px; }
+  }
+
+  /* 스크롤바 (전역) */
+  .chips::-webkit-scrollbar { display: none; }
+
+  /* 페이드인 */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .header, .search-wrap, .filters { animation: fadeUp .5s ease both; }
+  .search-wrap { animation-delay: .08s; }
+  .filters { animation-delay: .16s; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============== 사이드 패널 ============== -->
+  <aside class="panel" id="panel">
+    <div class="header">
+      <div class="brand-row">
+        <span class="stamp">全</span>
+        <span class="kicker">no.104 · archive · 2026</span>
+      </div>
+      <h1 class="title">전주 맛집 지도</h1>
+      <div class="title-en">A Hungry Wanderer's Guide to Jeonju</div>
+      <div class="subtitle">
+        전주 청창사 대표님들을 위한<br>
+        104곳의 식탁. 지역과 메뉴로 골라보세요.
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="q" type="search" placeholder="가게 이름·메뉴·주소로 검색…" autocomplete="off" />
+        <button class="clear-btn" id="clear-q" aria-label="검색 지우기">✕</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-section">
+        <div class="filter-label">카테고리 Category</div>
+        <div class="chips" id="cat-chips"></div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">지역 Neighborhood</div>
+        <div class="chips" id="area-chips"></div>
+      </div>
+    </div>
+
+    <div class="meta-bar">
+      <div class="meta-count"><b id="count-num">0</b> 곳 <span style="color:var(--ink-mute)">/ 총 <span id="total-num">0</span></span></div>
+      <button class="reset-btn" id="reset">↺ 필터 초기화</button>
+    </div>
+
+    <div class="list" id="list"></div>
+  </aside>
+
+  <!-- ============== 지도 ============== -->
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="map-legend" id="legend">
+      <div class="legend-title">Categories</div>
+      <div id="legend-rows"></div>
+    </div>
+  </div>
+
+  <button class="mobile-toggle" id="mobile-toggle">🍜 목록 · 필터 열기</button>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<!-- 맛집 데이터 -->
+<script src="data.js"></script>
+
+<script>
+  // ============ 상태 ============
+  const CATEGORIES = [
+    { key: "한식",      label: "한식",       color: "#9e2a2b" },
+    { key: "고기구이",  label: "고기·구이",  color: "#6b3e2a" },
+    { key: "중식",      label: "중식",       color: "#c89b3c" },
+    { key: "일식",      label: "일식",       color: "#2c3e5a" },
+    { key: "양식",      label: "양식",       color: "#4a6b8a" },
+    { key: "분식",      label: "분식",       color: "#d97f3e" },
+    { key: "술집포차",  label: "술집·포차",  color: "#6b4e7a" },
+    { key: "카페빵",    label: "카페·빵",    color: "#c07c8e" },
+    { key: "아시아기타",label: "아시아·기타",color: "#4a6b4e" },
+  ];
+
+  const state = {
+    q: "",
+    cats: new Set(),
+    areas: new Set(),
+    focusedId: null,
+  };
+
+  const data = window.RESTAURANTS || [];
+  const areasInOrder = [];
+  data.forEach(r => { if (!areasInOrder.includes(r.area)) areasInOrder.push(r.area); });
+
+  const catMap = Object.fromEntries(CATEGORIES.map(c => [c.key, c]));
+
+  // ============ 지도 ============
+  const map = L.map("map", { zoomControl: true, scrollWheelZoom: true })
+    .setView([35.824, 127.148], 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  const markerMap = new Map();  // id -> marker
+
+  function buildMarker(r) {
+    const color = (catMap[r.category] || {}).color || "#777";
+    const icon = L.divIcon({
+      className: "rest-marker",
+      html: `<div class="pin" style="background:${color}" data-num="${r.id}"></div>`,
+      iconSize: [26, 26],
+      iconAnchor: [13, 24],
+      popupAnchor: [0, -22],
+    });
+    const m = L.marker([r.lat, r.lng], { icon });
+    m.bindPopup(popupHtml(r), { maxWidth: 260, className: "rest-popup" });
+    m.on("click", () => setFocus(r.id, { fromMarker: true }));
+    return m;
+  }
+
+  function popupHtml(r) {
+    const color = (catMap[r.category] || {}).color || "#777";
+    const q = encodeURIComponent(r.name + " " + r.address);
+    return `
+      <div class="popup-num">NO. ${String(r.id).padStart(3, "0")}</div>
+      <div class="popup-name">${esc(r.name)}</div>
+      <div class="popup-desc">${esc(r.desc)}</div>
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+        <span class="tag"><span class="dot" style="background:${color}"></span>${esc((catMap[r.category]||{}).label || r.category)}</span>
+        <span class="tag">${esc(r.area)}</span>
+      </div>
+      <div class="popup-addr">📍 ${esc(r.address)}</div>
+      <div class="popup-links">
+        <a href="https://map.naver.com/v5/search/${q}" target="_blank" rel="noopener">네이버지도</a>
+        <a href="https://map.kakao.com/?q=${q}" target="_blank" rel="noopener">카카오맵</a>
+      </div>
+    `;
+  }
+
+  // 모든 마커 추가
+  data.forEach(r => {
+    const m = buildMarker(r);
+    m.addTo(map);
+    markerMap.set(r.id, m);
+  });
+
+  // ============ 필터 UI ============
+  function renderCatChips() {
+    const el = document.getElementById("cat-chips");
+    const counts = countBy(data, "category");
+    el.innerHTML = CATEGORIES.map(c => {
+      const cnt = counts[c.key] || 0;
+      if (cnt === 0) return "";
+      const active = state.cats.has(c.key) ? "active" : "";
+      return `<button class="chip ${active}" data-cat="${c.key}" style="--c:${c.color}">
+        <span class="dot"></span>${esc(c.label)}<span class="count">${cnt}</span>
+      </button>`;
+    }).join("");
+    el.onclick = (e) => {
+      const b = e.target.closest("[data-cat]");
+      if (!b) return;
+      const k = b.dataset.cat;
+      if (state.cats.has(k)) state.cats.delete(k); else state.cats.add(k);
+      renderCatChips(); applyFilter();
+    };
+  }
+  function renderAreaChips() {
+    const el = document.getElementById("area-chips");
+    const counts = countBy(data, "area");
+    el.innerHTML = areasInOrder.map(a => {
+      const cnt = counts[a] || 0;
+      const active = state.areas.has(a) ? "active" : "";
+      return `<button class="chip ${active}" data-area="${a}">
+        ${esc(a)}<span class="count">${cnt}</span>
+      </button>`;
+    }).join("");
+    el.onclick = (e) => {
+      const b = e.target.closest("[data-area]");
+      if (!b) return;
+      const k = b.dataset.area;
+      if (state.areas.has(k)) state.areas.delete(k); else state.areas.add(k);
+      renderAreaChips(); applyFilter();
+    };
+  }
+
+  // 범례
+  function renderLegend() {
+    const el = document.getElementById("legend-rows");
+    const counts = countBy(data, "category");
+    el.innerHTML = CATEGORIES.filter(c => counts[c.key]).map(c => `
+      <div class="legend-row"><span class="dot" style="background:${c.color}"></span>${esc(c.label)}</div>
+    `).join("");
+  }
+
+  // ============ 리스트 & 필터 적용 ============
+  function applyFilter() {
+    const q = state.q.trim().toLowerCase();
+    const useCat = state.cats.size > 0;
+    const useArea = state.areas.size > 0;
+
+    const filtered = data.filter(r => {
+      if (useCat && !state.cats.has(r.category)) return false;
+      if (useArea && !state.areas.has(r.area)) return false;
+      if (q) {
+        const hay = (r.name + " " + r.desc + " " + r.address + " " + r.area + " " + r.category).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    // 지도 마커 표시/숨김
+    const visibleIds = new Set(filtered.map(r => r.id));
+    markerMap.forEach((mk, id) => {
+      const shouldShow = visibleIds.has(id);
+      const has = map.hasLayer(mk);
+      if (shouldShow && !has) mk.addTo(map);
+      else if (!shouldShow && has) map.removeLayer(mk);
+    });
+
+    // 리스트
+    const list = document.getElementById("list");
+    document.getElementById("count-num").textContent = filtered.length;
+    document.getElementById("total-num").textContent = data.length;
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty"><h3>검색 결과가 없습니다</h3>다른 키워드로 시도해보세요</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(r => {
+      const color = (catMap[r.category] || {}).color || "#777";
+      const focused = state.focusedId === r.id ? "focused" : "";
+      return `
+        <div class="entry ${focused}" data-id="${r.id}">
+          <div class="entry-num">${String(r.id).padStart(2, "0")}</div>
+          <div class="entry-body">
+            <h3>${esc(r.name)}</h3>
+            <div class="entry-desc">${esc(r.desc)}</div>
+            <div class="entry-meta">
+              <span class="tag" style="--c:${color}"><span class="dot"></span>${esc((catMap[r.category]||{}).label || r.category)}</span>
+              <span class="tag">${esc(r.area)}</span>
+            </div>
+            <div class="entry-addr" style="margin-top:5px">${esc(r.address)}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    list.onclick = (e) => {
+      const el = e.target.closest("[data-id]");
+      if (!el) return;
+      setFocus(Number(el.dataset.id), { fromList: true });
+    };
+  }
+
+  // ============ 포커스 (클릭/검색) ============
+  function setFocus(id, { fromList, fromMarker } = {}) {
+    state.focusedId = id;
+    const r = data.find(x => x.id === id);
+    if (!r) return;
+
+    // 지도 이동 & 팝업
+    const mk = markerMap.get(id);
+    if (mk) {
+      map.setView([r.lat, r.lng], Math.max(map.getZoom(), 15), { animate: true });
+      mk.openPopup();
+    }
+
+    // 리스트에서 클릭한 게 아니면 리스트 스크롤
+    if (!fromList) {
+      const entry = document.querySelector(`.entry[data-id="${id}"]`);
+      if (entry) entry.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // 리스트 재렌더 (focused 클래스 업데이트)
+    document.querySelectorAll(".entry").forEach(el => {
+      el.classList.toggle("focused", Number(el.dataset.id) === id);
+    });
+  }
+
+  // ============ 검색 바인딩 ============
+  const qInput = document.getElementById("q");
+  const clearBtn = document.getElementById("clear-q");
+  qInput.addEventListener("input", (e) => {
+    state.q = e.target.value;
+    clearBtn.classList.toggle("visible", !!state.q);
+    applyFilter();
+  });
+  clearBtn.addEventListener("click", () => {
+    state.q = ""; qInput.value = "";
+    clearBtn.classList.remove("visible");
+    applyFilter(); qInput.focus();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    state.q = ""; qInput.value = "";
+    clearBtn.classList.remove("visible");
+    state.cats.clear(); state.areas.clear();
+    state.focusedId = null;
+    renderCatChips(); renderAreaChips(); applyFilter();
+    map.setView([35.824, 127.148], 13);
+  });
+
+  // 모바일 토글
+  const panel = document.getElementById("panel");
+  const mt = document.getElementById("mobile-toggle");
+  // 시작: 모바일에서는 지도 먼저 보이게
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    panel.classList.add("hidden");
+  }
+  mt.addEventListener("click", () => {
+    const isHidden = panel.classList.toggle("hidden");
+    mt.textContent = isHidden ? "🍜 목록 · 필터 열기" : "🗺 지도로 돌아가기";
+  });
+
+  // ============ 유틸 ============
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+  function countBy(arr, key) {
+    const m = {};
+    arr.forEach(x => { m[x[key]] = (m[x[key]] || 0) + 1; });
+    return m;
+  }
+
+  // ============ 초기화 ============
+  renderCatChips();
+  renderAreaChips();
+  renderLegend();
+  applyFilter();
+</script>
+</body>
+</html>

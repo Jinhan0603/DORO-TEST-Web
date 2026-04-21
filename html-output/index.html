@@ -169,6 +169,7 @@
     .cat-edu   { background:#FFF7ED; color:#EA580C; } .icon-edu   { background:#FFF7ED; }
     .cat-road  { background:#F5F3FF; color:#7C3AED; } .icon-road  { background:#F5F3FF; }
     .cat-collab{ background:#FDF4FF; color:#A21CAF; } .icon-collab{ background:#FDF4FF; }
+    .cat-life  { background:#F0FFF4; color:#15803D; } .icon-life  { background:#F0FFF4; }
 
     /* ── EMPTY STATE ── */
     .empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
@@ -193,8 +194,8 @@
     <h1>DORO <em>결과물</em> 아카이브</h1>
     <p>팀원 누구나 바로 열어볼 수 있는 인터랙티브 결과물 모음입니다.<br>카테고리 필터 또는 검색으로 원하는 자료를 찾아보세요.</p>
     <div class="stats-row">
-      <div class="stat"><div class="stat-num" id="total-cnt"><em>17</em></div><div class="stat-label">전체 문서</div></div>
-      <div class="stat"><div class="stat-num"><em>5</em></div><div class="stat-label">카테고리</div></div>
+      <div class="stat"><div class="stat-num" id="total-cnt"><em>18</em></div><div class="stat-label">전체 문서</div></div>
+      <div class="stat"><div class="stat-num"><em>6</em></div><div class="stat-label">카테고리</div></div>
       <div class="stat"><div class="stat-num"><em>2026</em></div><div class="stat-label">최신 업데이트</div></div>
     </div>
   </div>
@@ -210,12 +211,13 @@
       <input type="text" id="search" placeholder="결과물 검색 (예: 컨설팅, AI, 사업 계획…)">
     </div>
     <div class="filter-tabs">
-      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">17</span></button>
+      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">18</span></button>
       <button class="filter-tab" data-cat="ai">AI·컨설팅 <span class="cnt" id="cnt-ai">2</span></button>
       <button class="filter-tab" data-cat="biz">사업·전략 <span class="cnt" id="cnt-biz">5</span></button>
       <button class="filter-tab" data-cat="edu">교육 프로그램 <span class="cnt" id="cnt-edu">4</span></button>
       <button class="filter-tab" data-cat="road">Open Road <span class="cnt" id="cnt-road">3</span></button>
       <button class="filter-tab" data-cat="collab">산학연·협력 <span class="cnt" id="cnt-collab">3</span></button>
+      <button class="filter-tab" data-cat="life">기타·커뮤니티 <span class="cnt" id="cnt-life">1</span></button>
     </div>
   </div>
 
@@ -326,6 +328,14 @@ const ITEMS = [
     file: 'DORO_ScienceVoucher_Strategy.html'
   },
 
+  /* ── 기타·커뮤니티 ── */
+  {
+    cat: 'life', icon: '🗺️', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
+    title: '전주 맛집 지도 · 全州味房',
+    desc: '전주 청창사 대표님들을 위한 맛집 아카이브. 104곳을 지역·카테고리·검색으로 Leaflet 지도에서 탐색. 한옥마을 무드의 에디토리얼 디자인.',
+    file: 'jeonju-food-map/index.html'
+  },
+
   /* ── 산학연·협력 ── */
   {
     cat: 'collab', icon: '🔬', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
@@ -353,6 +363,7 @@ const SECTIONS = [
   { cat: 'edu',   label: '교육 프로그램' },
   { cat: 'road',  label: 'Open Road' },
   { cat: 'collab',label: '산학연 · 협력' },
+  { cat: 'life',  label: '기타 · 커뮤니티' },
 ];
 
 function renderCards(filter = 'all', query = '') {
