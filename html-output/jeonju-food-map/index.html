@@ -66,6 +66,7 @@
     display: flex; flex-direction: column;
     position: relative;
     z-index: 500;
+    overflow: hidden; /* flex 자식 리스트가 독립 스크롤 되려면 필수 */
   }
 
   .header {
@@ -274,7 +275,9 @@
 
   /* 리스트 */
   .list {
-    flex: 1; overflow-y: auto;
+    flex: 1;
+    min-height: 0; /* flexbox에서 overflow scroll 작동 필수 */
+    overflow-y: auto;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -760,9 +763,9 @@
   Object.entries(AREA_CENTERS).forEach(([name, { lat, lng, r }]) => {
     const circle = L.circle([lat, lng], {
       radius: r,
-      color: "#9e2a2b", fillColor: "#9e2a2b",
-      fillOpacity: .04, weight: 1.2,
-      dashArray: "5 4", opacity: .25,
+      color: "#b5894d", fillColor: "#b5894d",
+      fillOpacity: .10, weight: 2,
+      dashArray: "6 4", opacity: .55,
       interactive: false,
     }).addTo(map);
     areaCircleMap.set(name, circle);
@@ -783,8 +786,8 @@
     areaCircleMap.forEach((circle, name) => {
       const isActive = active.has(name);
       circle.setStyle(isActive
-        ? { color: "#9e2a2b", fillOpacity: .12, opacity: .7, weight: 2, dashArray: "5 3" }
-        : { color: "#9e2a2b", fillOpacity: .04, opacity: .25, weight: 1.2, dashArray: "5 4" }
+        ? { color: "#9e2a2b", fillColor: "#9e2a2b", fillOpacity: .18, opacity: .9, weight: 2.5, dashArray: "6 3" }
+        : { color: "#b5894d", fillColor: "#b5894d", fillOpacity: .10, opacity: .55, weight: 2, dashArray: "6 4" }
       );
     });
 
@@ -1040,6 +1043,15 @@
   }
 
   // ============ 내 위치 ============
+  const JEONJU_CENTER = [35.8240, 127.1480];
+
+  function haversineKm(lat1, lng1, lat2, lng2) {
+    const R = 6371, toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
   let myLocMarker = null;
   let myLocCircle = null;
 
@@ -1086,7 +1098,17 @@
           .bindPopup("<b>현재 내 위치</b><br><small>정확도 ±" + Math.round(accuracy) + "m</small>")
           .openPopup();
 
-        map.setView([lat, lng], 15, { animate: true });
+        const distKm = haversineKm(lat, lng, JEONJU_CENTER[0], JEONJU_CENTER[1]);
+        if (distKm < 15) {
+          map.setView([lat, lng], 15, { animate: true });
+        } else {
+          // 전주에서 멀 경우 지도 이동 없이 마커만 표시
+          myLocMarker.setPopupContent(
+            `<b>현재 내 위치</b><br><small>정확도 ±${Math.round(accuracy)}m</small><br>` +
+            `<small style="color:#9e2a2b">⚠ 전주 시내에서 ${Math.round(distKm)}km 떨어져 있습니다.<br>` +
+            `GPS가 부정확할 수 있습니다.</small>`
+          );
+        }
         btn.classList.remove("loading");
         btn.classList.add("active");
         btn.querySelector("span").textContent = "위치 끄기";
