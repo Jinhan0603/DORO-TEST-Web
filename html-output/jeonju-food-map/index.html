@@ -236,6 +236,8 @@
   .list {
     flex: 1; overflow-y: auto;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .list::-webkit-scrollbar { width: 8px; }
   .list::-webkit-scrollbar-track { background: var(--paper); }
@@ -259,6 +261,11 @@
     background: var(--vermilion);
   }
   .entry { position: relative; }
+  @keyframes entryPop {
+    0%   { background: rgba(158,42,43,.18); }
+    100% { background: var(--paper-deep); }
+  }
+  .entry.focused { animation: entryPop .4s ease both; }
 
   .entry-num {
     font-family: "Fraunces", serif; font-style: italic;
@@ -314,7 +321,7 @@
   }
 
   /* ================== 지도 ================== */
-  .map-wrap { position: relative; background: #e3dcc9; }
+  .map-wrap { position: relative; background: #e3dcc9; overscroll-behavior: none; }
   #map { width: 100%; height: 100%; }
 
   /* 지도 톤 조정 (한지 느낌으로) */
@@ -769,23 +776,32 @@
     const r = data.find(x => x.id === id);
     if (!r) return;
 
+    // focused 클래스 먼저 업데이트
+    document.querySelectorAll(".entry").forEach(el => {
+      el.classList.toggle("focused", Number(el.dataset.id) === id);
+    });
+
     // 지도 이동 & 팝업
     const mk = markerMap.get(id);
     if (mk) {
       map.setView([r.lat, r.lng], Math.max(map.getZoom(), 15), { animate: true });
+      // 타일 재계산: setView 애니메이션 끝난 뒤 invalidateSize
+      setTimeout(() => map.invalidateSize({ pan: false }), 350);
       mk.openPopup();
     }
 
-    // 리스트에서 클릭한 게 아니면 리스트 스크롤
+    // 리스트 스크롤 — window가 아닌 .list 컨테이너 안에서만
     if (!fromList) {
-      const entry = document.querySelector(`.entry[data-id="${id}"]`);
-      if (entry) entry.scrollIntoView({ behavior: "smooth", block: "center" });
+      const listEl = document.getElementById("list");
+      const entry = listEl.querySelector(`.entry[data-id="${id}"]`);
+      if (entry) {
+        const entryTop    = entry.offsetTop;
+        const entryHeight = entry.offsetHeight;
+        const listHeight  = listEl.clientHeight;
+        const target = entryTop - (listHeight / 2) + (entryHeight / 2);
+        listEl.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+      }
     }
-
-    // 리스트 재렌더 (focused 클래스 업데이트)
-    document.querySelectorAll(".entry").forEach(el => {
-      el.classList.toggle("focused", Number(el.dataset.id) === id);
-    });
   }
 
   // ============ 검색 바인딩 ============
