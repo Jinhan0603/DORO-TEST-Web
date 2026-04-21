@@ -732,7 +732,8 @@
 
   function popupHtml(r) {
     const color = (catMap[r.category] || {}).color || "#777";
-    const q = encodeURIComponent(r.name + " " + r.address);
+    const qName  = encodeURIComponent(r.name + " 전주");
+    const qKakao = encodeURIComponent(r.name + " 전주");
     return `
       <div class="popup-num">NO. ${String(r.id).padStart(3, "0")}</div>
       <div class="popup-name">${esc(r.name)}</div>
@@ -743,8 +744,8 @@
       </div>
       <div class="popup-addr">📍 ${esc(r.address)}</div>
       <div class="popup-links">
-        <a href="https://map.naver.com/v5/search/${q}" target="_blank" rel="noopener">네이버지도</a>
-        <a href="https://map.kakao.com/?q=${q}" target="_blank" rel="noopener">카카오맵</a>
+        <a href="https://map.naver.com/v5/search/${qName}" target="_blank" rel="noopener">네이버지도</a>
+        <a href="https://map.kakao.com/?q=${qKakao}" target="_blank" rel="noopener">카카오맵</a>
       </div>
     `;
   }
