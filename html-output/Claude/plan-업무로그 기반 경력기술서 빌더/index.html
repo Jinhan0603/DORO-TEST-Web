@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>업무로그 기반 경력기술서 빌더</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── Clay Design Tokens ─────────────────────────────── */
+:root {
+  --bg: #faf9f7;
+  --white: #ffffff;
+  --black: #000000;
+  --text: #000000;
+  --text2: #9f9b93;
+  --text3: #55534e;
+  --border: #dad4c8;
+  --border-light: #eee9df;
+
+  /* Swatches */
+  --matcha-300: #84e7a5;
+  --matcha-600: #078a52;
+  --matcha-800: #02492a;
+  --slushie: #3bd3fd;
+  --slushie-800: #0089ad;
+  --lemon: #fbbd41;
+  --lemon-700: #d08a11;
+  --ube-300: #c1b0ff;
+  --ube-800: #43089f;
+  --pom: #fc7981;
+  --blueberry: #01418d;
+
+  /* Shadow */
+  --shadow: rgba(0,0,0,0.10) 0px 1px 1px, rgba(0,0,0,0.04) 0px -1px 1px inset, rgba(0,0,0,0.05) 0px -0.5px 1px;
+
+  /* Typography */
+  --font: 'DM Sans', Arial, sans-serif;
+  --mono: 'Space Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0;
+  padding: 0 24px;
+  height: 60px;
+  box-shadow: var(--shadow);
+}
+.topbar-logo {
+  font-size: 17px; font-weight: 600; letter-spacing: -0.3px;
+  margin-right: 32px; white-space: nowrap;
+}
+.topbar-logo span { color: var(--matcha-600); }
+.nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text3); padding: 6px 12px; border-radius: 8px;
+  white-space: nowrap; transition: background 0.15s, color 0.15s;
+}
+.nav-btn:hover { background: var(--bg); color: var(--text); }
+.nav-btn.active { background: var(--black); color: var(--white); }
+
+/* ── Main ───────────────────────────────────────────── */
+.main { flex: 1; padding: 32px 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* ── Clay Button ────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font); font-size: 16px; font-weight: 500;
+  padding: 10px 20px; border-radius: 1584px;
+  border: 1px solid var(--black); cursor: pointer;
+  background: var(--white); color: var(--black);
+  box-shadow: var(--shadow);
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+  letter-spacing: -0.16px;
+  position: relative;
+}
+.btn:hover {
+  transform: rotateZ(-4deg) translateY(-3px);
+  box-shadow: var(--black) -5px 5px;
+  background: var(--lemon);
+}
+.btn.primary {
+  background: var(--black); color: var(--white); border-color: var(--black);
+}
+.btn.primary:hover {
+  background: var(--matcha-600); color: var(--white);
+  box-shadow: var(--black) -5px 5px;
+}
+.btn.sm { font-size: 13px; padding: 6px 14px; }
+.btn.danger { border-color: var(--pom); color: var(--pom); }
+.btn.danger:hover { background: var(--pom); color: var(--white); box-shadow: var(--black) -5px 5px; }
+
+/* ── Card ───────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.card.dashed { border-style: dashed; }
+.card.matcha { background: var(--matcha-300); border-color: var(--matcha-600); }
+.card.lemon { background: #fff8e1; border-color: var(--lemon); }
+.card.slushie { background: #e6faff; border-color: var(--slushie); }
+.card.ube { background: #f0eeff; border-color: var(--ube-300); }
+.card.pom { background: #fff0f1; border-color: var(--pom); }
+
+/* ── Form ───────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 500; color: var(--text3); }
+input[type=text], input[type=number], textarea, select {
+  font-family: var(--font); font-size: 15px;
+  padding: 10px 14px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--white);
+  color: var(--text); outline: none; width: 100%;
+  transition: border-color 0.15s;
+}
+input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
+  border-color: var(--black);
+}
+textarea { resize: vertical; min-height: 90px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+
+/* Range input */
+input[type=range] { width: 100%; accent-color: var(--matcha-600); cursor: pointer; }
+
+/* ── Eyebrow / Headers ──────────────────────────────── */
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text2);
+  margin-bottom: 6px;
+}
+.screen-title { font-size: 28px; font-weight: 600; letter-spacing: -0.8px; margin-bottom: 6px; }
+.screen-sub { font-size: 15px; color: var(--text3); margin-bottom: 28px; }
+
+/* ── Pills / Chips ──────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 1584px; padding: 3px 10px; font-size: 12px;
+  color: var(--text3); font-weight: 500;
+}
+.chip.matcha { background: var(--matcha-300); border-color: var(--matcha-600); color: var(--matcha-800); }
+.chip.lemon { background: #fff3c4; border-color: var(--lemon); color: var(--lemon-700); }
+.chip.slushie { background: #d8f5ff; border-color: var(--slushie); color: var(--slushie-800); }
+.chip.ube { background: #ede8ff; border-color: var(--ube-300); color: var(--ube-800); }
+.chip.pom { background: #ffe8ea; border-color: var(--pom); color: #c0373f; }
+
+/* ── Badge ──────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 1584px; font-size: 11px; font-weight: 600;
+}
+.badge.safe { background: var(--matcha-300); color: var(--matcha-800); }
+.badge.warn { background: #fff3c4; color: var(--lemon-700); }
+.badge.danger { background: #ffe8ea; color: #c0373f; }
+
+/* ── Score Ring ─────────────────────────────────────── */
+.score-ring-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.score-ring-wrap svg { display: block; }
+.score-ring-label { font-size: 12px; font-weight: 500; color: var(--text3); text-align: center; }
+.score-ring-num {
+  font-size: 22px; font-weight: 700; text-align: center;
+  font-family: var(--mono);
+}
+
+/* ── Sections ───────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── Onboarding ─────────────────────────────────────── */
+.onboarding-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: calc(100vh - 100px); padding-top: 40px;
+}
+.onboarding-card {
+  width: 100%; max-width: 520px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 40px; padding: 40px; box-shadow: var(--shadow);
+}
+.onboarding-steps {
+  display: flex; gap: 8px; margin-bottom: 32px;
+}
+.onboarding-step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.onboarding-step-dot.active { background: var(--black); }
+.onboarding-step-dot.done { background: var(--matcha-600); }
+.onboarding-title { font-size: 28px; font-weight: 600; letter-spacing: -0.8px; margin-bottom: 8px; }
+.onboarding-sub { font-size: 15px; color: var(--text3); margin-bottom: 28px; }
+.onboarding-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+.step-hint { font-family: var(--mono); font-size: 12px; color: var(--text2); }
+
+/* ── Dashboard ──────────────────────────────────────── */
+.hero-band {
+  background: var(--black); color: var(--white);
+  border-radius: 24px; padding: 32px; margin-bottom: 20px;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+}
+.hero-band .hero-text h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+.hero-band .hero-text p { font-size: 15px; color: #aaa; max-width: 480px; margin-bottom: 20px; }
+.hero-band .hero-text .btn.primary:hover { background: var(--matcha-600); }
+
+.stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+@media(max-width:800px){ .stat-row { grid-template-columns: repeat(2,1fr); } }
+.stat-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.stat-card .stat-icon { font-size: 20px; margin-bottom: 8px; }
+.stat-card .stat-val { font-family: var(--mono); font-size: 26px; font-weight: 700; }
+.stat-card .stat-title { font-size: 12px; font-weight: 600; color: var(--text3); margin-bottom: 2px; }
+.stat-card .stat-helper { font-size: 11px; color: var(--text2); }
+
+.two-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:700px){ .two-panel { grid-template-columns: 1fr; } }
+
+/* Pipeline bars */
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13px; }
+.bar-row > span { width: 64px; color: var(--text3); flex-shrink: 0; }
+.bar-track { flex: 1; height: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 1584px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--black); border-radius: 1584px; transition: width 0.6s; }
+.bar-row > strong { font-family: var(--mono); font-size: 13px; width: 28px; text-align: right; }
+
+/* Heatmap */
+.heatmap { display: flex; flex-wrap: wrap; gap: 4px; }
+.heat {
+  width: 14px; height: 14px; border-radius: 3px; background: var(--bg);
+  border: 1px solid var(--border);
+}
+.heat-1 { background: #d4f4df; }
+.heat-2 { background: var(--matcha-300); }
+.heat-3 { background: var(--matcha-600); }
+.heat-4 { background: var(--matcha-800); }
+
+/* ── Log List ───────────────────────────────────────── */
+.log-list { display: flex; flex-direction: column; gap: 10px; }
+.log-item {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; box-shadow: var(--shadow);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+}
+.log-meta { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.log-meta span { font-family: var(--mono); font-size: 11px; color: var(--text2); }
+.log-item p { font-size: 14px; color: var(--text); line-height: 1.5; }
+.log-item .result-note { font-size: 12px; color: var(--matcha-600); margin-top: 6px; }
+.chip-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.icon-btn {
+  background: none; border: none; cursor: pointer; font-size: 18px;
+  color: var(--text2); padding: 4px; line-height: 1; flex-shrink: 0;
+}
+.icon-btn:hover { color: var(--pom); }
+
+/* ── Achievement Cards ──────────────────────────────── */
+.ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.ach-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; padding: 22px; box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.ach-card:hover { transform: translateY(-3px); box-shadow: var(--black) -4px 4px; }
+.ach-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.ach-card-title { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; flex: 1; }
+.star-block { border-top: 1px dashed var(--border-light); padding-top: 10px; margin-top: 10px; }
+.star-row { display: flex; gap: 8px; margin-bottom: 7px; font-size: 13px; line-height: 1.5; }
+.star-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; color: var(--text2); width: 48px; flex-shrink: 0; padding-top: 1px;
+}
+.score-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.score-pill {
+  font-family: var(--mono); font-size: 10px; padding: 2px 8px;
+  border-radius: 1584px; border: 1px solid var(--border);
+  color: var(--text3);
+}
+
+/* ── JD Match ───────────────────────────────────────── */
+.jd-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:700px){ .jd-layout { grid-template-columns: 1fr; } }
+.jd-score-big { font-family: var(--mono); font-size: 64px; font-weight: 700; line-height: 1; }
+.keyword-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.coverage-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+.coverage-row > span:first-child { width: 100px; color: var(--text3); flex-shrink: 0; font-size: 12px; }
+.cov-track { flex: 1; height: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 1584px; overflow: hidden; }
+.cov-fill { height: 100%; border-radius: 1584px; }
+.cov-strong { background: var(--matcha-600); }
+.cov-weak { background: var(--border); }
+.cov-val { font-family: var(--mono); font-size: 11px; width: 32px; text-align: right; color: var(--text2); }
+
+/* ── Builder ────────────────────────────────────────── */
+.builder-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+@media(max-width:800px){ .builder-layout { grid-template-columns: 1fr; } }
+.select-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--border); margin-bottom: 8px;
+  font-size: 14px; transition: background 0.15s;
+}
+.select-card:hover { background: var(--bg); }
+.select-card input[type=checkbox] { accent-color: var(--matcha-600); width: 16px; height: 16px; flex-shrink: 0; }
+.template-toggle { display: flex; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.template-toggle button {
+  flex: 1; padding: 8px; border: none; background: none; cursor: pointer;
+  font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text3);
+  transition: background 0.15s;
+}
+.template-toggle button.active { background: var(--black); color: var(--white); }
+
+/* Document preview */
+.doc-page {
+  background: var(--white); border: 1px dashed var(--border);
+  border-radius: 12px; padding: 32px; font-size: 14px;
+  max-height: 600px; overflow-y: auto;
+}
+.doc-page h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+.doc-page .doc-subtitle { color: var(--text3); margin-bottom: 20px; font-size: 13px; }
+.doc-page h2 { font-size: 16px; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin: 16px 0 8px; }
+.doc-page ul { padding-left: 20px; }
+.doc-page li { margin-bottom: 4px; }
+.doc-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-light); }
+.doc-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.doc-section p { font-size: 13px; color: var(--text3); line-height: 1.6; }
+.doc-tags { color: var(--matcha-600) !important; font-size: 11px !important; margin-top: 4px; }
+.builder-scores { display: flex; gap: 12px; }
+.builder-score-item { text-align: center; }
+.builder-score-item .val { font-family: var(--mono); font-size: 22px; font-weight: 700; }
+.builder-score-item .lbl { font-size: 11px; color: var(--text2); }
+
+/* Export button */
+.copy-btn { position: relative; }
+
+/* ── Security ───────────────────────────────────────── */
+.security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:700px){ .security-grid { grid-template-columns: 1fr; } }
+.finding-item {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 8px;
+  box-shadow: var(--shadow);
+}
+.finding-item .orig { font-family: var(--mono); font-size: 13px; color: var(--pom); font-weight: 700; }
+.finding-item .suggest { font-family: var(--mono); font-size: 13px; color: var(--matcha-600); }
+.finding-item .reason { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* ── Prompt hints ───────────────────────────────────── */
+.prompt-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.prompt-hint {
+  background: var(--bg); border: 1px dashed var(--border); border-radius: 1584px;
+  font-size: 12px; color: var(--text3); padding: 4px 12px; cursor: pointer;
+}
+.prompt-hint:hover { border-color: var(--black); color: var(--black); }
+
+/* ── Misc ────────────────────────────────────────────── */
+.muted { font-size: 13px; color: var(--text2); }
+.section-title { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 16px; }
+.empty-state {
+  text-align: center; padding: 48px 24px;
+  border: 1px dashed var(--border); border-radius: 20px;
+  color: var(--text2); font-size: 14px;
+}
+.empty-state .ico { font-size: 36px; margin-bottom: 12px; }
+.divider { height: 1px; background: var(--border-light); margin: 20px 0; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--black); color: var(--white); padding: 10px 22px;
+  border-radius: 1584px; font-size: 14px; font-weight: 500;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; }
+
+/* Screen grid */
+.screen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:700px){ .screen-grid { grid-template-columns: 1fr; } }
+
+/* Panel utility */
+.panel {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px; box-shadow: var(--shadow);
+}
+.panel-title { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Topbar -->
+<nav class="topbar">
+  <div class="topbar-logo">업무로그<span>·</span>경력기술서</div>
+  <div class="nav" id="nav">
+    <button class="nav-btn" data-screen="onboarding">온보딩</button>
+    <button class="nav-btn active" data-screen="dashboard">대시보드</button>
+    <button class="nav-btn" data-screen="logs">업무로그</button>
+    <button class="nav-btn" data-screen="achievements">성과카드</button>
+    <button class="nav-btn" data-screen="jd">JD 매칭</button>
+    <button class="nav-btn" data-screen="builder">경력기술서</button>
+    <button class="nav-btn" data-screen="security">보안 체크</button>
+  </div>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- ── ONBOARDING ── -->
+  <div class="screen" id="screen-onboarding">
+    <div class="onboarding-wrap">
+      <div class="onboarding-card">
+        <div class="onboarding-steps" id="ob-dots"></div>
+
+        <!-- Step 1 -->
+        <div id="ob-step-1">
+          <div class="eyebrow">Step 1 of 3</div>
+          <div class="onboarding-title">안녕하세요! 먼저 이름을 알려주세요.</div>
+          <div class="onboarding-sub">완성된 문장이 아니어도 괜찮아요. 업무 단서를 모으는 것부터 시작합니다.</div>
+          <div class="field">
+            <label>이름</label>
+            <input type="text" id="ob-name" placeholder="예: 김민준" maxlength="20">
+          </div>
+          <div class="onboarding-actions">
+            <span class="step-hint">1 / 3</span>
+            <button class="btn primary" onclick="obNext(1)">다음 →</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="ob-step-2" style="display:none">
+          <div class="eyebrow">Step 2 of 3</div>
+          <div class="onboarding-title">현재 어떤 일을 하고 계신가요?</div>
+          <div class="onboarding-sub">지금 역할과 경험 연차를 입력해주세요.</div>
+          <div class="form-grid">
+            <div class="field">
+              <label>현재 직무</label>
+              <input type="text" id="ob-role" placeholder="예: 교육 운영 담당">
+            </div>
+            <div class="field">
+              <label>경력 연차</label>
+              <input type="number" id="ob-years" placeholder="3" min="0" max="40">
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <label>업종 / 분야</label>
+              <input type="text" id="ob-industry" placeholder="예: 에듀테크, 교육 서비스">
+            </div>
+          </div>
+          <div class="onboarding-actions">
+            <button class="btn sm" onclick="obBack(2)">← 이전</button>
+            <button class="btn primary" onclick="obNext(2)">다음 →</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="ob-step-3" style="display:none">
+          <div class="eyebrow">Step 3 of 3</div>
+          <div class="onboarding-title">어떤 목표가 있으신가요?</div>
+          <div class="onboarding-sub">목표 직무와 이 앱을 어떻게 활용하고 싶으신지 알려주세요.</div>
+          <div class="form-grid">
+            <div class="field" style="grid-column:1/-1">
+              <label>목표 직무 / 이직 방향</label>
+              <input type="text" id="ob-target" placeholder="예: 프로젝트 매니저, 콘텐츠 기획">
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <label>활용 목적</label>
+              <select id="ob-goal">
+                <option value="이직">이직 준비</option>
+                <option value="연봉협상">연봉협상 대비</option>
+                <option value="성과평가">성과평가 준비</option>
+                <option value="기록">업무 기록 습관화</option>
+              </select>
+            </div>
+          </div>
+          <div class="onboarding-actions">
+            <button class="btn sm" onclick="obBack(3)">← 이전</button>
+            <button class="btn primary" onclick="obFinish()">시작하기 ✦</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD ── -->
+  <div class="screen active" id="screen-dashboard">
+    <div class="hero-band">
+      <div class="hero-text">
+        <p class="eyebrow" style="color:#666;margin-bottom:6px">오늘의 다음 액션</p>
+        <h2 id="dash-hero-title">이번 주 업무 1개만 더 기록하면 경력기술서 재료가 늘어납니다.</h2>
+        <p>완성된 문장이 아니어도 괜찮아요. 성과 문장은 나중에 다듬습니다.</p>
+        <button class="btn primary" style="margin-top:16px" onclick="goScreen('logs')">+ 업무로그 추가하기</button>
+      </div>
+      <div id="dash-ring"></div>
+    </div>
+
+    <div class="stat-row" id="dash-stats"></div>
+
+    <div class="two-panel">
+      <div class="panel">
+        <div class="eyebrow">커리어 자산 파이프라인</div>
+        <div class="panel-title" style="margin-bottom:16px">업무로그가 경력 문서가 되는 과정</div>
+        <div id="pipeline-bars"></div>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">업무로그 히트맵</div>
+        <div class="panel-title" style="margin-bottom:12px">기록 습관이 쌓이는 화면</div>
+        <div class="heatmap" id="heatmap"></div>
+        <p class="muted" style="margin-top:10px;font-size:11px">최근 4주 기록 밀도</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WORK LOGS ── -->
+  <div class="screen" id="screen-logs">
+    <div class="screen-grid">
+      <!-- Left: input form -->
+      <div class="panel">
+        <div class="flex-between" style="margin-bottom:16px">
+          <div>
+            <div class="eyebrow">업무로그 수집함</div>
+            <div class="panel-title">최근에 한 일을 3줄만 적어보세요.</div>
+          </div>
+          <span class="badge safe">완성문장 불필요</span>
+        </div>
+
+        <div class="field" style="margin-bottom:12px">
+          <label>오늘 해결한 문제 또는 한 일</label>
+          <textarea id="log-raw" placeholder="예: 교구 배송 누락이 있어서 체크리스트를 만들고 다음 회차부터 담당자별 확인 단계를 추가했다."></textarea>
+        </div>
+
+        <div class="prompt-row">
+          <span class="prompt-hint" onclick="appendHint('누구와 협업했나요?')">누구와 협업했나요?</span>
+          <span class="prompt-hint" onclick="appendHint('전보다 나아진 점이 있나요?')">전보다 나아진 점?</span>
+          <span class="prompt-hint" onclick="appendHint('숫자로 표현할 수 있나요?')">숫자로 표현할 수 있나요?</span>
+        </div>
+
+        <div class="form-grid" style="margin-top:12px;margin-bottom:16px">
+          <div class="field">
+            <label>프로젝트명</label>
+            <input type="text" id="log-project" placeholder="예: AI 캠프 운영">
+          </div>
+          <div class="field">
+            <label>중요도: <span id="log-importance-val">3</span></label>
+            <input type="range" id="log-importance" min="1" max="5" value="3" oninput="document.getElementById('log-importance-val').textContent=this.value">
+          </div>
+          <div class="field">
+            <label>사용 도구</label>
+            <input type="text" id="log-tools" placeholder="Notion, Sheets, Slack">
+          </div>
+          <div class="field">
+            <label>결과 / 변화 메모</label>
+            <input type="text" id="log-result" placeholder="예: 다음 회차 누락 감소">
+          </div>
+        </div>
+
+        <button class="btn primary" onclick="addLog()">✦ 성과카드 후보 만들기</button>
+      </div>
+
+      <!-- Right: log list -->
+      <div class="panel">
+        <div class="eyebrow">최근 업무로그</div>
+        <div class="panel-title" style="margin-bottom:14px" id="log-count-title">0개 기록됨</div>
+        <div id="log-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACHIEVEMENTS ── -->
+  <div class="screen" id="screen-achievements">
+    <div class="flex-between" style="margin-bottom:20px">
+      <div>
+        <div class="eyebrow">성과카드</div>
+        <div class="screen-title">경력 문장 후보</div>
+        <div class="screen-sub">업무로그에서 자동 생성된 STAR 성과카드입니다.</div>
+      </div>
+      <button class="btn sm" onclick="regenerateCards()">↺ 재생성</button>
+    </div>
+    <div id="ach-grid"></div>
+  </div>
+
+  <!-- ── JD MATCH ── -->
+  <div class="screen" id="screen-jd">
+    <div class="eyebrow">JD 매칭</div>
+    <div class="screen-title">채용공고와 내 경력 비교</div>
+    <div class="screen-sub">JD를 붙여넣으면 내 성과카드와 키워드를 매칭합니다.</div>
+
+    <div class="jd-layout">
+      <div>
+        <div class="panel" style="margin-bottom:16px">
+          <div class="eyebrow" style="margin-bottom:8px">채용공고 / JD 입력</div>
+          <textarea id="jd-input" placeholder="채용공고를 여기에 붙여넣으세요. 교육 운영, 강사 관리, 데이터 분석 등의 키워드를 자동 감지합니다." style="min-height:180px"></textarea>
+          <button class="btn primary" style="margin-top:12px" onclick="runJDMatch()">⌁ 매칭 분석하기</button>
+        </div>
+
+        <div class="panel" id="jd-keywords-panel" style="display:none">
+          <div class="eyebrow" style="margin-bottom:8px">감지된 키워드</div>
+          <div style="margin-bottom:12px">
+            <div class="muted" style="font-size:12px;margin-bottom:6px">매칭됨</div>
+            <div class="keyword-list" id="jd-strong"></div>
+          </div>
+          <div>
+            <div class="muted" style="font-size:12px;margin-bottom:6px">보완 필요</div>
+            <div class="keyword-list" id="jd-weak"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" id="jd-score-panel" style="display:none">
+          <div class="eyebrow" style="margin-bottom:8px">매칭 점수</div>
+          <div class="jd-score-big" id="jd-score-num">0점</div>
+          <div class="muted" style="margin-bottom:20px" id="jd-score-msg"></div>
+          <div class="eyebrow" style="margin-bottom:10px">키워드별 커버리지</div>
+          <div id="jd-coverage"></div>
+        </div>
+        <div class="panel" id="jd-matched-panel" style="display:none">
+          <div class="eyebrow" style="margin-bottom:8px">관련 성과카드</div>
+          <div id="jd-matched-cards"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BUILDER ── -->
+  <div class="screen" id="screen-builder">
+    <div class="eyebrow" style="margin-bottom:4px">경력기술서 빌더</div>
+    <div class="screen-title" style="margin-bottom:20px">문서 미리보기</div>
+
+    <div class="builder-layout">
+      <!-- Sidebar: card picker -->
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:6px">성과카드 선택</div>
+        <div class="panel-title" style="margin-bottom:12px">문서에 넣을 카드를 고르세요.</div>
+        <div class="template-toggle" style="margin-bottom:16px">
+          <button id="tmpl-project" class="active" onclick="setTemplate('project')">프로젝트형</button>
+          <button id="tmpl-operation" onclick="setTemplate('operation')">운영성과형</button>
+        </div>
+        <div id="builder-card-list"></div>
+      </div>
+
+      <!-- Preview -->
+      <div class="panel">
+        <div class="flex-between" style="margin-bottom:16px">
+          <div>
+            <div class="eyebrow">경력기술서 미리보기</div>
+            <div class="panel-title" id="builder-header-title">이름 · 직무</div>
+          </div>
+          <div class="builder-scores">
+            <div class="builder-score-item">
+              <div class="val" id="builder-readiness">0</div>
+              <div class="lbl">품질점수</div>
+            </div>
+            <div class="builder-score-item">
+              <div class="val" id="builder-security">0</div>
+              <div class="lbl">보안점수</div>
+            </div>
+          </div>
+        </div>
+        <div id="doc-preview" class="doc-page"></div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn sm" onclick="copyResume()">📋 텍스트 복사</button>
+          <button class="btn sm" onclick="printResume()">🖨 인쇄 / PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECURITY ── -->
+  <div class="screen" id="screen-security">
+    <div class="eyebrow">보안 체크</div>
+    <div class="screen-title">외부 제출 전 점검</div>
+    <div class="screen-sub">고객사명, 내부 수치, URL, 이메일, 전화번호를 감지합니다.</div>
+
+    <div class="security-grid">
+      <div>
+        <div class="panel" style="margin-bottom:16px">
+          <div class="eyebrow" style="margin-bottom:6px">점검할 텍스트</div>
+          <textarea id="sec-input" placeholder="업무로그나 경력기술서 텍스트를 붙여넣으세요." style="min-height:180px"></textarea>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <button class="btn primary sm" onclick="runSecCheck()">◈ 보안 검사</button>
+            <button class="btn sm" onclick="loadLogsForSec()">업무로그 불러오기</button>
+          </div>
+        </div>
+
+        <div class="panel" id="sec-score-card" style="display:none">
+          <div class="eyebrow" style="margin-bottom:8px">보안 점수</div>
+          <div id="sec-score-big" style="font-family:var(--mono);font-size:56px;font-weight:700;line-height:1"></div>
+          <div class="muted" id="sec-score-msg" style="margin-top:4px"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="eyebrow" style="margin-bottom:8px">감지된 항목</div>
+          <div id="findings-list"></div>
+          <div style="margin-top:12px;display:none" id="mask-btn-wrap">
+            <button class="btn primary sm" onclick="applyMasking()">마스킹 적용하기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── Storage ──────────────────────────────────────────
+const KEY = 'career-log-builder-v1';
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || defaultState(); }
+  catch { return defaultState(); }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+function defaultState() {
+  return {
+    profile: { name: '', currentRole: '', targetRole: '', yearsOfExperience: 0, industry: '', goal: '' },
+    logs: [],
+    cards: [],
+    selectedCardIds: [],
+    template: 'project',
+    jdInput: '',
+    jdResult: null,
+    onboardingDone: false,
+    currentScreen: 'dashboard'
+  };
+}
+
+let state = load();
+// ─────────────────────────────────────────────────────
+
+// ── Navigation ───────────────────────────────────────
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const screen = document.getElementById('screen-' + id);
+  const btn = document.querySelector('[data-screen="' + id + '"]');
+  if (screen) screen.classList.add('active');
+  if (btn) btn.classList.add('active');
+  state.currentScreen = id;
+  save();
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'logs') renderLogs();
+  if (id === 'achievements') renderAchievements();
+  if (id === 'builder') renderBuilder();
+  if (id === 'security') {};
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => goScreen(btn.dataset.screen));
+});
+// ─────────────────────────────────────────────────────
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+// ─────────────────────────────────────────────────────
+
+// ── Onboarding ────────────────────────────────────────
+let obStep = 1;
+
+function renderObDots() {
+  const dots = document.getElementById('ob-dots');
+  dots.innerHTML = [1,2,3].map(i => `<div class="onboarding-step-dot ${i < obStep ? 'done' : i === obStep ? 'active' : ''}"></div>`).join('');
+}
+
+function obNext(step) {
+  if (step === 1) {
+    const name = document.getElementById('ob-name').value.trim();
+    if (!name) { showToast('이름을 입력해주세요.'); return; }
+    state.profile.name = name;
+  } else if (step === 2) {
+    state.profile.currentRole = document.getElementById('ob-role').value.trim() || '직장인';
+    state.profile.yearsOfExperience = parseInt(document.getElementById('ob-years').value) || 0;
+    state.profile.industry = document.getElementById('ob-industry').value.trim() || '일반';
+  }
+  save();
+  document.getElementById('ob-step-' + step).style.display = 'none';
+  obStep = step + 1;
+  document.getElementById('ob-step-' + obStep).style.display = 'block';
+  renderObDots();
+}
+
+function obBack(step) {
+  document.getElementById('ob-step-' + step).style.display = 'none';
+  obStep = step - 1;
+  document.getElementById('ob-step-' + obStep).style.display = 'block';
+  renderObDots();
+}
+
+function obFinish() {
+  state.profile.targetRole = document.getElementById('ob-target').value.trim() || state.profile.currentRole;
+  state.profile.goal = document.getElementById('ob-goal').value;
+  state.onboardingDone = true;
+  save();
+  showToast('✦ 시작되었습니다!');
+  goScreen('dashboard');
+}
+
+renderObDots();
+// ─────────────────────────────────────────────────────
+
+// ── Score Ring SVG ────────────────────────────────────
+function scoreRingHTML(score, label, size=90) {
+  const r = (size - 14) / 2;
+  const circ = 2 * Math.PI * r;
+  const fill = circ * (1 - score / 100);
+  const col = score >= 70 ? '#078a52' : score >= 40 ? '#fbbd41' : '#fc7981';
+  return `<div class="score-ring-wrap">
+    <svg width="${size}" height="${size}">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#eee9df" stroke-width="10"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="10"
+        stroke-dasharray="${circ}" stroke-dashoffset="${fill}"
+        stroke-linecap="round" transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dashoffset 0.8s"/>
+    </svg>
+    <div class="score-ring-num" style="margin-top:-${size/2+18}px;padding-bottom:${size/2-14}px">${score}</div>
+    <div class="score-ring-label">${label}</div>
+  </div>`;
+}
+// ─────────────────────────────────────────────────────
+
+// ── Career Engine ─────────────────────────────────────
+const skillRules = [
+  { key: '강사', title: '강사 배정 프로세스 안정화', skills: ['강사 관리','일정 관리','커뮤니케이션','운영 관리'], metrics: ['배정한 강사 수','배정 소요시간','일정 변경 대응 건수','재섭외율'] },
+  { key: '교구', title: '교구 운영 체크리스트 표준화', skills: ['프로세스 개선','품질 관리','운영 관리','문제 해결'], metrics: ['교구 준비 수량','누락 건수','재작업 건수','준비 리드타임'] },
+  { key: '만족도', title: '교육 만족도 데이터 기반 개선안 도출', skills: ['데이터 분석','교육 개선','리포팅','콘텐츠 기획'], metrics: ['만족도 점수','응답자 수','불만 유형 수','개선 반영 건수'] },
+  { key: '제안서', title: 'B2B 교육 제안 자료 기획', skills: ['B2B 커뮤니케이션','제안서 작성','영업 지원','사업 기획'], metrics: ['제안 금액','고객사 수','미팅 전환율','계약 전환율'] },
+  { key: 'FAQ', title: '고객 문의 대응 지식 베이스 구축', skills: ['CS 운영','문서화','업무 표준화','고객 커뮤니케이션'], metrics: ['문의 처리 건수','응답 시간','재문의율','FAQ 반영 문항 수'] },
+  { key: '데이터', title: '데이터 기반 운영 개선', skills: ['데이터 분석','리포팅','문제 해결','협업'], metrics: ['처리 건수','정확도','소요 시간','오류 감소'] },
+  { key: '기획', title: '사업 기획 및 전략 수립', skills: ['기획','전략 수립','분석','협업'], metrics: ['기획 건수','채택률','일정 준수율','성과 달성률'] },
+  { key: '운영', title: '운영 프로세스 개선', skills: ['운영 관리','프로세스 개선','문제 해결','문서화'], metrics: ['처리 건수','소요 시간','오류 건수','재발 방지 건수'] }
+];
+const fallbackRule = { key: 'default', title: '업무 실행 프로세스 개선', skills: ['문제 해결','협업','운영 관리','문서화'], metrics: ['처리 건수','소요 시간','오류 감소','만족도'] };
+
+function findRule(text) {
+  const norm = s => s.replace(/\s/g,'').toLowerCase();
+  return skillRules.find(r => norm(text).includes(norm(r.key))) || fallbackRule;
+}
+function clamp(v,a,b) { return Math.min(Math.max(v,a),b); }
+
+function generateCard(log, index) {
+  const rule = findRule(log.rawText);
+  const findings = detectSecurity(log.rawText);
+  const confLevel = findings.some(f => f.severity === 'high') ? 'review_required'
+    : findings.length > 0 ? 'masking_required' : 'safe';
+  const evidenceBonus = log.resultMemo.trim().length > 0 ? 14 : 0;
+  const impactScore = clamp(46 + log.importance * 9 + evidenceBonus, 0, 96);
+  const after = `${log.project || '프로젝트'}에서 ${rule.skills.slice(0,2).join('·')} 역량을 활용해 ${rule.title.replace(/화$|도출$|기획$/,'')} 과제를 수행하고, ${log.resultMemo || '운영 안정성과 업무 재현 가능성을 높였습니다'}.`;
+
+  return {
+    id: 'ach-' + (index + 1),
+    sourceLogId: log.id,
+    title: rule.title,
+    situation: `${log.project || '해당 프로젝트'} 과정에서 반복 업무와 운영 리스크를 관리해야 하는 상황이었습니다.`,
+    task: `${rule.skills[0]}와 ${rule.skills[1]} 역량을 바탕으로 업무 흐름을 정리하고 실행 안정성을 높이는 역할을 맡았습니다.`,
+    action: `${rule.skills[0]} 관점에서 업무 흐름을 정리하고, ${rule.skills[1]}에 필요한 실행 항목을 구체화했습니다.`,
+    result: log.resultMemo || '업무 진행 과정의 안정성과 재현 가능성을 높였습니다.',
+    before: log.rawText.slice(0, 54) + (log.rawText.length > 54 ? '…' : ''),
+    after,
+    skills: rule.skills,
+    metricCandidates: rule.metrics,
+    impactScore,
+    evidenceScore: clamp(50 + evidenceBonus + rule.metrics.length * 6, 0, 94),
+    jdRelevanceScore: clamp(58 + rule.skills.length * 7, 0, 95),
+    confidentialityLevel: confLevel
+  };
+}
+
+function calcReadiness() {
+  const metricCount = state.cards.reduce((s,c) => s + c.metricCandidates.length, 0);
+  const safeCount = state.cards.filter(c => c.confidentialityLevel === 'safe').length;
+  return clamp(Math.round(state.logs.length * 8 + state.cards.length * 10 + metricCount * 2 + safeCount * 3), 0, 100);
+}
+
+function calcSecurityScore(findings) {
+  const penalty = findings.reduce((s,f) => s + (f.severity==='high'?20:f.severity==='medium'?12:6), 0);
+  return clamp(100 - penalty, 0, 100);
+}
+
+// ─────────────────────────────────────────────────────
+
+// ── Security Detection ────────────────────────────────
+function detectSecurity(text) {
+  const findings = [];
+  const push = (id,type,sev,orig,suggest,reason) => findings.push({id,type,sev,severity:sev,original:orig,suggestion:suggest,reason});
+
+  (text.match(/[A-Z가-힣]{1,12}(전자|은행|카드|병원|그룹|교육청|대학교|고객사)/g)||[]).forEach((m,i) =>
+    push(`co-${i}`, 'customer_name', 'medium', m, '대형 B2B 고객사', '고객사 실명은 외부 제출 전 익명화하는 것이 안전합니다.'));
+
+  (text.match(/\d+(\.\d+)?\s?(억|천만|백만|만원|원)/g)||[]).forEach((m,i) =>
+    push(`mt-${i}`, 'internal_metric', m.includes('억')?'high':'medium', m, m.includes('억')?'억 단위 규모':'금액 규모', '내부 매출·계약 금액은 범주형 표현으로 바꾸는 것이 안전합니다.'));
+
+  (text.match(/https?:\/\/[^\s]+/g)||[]).forEach((m,i) =>
+    push(`url-${i}`, 'url', 'high', m, '[내부 URL 삭제]', '내부 시스템 URL은 제출 문서에서 삭제해야 합니다.'));
+
+  (text.match(/[\w.-]+@[\w.-]+\.[A-Za-z]{2,}/g)||[]).forEach((m,i) =>
+    push(`em-${i}`, 'email', 'high', m, '[이메일 삭제]', '개인정보 또는 담당자 정보일 수 있어 삭제가 필요합니다.'));
+
+  (text.match(/01[016789]-?\d{3,4}-?\d{4}/g)||[]).forEach((m,i) =>
+    push(`ph-${i}`, 'phone', 'high', m, '[전화번호 삭제]', '전화번호는 개인정보로 처리해야 합니다.'));
+
+  const seen = new Set();
+  return findings.filter(f => {
+    const k = f.type + '-' + f.original;
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+}
+// ─────────────────────────────────────────────────────
+
+// ── Dashboard ─────────────────────────────────────────
+function renderDashboard() {
+  const readiness = calcReadiness();
+  const allFindings = state.logs.flatMap(l => detectSecurity(l.rawText));
+  const secScore = calcSecurityScore(allFindings);
+  const jdScore = state.jdResult ? state.jdResult.score : 0;
+
+  // Ring
+  document.getElementById('dash-ring').innerHTML = scoreRingHTML(readiness, '준비도', 100);
+
+  // Stats
+  const stats = [
+    { icon: '✎', title: '업무로그', val: state.logs.length + '개', helper: '기록된 업무' },
+    { icon: '✦', title: '성과카드', val: state.cards.length + '개', helper: '경력 문장 후보' },
+    { icon: '⌁', title: 'JD 매칭', val: jdScore + '점', helper: '목표 직무 적합도' },
+    { icon: '◈', title: '보안 점수', val: secScore + '점', helper: allFindings.length > 0 ? `위험 표현 ${allFindings.length}개` : '외부 제출 가능' }
+  ];
+  document.getElementById('dash-stats').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-icon">${s.icon}</div>
+      <div class="stat-title">${s.title}</div>
+      <div class="stat-val">${s.val}</div>
+      <div class="stat-helper">${s.helper}</div>
+    </div>`).join('');
+
+  // Pipeline
+  const pipeline = [
+    { name: '업무로그', value: state.logs.length },
+    { name: '성과카드', value: state.cards.length },
+    { name: '수치화', value: state.cards.filter(c => c.metricCandidates.length >= 4).length },
+    { name: '문서반영', value: state.selectedCardIds.length }
+  ];
+  const maxPipe = Math.max(...pipeline.map(p => p.value), 1);
+  document.getElementById('pipeline-bars').innerHTML = pipeline.map(p => `
+    <div class="bar-row">
+      <span>${p.name}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(p.value/maxPipe)*100}%"></div></div>
+      <strong>${p.value}</strong>
+    </div>`).join('');
+
+  // Heatmap
+  const today = new Date();
+  const heatData = Array.from({length: 28}, (_,i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (27 - i));
+    const dateStr = d.toISOString().slice(0,10);
+    const count = state.logs.filter(l => l.logDate === dateStr).length;
+    return Math.min(count, 4);
+  });
+  document.getElementById('heatmap').innerHTML = heatData.map(v => `<span class="heat heat-${v}"></span>`).join('');
+
+  // Hero title
+  if (state.profile.name) {
+    document.getElementById('dash-hero-title').textContent = `${state.profile.name}님, 이번 주 업무 1개만 더 기록하면 경력기술서 재료가 늘어납니다.`;
+  }
+}
+// ─────────────────────────────────────────────────────
+
+// ── Logs ──────────────────────────────────────────────
+function addLog() {
+  const raw = document.getElementById('log-raw').value.trim();
+  if (!raw) { showToast('업무 내용을 입력해주세요.'); return; }
+  const project = document.getElementById('log-project').value.trim() || '일반 업무';
+  const importance = parseInt(document.getElementById('log-importance').value);
+  const toolsText = document.getElementById('log-tools').value;
+  const resultMemo = document.getElementById('log-result').value.trim();
+  const tools = toolsText.split(/[,，\s]+/).map(s=>s.trim()).filter(Boolean);
+  const today = new Date().toISOString().slice(0,10);
+
+  const log = {
+    id: 'log-' + Date.now(),
+    logDate: today,
+    rawText: raw,
+    project,
+    importance,
+    tools,
+    resultMemo
+  };
+  state.logs.unshift(log);
+  state.cards = state.logs.map((l,i) => generateCard(l, i));
+  save();
+
+  // Reset form
+  document.getElementById('log-raw').value = '';
+  document.getElementById('log-project').value = '';
+  document.getElementById('log-importance').value = 3;
+  document.getElementById('log-importance-val').textContent = '3';
+  document.getElementById('log-tools').value = '';
+  document.getElementById('log-result').value = '';
+
+  renderLogs();
+  showToast('✦ 성과카드 후보가 만들어졌어요!');
+}
+
+function deleteLog(id) {
+  state.logs = state.logs.filter(l => l.id !== id);
+  state.cards = state.logs.map((l,i) => generateCard(l, i));
+  state.selectedCardIds = state.selectedCardIds.filter(sid =>
+    state.cards.some(c => c.id === sid));
+  save();
+  renderLogs();
+  showToast('로그가 삭제되었어요.');
+}
+
+function renderLogs() {
+  const list = document.getElementById('log-list');
+  document.getElementById('log-count-title').textContent = state.logs.length + '개 기록됨';
+  if (state.logs.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="ico">✎</div><div>아직 업무로그가 없어요.<br>왼쪽에서 첫 번째 업무를 기록해보세요.</div></div>';
+    return;
+  }
+  list.innerHTML = '<div class="log-list">' + state.logs.map(log => `
+    <article class="log-item">
+      <div style="flex:1">
+        <div class="log-meta">
+          <span>${log.logDate}</span>
+          <span>${log.project}</span>
+          <span>중요도 ${log.importance}</span>
+        </div>
+        <p>${escHtml(log.rawText)}</p>
+        <div class="chip-row">
+          ${log.tools.map(t => `<span class="chip">${escHtml(t)}</span>`).join('')}
+        </div>
+        ${log.resultMemo ? `<p class="result-note">결과 단서: ${escHtml(log.resultMemo)}</p>` : ''}
+      </div>
+      <button class="icon-btn" onclick="deleteLog('${log.id}')" title="삭제">×</button>
+    </article>`).join('') + '</div>';
+}
+
+function appendHint(hint) {
+  const ta = document.getElementById('log-raw');
+  const val = ta.value.trim();
+  ta.value = val ? val + '\n' + hint + ' ' : hint + ' ';
+  ta.focus();
+}
+// ─────────────────────────────────────────────────────
+
+// ── Achievements ──────────────────────────────────────
+function regenerateCards() {
+  state.cards = state.logs.map((l,i) => generateCard(l, i));
+  save();
+  renderAchievements();
+  showToast('성과카드가 재생성되었어요.');
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('ach-grid');
+  if (state.cards.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="ico">✦</div><div>업무로그를 추가하면 성과카드가 자동으로 생성됩니다.</div></div>';
+    return;
+  }
+  const confColors = { safe: 'safe', masking_required: 'warn', review_required: 'danger', blocked: 'danger' };
+  const confLabels = { safe: '안전', masking_required: '마스킹 필요', review_required: '검토 필요', blocked: '차단' };
+
+  grid.innerHTML = '<div class="ach-grid">' + state.cards.map(c => `
+    <div class="ach-card">
+      <div class="ach-card-header">
+        <div class="ach-card-title">${escHtml(c.title)}</div>
+        <span class="badge ${confColors[c.confidentialityLevel]}">${confLabels[c.confidentialityLevel]}</span>
+      </div>
+      <div class="star-block">
+        ${[['S','상황',c.situation],['T','역할',c.task],['A','실행',c.action],['R','결과',c.result]].map(([l,label,v])=>`
+          <div class="star-row">
+            <span class="star-label">${l} · ${label}</span>
+            <span>${escHtml(v)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="score-pills">
+        <span class="score-pill">임팩트 ${c.impactScore}</span>
+        <span class="score-pill">근거 ${c.evidenceScore}</span>
+        <span class="score-pill">JD 적합 ${c.jdRelevanceScore}</span>
+      </div>
+      <div class="chip-row" style="margin-top:10px">
+        ${c.skills.map(s=>`<span class="chip matcha">${escHtml(s)}</span>`).join('')}
+      </div>
+      <div style="margin-top:8px">
+        <div class="muted" style="font-size:11px;margin-bottom:4px">수치화 후보</div>
+        <div class="chip-row">${c.metricCandidates.map(m=>`<span class="chip lemon">${escHtml(m)}</span>`).join('')}</div>
+      </div>
+    </div>`).join('') + '</div>';
+}
+// ─────────────────────────────────────────────────────
+
+// ── JD Match ──────────────────────────────────────────
+const jdCandidates = ['교육 운영','일정 관리','강사 관리','고객 커뮤니케이션','콘텐츠 개선','데이터 분석','운영 리포트','예산 관리','프로젝트 관리','Notion','Google Sheets','Slack','문제 해결','프로세스 개선','제안서 작성','팀 협업','CS 운영','B2B 영업','채용','온보딩'];
+
+function runJDMatch() {
+  const jd = document.getElementById('jd-input').value.trim();
+  if (!jd) { showToast('JD를 입력해주세요.'); return; }
+  state.jdInput = jd;
+
+  const norm = s => s.replace(/\s/g,'').toLowerCase();
+  const jdNorm = norm(jd);
+  const detected = jdCandidates.filter(k => jdNorm.includes(norm(k)));
+  const cardKeywords = state.cards.flatMap(c => [c.title, ...c.skills, ...c.metricCandidates]);
+  const isSim = (a,b) => { const na=norm(a),nb=norm(b); return na.includes(nb)||nb.includes(na); };
+
+  const strong = detected.filter(k => cardKeywords.some(ck => isSim(k,ck)));
+  const weak = detected.filter(k => !strong.includes(k));
+  const matchedCards = state.cards.filter(c =>
+    c.skills.some(s => strong.some(k => isSim(k,s))) ||
+    strong.some(k => isSim(k,c.title)));
+  const score = detected.length === 0 ? 0 : Math.round((strong.length / detected.length) * 100);
+  const coverage = detected.slice(0,9).map((k,i) => ({
+    keyword: k,
+    value: strong.includes(k) ? 82 + ((i*7)%15) : 24 + ((i*11)%28),
+    isStrong: strong.includes(k)
+  }));
+
+  state.jdResult = { score, strongKeywords: strong, weakKeywords: weak, matchedCards, coverage };
+  save();
+
+  // Render
+  document.getElementById('jd-keywords-panel').style.display = 'block';
+  document.getElementById('jd-score-panel').style.display = 'block';
+  document.getElementById('jd-matched-panel').style.display = 'block';
+
+  document.getElementById('jd-strong').innerHTML = strong.map(k => `<span class="chip matcha">${escHtml(k)}</span>`).join('') || '<span class="muted">없음</span>';
+  document.getElementById('jd-weak').innerHTML = weak.map(k => `<span class="chip pom">${escHtml(k)}</span>`).join('') || '<span class="muted">없음</span>';
+
+  const scoreNum = document.getElementById('jd-score-num');
+  scoreNum.textContent = score + '점';
+  scoreNum.style.color = score >= 70 ? 'var(--matcha-600)' : score >= 40 ? 'var(--lemon-700)' : 'var(--pom)';
+  document.getElementById('jd-score-msg').textContent = score >= 70 ? '매우 좋은 매칭입니다!' : score >= 40 ? '일부 보완이 필요합니다.' : '추가 경험 기록이 도움이 됩니다.';
+
+  document.getElementById('jd-coverage').innerHTML = coverage.map(c => `
+    <div class="coverage-row">
+      <span>${escHtml(c.keyword)}</span>
+      <div class="cov-track"><div class="cov-fill ${c.isStrong?'cov-strong':'cov-weak'}" style="width:${c.value}%"></div></div>
+      <span class="cov-val">${c.value}%</span>
+    </div>`).join('');
+
+  document.getElementById('jd-matched-cards').innerHTML = matchedCards.length === 0
+    ? '<div class="muted">매칭된 성과카드가 없습니다.</div>'
+    : matchedCards.map(c => `
+      <div style="padding:10px 0;border-bottom:1px solid var(--border-light)">
+        <div style="font-size:14px;font-weight:600">${escHtml(c.title)}</div>
+        <div class="chip-row" style="margin-top:4px">${c.skills.map(s=>`<span class="chip slushie">${escHtml(s)}</span>`).join('')}</div>
+      </div>`).join('');
+}
+// ─────────────────────────────────────────────────────
+
+// ── Builder ───────────────────────────────────────────
+let currentTemplate = state.template || 'project';
+
+function setTemplate(t) {
+  currentTemplate = t;
+  state.template = t;
+  save();
+  document.getElementById('tmpl-project').classList.toggle('active', t === 'project');
+  document.getElementById('tmpl-operation').classList.toggle('active', t === 'operation');
+  renderDocPreview();
+}
+
+function toggleCard(id) {
+  if (state.selectedCardIds.includes(id)) {
+    state.selectedCardIds = state.selectedCardIds.filter(x => x !== id);
+  } else {
+    state.selectedCardIds.push(id);
+  }
+  save();
+  renderDocPreview();
+}
+
+function renderBuilder() {
+  const p = state.profile;
+  document.getElementById('builder-header-title').textContent = (p.name || '이름') + ' · ' + (p.targetRole || p.currentRole || '직무');
+
+  // Card list
+  document.getElementById('builder-card-list').innerHTML = state.cards.length === 0
+    ? '<div class="muted" style="font-size:13px">업무로그를 추가하면 성과카드가 생성됩니다.</div>'
+    : state.cards.map(c => `
+      <label class="select-card">
+        <input type="checkbox" ${state.selectedCardIds.includes(c.id) ? 'checked' : ''} onchange="toggleCard('${c.id}')">
+        <span>${escHtml(c.title)}</span>
+      </label>`).join('');
+
+  // Scores
+  const readiness = calcReadiness();
+  const allFindings = state.logs.flatMap(l => detectSecurity(l.rawText));
+  const secScore = calcSecurityScore(allFindings);
+  document.getElementById('builder-readiness').textContent = readiness;
+  document.getElementById('builder-security').textContent = secScore;
+
+  renderDocPreview();
+}
+
+function renderDocPreview() {
+  const p = state.profile;
+  const selected = state.cards.filter(c => state.selectedCardIds.includes(c.id));
+  const skills = currentTemplate === 'project'
+    ? ['프로젝트 단위 문제 정의 및 실행 관리', '성과 지표 기반 개선안 도출', '이해관계자 커뮤니케이션과 산출물 관리']
+    : ['교육 운영 프로세스 표준화', '강사·교구·일정 운영 리스크 관리', '현장 이슈 대응과 재발 방지 체계 구축'];
+
+  document.getElementById('doc-preview').innerHTML = `
+    <h1>${escHtml(p.name || '홍길동')}</h1>
+    <p class="doc-subtitle">${escHtml(p.currentRole || '직무')} · ${p.yearsOfExperience || 0}년차 · ${escHtml(p.industry || '업종')}</p>
+    <h2>핵심 역량</h2>
+    <ul>${skills.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <h2>주요 프로젝트</h2>
+    ${selected.length === 0
+      ? '<p class="muted">왼쪽에서 성과카드를 선택하면 문서에 반영됩니다.</p>'
+      : selected.map(c => `
+        <section class="doc-section">
+          <h3>${escHtml(c.title)}</h3>
+          <p>${escHtml(c.after)}</p>
+          <p class="doc-tags">역량: ${c.skills.join(' · ')}</p>
+        </section>`).join('')}
+  `;
+}
+
+function copyResume() {
+  const el = document.getElementById('doc-preview');
+  navigator.clipboard.writeText(el.innerText).then(() => showToast('📋 클립보드에 복사되었습니다!'));
+}
+function printResume() { window.print(); }
+// ─────────────────────────────────────────────────────
+
+// ── Security ──────────────────────────────────────────
+let secFindings = [];
+
+function runSecCheck() {
+  const text = document.getElementById('sec-input').value.trim();
+  if (!text) { showToast('텍스트를 입력해주세요.'); return; }
+  secFindings = detectSecurity(text);
+  const score = calcSecurityScore(secFindings);
+
+  document.getElementById('sec-score-card').style.display = 'block';
+  const scoreEl = document.getElementById('sec-score-big');
+  scoreEl.textContent = score + '점';
+  scoreEl.style.color = score >= 80 ? 'var(--matcha-600)' : score >= 50 ? 'var(--lemon-700)' : 'var(--pom)';
+  document.getElementById('sec-score-msg').textContent = secFindings.length === 0
+    ? '외부 제출 가능한 상태입니다.' : `${secFindings.length}개 항목을 검토하세요.`;
+
+  const list = document.getElementById('findings-list');
+  if (secFindings.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="padding:24px"><div class="ico">✓</div><div>감지된 민감 정보가 없습니다.</div></div>';
+    document.getElementById('mask-btn-wrap').style.display = 'none';
+  } else {
+    const sevBadge = { high: 'danger', medium: 'warn', low: 'safe' };
+    const sevLabel = { high: '높음', medium: '중간', low: '낮음' };
+    list.innerHTML = secFindings.map(f => `
+      <div class="finding-item">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span class="badge ${sevBadge[f.severity]}">${sevLabel[f.severity]}</span>
+          <span class="muted" style="font-size:11px">${f.type}</span>
+        </div>
+        <div class="orig">"${escHtml(f.original)}"</div>
+        <div class="suggest">→ "${escHtml(f.suggestion)}"</div>
+        <div class="reason">${escHtml(f.reason)}</div>
+      </div>`).join('');
+    document.getElementById('mask-btn-wrap').style.display = 'block';
+  }
+}
+
+function loadLogsForSec() {
+  if (state.logs.length === 0) { showToast('업무로그가 없습니다.'); return; }
+  document.getElementById('sec-input').value = state.logs.map(l => l.rawText).join('\n\n');
+}
+
+function applyMasking() {
+  let text = document.getElementById('sec-input').value;
+  secFindings.forEach(f => { text = text.replaceAll(f.original, f.suggestion); });
+  document.getElementById('sec-input').value = text;
+  secFindings = [];
+  document.getElementById('findings-list').innerHTML = '<div class="empty-state" style="padding:24px"><div class="ico">✓</div><div>마스킹이 완료되었습니다.</div></div>';
+  document.getElementById('mask-btn-wrap').style.display = 'none';
+  showToast('마스킹이 적용되었습니다!');
+}
+// ─────────────────────────────────────────────────────
+
+// ── Util ──────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+// ─────────────────────────────────────────────────────
+
+// ── Init ──────────────────────────────────────────────
+(function init() {
+  const screen = state.currentScreen || 'dashboard';
+
+  // If no onboarding done, show onboarding
+  if (!state.onboardingDone) {
+    goScreen('onboarding');
+    return;
+  }
+
+  goScreen(screen);
+
+  // Restore onboarding fields if revisiting
+  if (state.profile.name) document.getElementById('ob-name').value = state.profile.name;
+  if (state.profile.currentRole) document.getElementById('ob-role').value = state.profile.currentRole;
+  if (state.profile.yearsOfExperience) document.getElementById('ob-years').value = state.profile.yearsOfExperience;
+  if (state.profile.industry) document.getElementById('ob-industry').value = state.profile.industry;
+  if (state.profile.targetRole) document.getElementById('ob-target').value = state.profile.targetRole;
+  if (state.profile.goal) document.getElementById('ob-goal').value = state.profile.goal;
+})();
+</script>
+</body>
+</html>

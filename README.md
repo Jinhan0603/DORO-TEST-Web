@@ -10,7 +10,7 @@
 
 ---
 
-## 📂 전체 결과물 목록 (19건)
+## 📂 전체 결과물 목록 (20건)
 
 ### 🤖 AI · 컨설팅
 
@@ -59,6 +59,7 @@
 | 제목 | 바로가기 |
 |------|----------|
 | 월급생존OS | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-월급생존OS/index.html) |
+| 업무로그 기반 경력기술서 빌더 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-업무로그%20기반%20경력기술서%20빌더/index.html) |
 | 전주 맛집 지도 · 全州味房 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/jeonju-food-map/index.html) |
 
 ---
