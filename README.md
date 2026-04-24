@@ -10,7 +10,7 @@
 
 ---
 
-## 📂 전체 결과물 목록 (17건)
+## 📂 전체 결과물 목록 (19건)
 
 ### 🤖 AI · 컨설팅
 
@@ -53,6 +53,13 @@
 | 2026 산학연 콜라보 계획 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/AI_Agent_LMS_Infographic.html) |
 | 협력 인포그래픽 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Cooperation_Infographic.html) |
 | AI Together | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/AI%20together.html) |
+
+### 🛠️ Claude AI 결과물
+
+| 제목 | 바로가기 |
+|------|----------|
+| 월급생존OS | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-월급생존OS/index.html) |
+| 전주 맛집 지도 · 全州味房 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/jeonju-food-map/index.html) |
 
 ---
 

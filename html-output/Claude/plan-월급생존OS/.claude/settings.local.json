@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(C:/Users/User/Documents/Jindex/DORO-TEST-Web/html-output/Claude/plan-월급생존OS/*)",
+      "Write(C:/Users/User/Documents/Jindex/DORO-TEST-Web/html-output/Claude/plan-월급생존OS/*)",
+      "Edit(C:/Users/User/Documents/Jindex/DORO-TEST-Web/html-output/Claude/plan-월급생존OS/*)",
+      "Skill(update-config)",
+      "Bash(start *)",
+      "WebFetch(domain:getdesign.md)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npx getdesign@latest add miro)",
+      "Read(//c/Users/User/Documents/Jindex/DORO-TEST-Web/**)",
+      "Read(//c/Users/User/**)"
+    ]
+  }
+}
