@@ -1,0 +1,24 @@
+{
+  "name": "one-room-cost-transparency-codex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "원룸 생활비 투명화 도우미 로컬 UI/UX 시제품 - Codex CLI 작업용",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "build": "node scripts/build.mjs",
+    "lint": "node scripts/lint.mjs",
+    "test": "node scripts/test.mjs",
+    "check": "node scripts/lint.mjs && node scripts/test.mjs && node scripts/build.mjs",
+    "codex:prompt": "node scripts/print-codex-prompt.mjs"
+  },
+  "keywords": [
+    "one-room",
+    "housing-cost",
+    "prototype",
+    "codex-cli",
+    "local-first"
+  ],
+  "author": "DORO prototype package",
+  "license": "UNLICENSED"
+}

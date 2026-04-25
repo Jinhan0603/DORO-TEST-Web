@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>원룸 생활비 투명화 도우미</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F5F5F7;--shell:#FFFFFF;--surface:#FAFAFA;--surface2:#F2F2F4;
+  --red:#E60000;--red2:#FF4444;--dark:#1A1A1A;--mid:#555;--muted:#999;
+  --border:#E0E0E0;--success:#00A86B;--warning:#FF8C00;--danger:#E60000;
+  --grad:linear-gradient(135deg,#E60000,#FF4444);
+}
+body{background:var(--bg);font-family:'Inter',sans-serif;min-height:100vh;color:var(--dark);}
+#phone{display:flex;flex-direction:column;height:100vh;width:100%;max-width:430px;margin:0 auto;background:var(--shell);overflow:hidden;}
+@media(min-width:500px){
+  body{display:flex;align-items:center;justify-content:center;padding:20px;}
+  #phone{height:min(900px,96vh);border-radius:28px;box-shadow:0 0 0 1px #E0E0E0,0 30px 60px rgba(0,0,0,.15);}
+}
+/* Top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:#FFF;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:8px;}
+.topbar-logo{width:28px;height:28px;background:var(--grad);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#FFF;}
+.topbar select{border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:13px;font-family:'Inter',sans-serif;background:#FFF;color:var(--dark);outline:none;cursor:pointer;max-width:160px;}
+.topbar-btn{background:none;border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--mid);}
+.topbar-btn:hover{background:var(--surface2);}
+/* Content */
+.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;}
+/* Bottom nav */
+.bottomnav{display:flex;border-top:1px solid var(--border);background:#FFF;flex-shrink:0;}
+.nav-btn{flex:1;padding:10px 4px 8px;background:none;border:none;font-size:10px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);transition:color .15s;}
+.nav-btn.active{color:var(--red);}
+.nav-btn .nav-icon{font-size:20px;line-height:1;}
+/* Cards */
+.card{background:#FFF;border-radius:16px;padding:16px;border:1px solid var(--border);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.card-sm{padding:12px;}
+/* Typography */
+.eyebrow{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.big-num{font-size:34px;font-weight:900;color:var(--dark);letter-spacing:-1px;margin:4px 0;}
+.big-num em{color:var(--red);font-style:normal;}
+.sect-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sect-title h2{font-size:15px;font-weight:700;}
+/* Pill */
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.pill-success{background:#E8F8F1;color:var(--success);}
+.pill-warning{background:#FFF3E0;color:var(--warning);}
+.pill-danger{background:#FFE8E8;color:var(--danger);}
+.pill-info{background:#EEF2FF;color:#6366F1;}
+/* Progress bar */
+.prog{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin:8px 0;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.prog-fill.red{background:var(--red);}
+.prog-fill.green{background:var(--success);}
+.prog-fill.orange{background:var(--warning);}
+/* Season grid */
+.season-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+.season-cell{background:var(--surface2);border-radius:10px;padding:10px 8px;text-align:center;}
+.season-cell span{font-size:11px;color:var(--muted);display:block;margin-bottom:3px;}
+.season-cell strong{font-size:13px;font-weight:700;color:var(--dark);}
+/* Notice */
+.notice{font-size:11px;color:var(--muted);background:var(--surface2);border-radius:8px;padding:8px 10px;margin-top:10px;line-height:1.5;}
+/* Risk items */
+.risk-item{border-left:3px solid var(--warning);padding:10px 12px;background:#FFF;border-radius:0 8px 8px 0;margin-bottom:8px;border:1px solid var(--border);border-left:3px solid var(--warning);}
+.risk-item.danger{border-left-color:var(--danger);}
+.risk-item strong{font-size:13px;font-weight:600;}
+.risk-item p{font-size:12px;color:var(--mid);margin:3px 0;}
+.risk-item code{font-size:11px;font-family:'Inter',sans-serif;color:var(--dark);background:var(--surface2);padding:5px 8px;border-radius:6px;display:block;margin-top:6px;line-height:1.4;}
+/* Chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0;}
+.chip{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;}
+.chip-good{background:#E8F8F1;color:var(--success);}
+.chip-bad{background:#FFE8E8;color:var(--danger);}
+.chip-warn{background:#FFF3E0;color:var(--warning);}
+.chip-label{font-size:11px;font-weight:600;color:var(--muted);margin-right:3px;}
+/* Breakdown */
+.bd-row{margin-bottom:10px;}
+.bd-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.bd-row-top strong{font-size:13px;font-weight:600;}
+.bd-row-top span{font-size:12px;color:var(--muted);}
+.bd-row-top b{font-size:13px;font-weight:700;color:var(--dark);}
+/* Wave chart */
+.wave-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.wave-row span{font-size:11px;color:var(--muted);width:26px;flex-shrink:0;}
+.wave-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.wave-bar i{display:block;height:100%;background:var(--grad);border-radius:3px;}
+.wave-row strong{font-size:11px;font-weight:600;width:68px;text-align:right;flex-shrink:0;}
+/* Compare table */
+.cmp-table{width:100%;border-collapse:collapse;font-size:12px;}
+.cmp-table th{padding:8px 6px;text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);}
+.cmp-table td{padding:8px 6px;border-bottom:1px solid var(--surface2);}
+.cmp-table td:first-child{color:var(--mid);}
+/* Candidate cards */
+.cand-cards{display:grid;grid-template-columns:1fr;gap:10px;}
+.cand-card{background:#FFF;border-radius:12px;padding:14px;border:1px solid var(--border);}
+.cand-card.best{border-color:var(--red);background:#FFF8F8;}
+.cand-rank{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.cand-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.cand-sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.cand-metric{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--surface2);}
+.cand-metric:last-of-type{border-bottom:none;}
+.cand-metric span{color:var(--mid);}
+.cand-metric strong{font-weight:600;}
+.choose-btn{margin-top:10px;width:100%;padding:8px;background:var(--surface2);border:none;border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;color:var(--dark);}
+.choose-btn:hover{background:var(--border);}
+/* Checklist */
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:11px;background:var(--surface2);border-radius:10px;margin-bottom:8px;cursor:pointer;}
+.cl-item.high{background:#FFF3E0;}
+.cl-item input{width:18px;height:18px;accent-color:var(--red);flex-shrink:0;margin-top:1px;cursor:pointer;}
+.cl-item-body strong{font-size:13px;font-weight:600;}
+.cl-item-body p{font-size:11px;color:var(--mid);margin:2px 0;}
+.cl-item-body small{font-size:10px;color:var(--muted);}
+/* Form fields */
+.field{margin-bottom:10px;}
+.field label{font-size:12px;color:var(--mid);display:block;margin-bottom:3px;font-weight:500;}
+.field input,.field select{width:100%;padding:9px 11px;background:#FFF;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;}
+.field input:focus,.field select:focus{border-color:var(--red);}
+.toggle-row{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.toggle-row label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;}
+.toggle-row input{accent-color:var(--red);width:16px;height:16px;}
+/* Settlement */
+.ded-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--surface2);}
+.ded-row:last-child{border-bottom:none;}
+.ded-row span{font-size:12px;color:var(--mid);}
+.ded-row b{font-size:13px;font-weight:700;}
+/* Bill row */
+.bill-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--surface2);font-size:13px;}
+.bill-row:last-child{border-bottom:none;}
+/* Action btn */
+.btn-red{width:100%;padding:11px;background:var(--red);color:#FFF;border:none;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;font-weight:700;cursor:pointer;margin-top:10px;}
+.btn-red:active{background:#CC0000;}
+/* Textarea */
+textarea{width:100%;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;color:var(--dark);resize:none;outline:none;line-height:1.6;}
+/* Deposit card */
+.dep-card{background:linear-gradient(135deg,#E60000,#FF4444);border-radius:14px;padding:16px;color:#FFF;margin-bottom:12px;}
+.dep-card .eyebrow{color:rgba(255,255,255,.7);}
+.dep-card .big-num{color:#FFF;}
+/* Links */
+.link-btn{background:none;border:none;font-size:12px;font-family:'Inter',sans-serif;color:var(--red);cursor:pointer;font-weight:600;padding:0;}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">🏠</div>
+      <select id="room-select" onchange="setState({roomId:this.value})"></select>
+    </div>
+    <button class="topbar-btn" onclick="resetData()" title="데이터 초기화">↺</button>
+  </div>
+  <div class="content" id="content"></div>
+  <nav class="bottomnav" id="bottomnav"></nav>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const ROOMS=[
+  {id:'room-a',name:'홍대입구역 5분 원룸',housingType:'원룸',region:'서울 마포구',areaPyeong:6.5,
+   deposit:10000000,monthlyRent:520000,maintenanceFee:80000,
+   maintenanceItems:{internet:true,water:true,commonElectricity:true,cleaning:true,elevator:'unknown',security:false,parking:false,tv:false},
+   heatingType:'도시가스 개별난방',electricityMeterConfirmed:false,gasPaymentConfirmed:true,
+   includesInternet:true,includesParking:false,internetFee:22000,parkingFee:0,otherMonthlyCost:0,
+   includeDepositOpportunityCost:true,opportunityRate:0.035,
+   utilities:{
+     electricity:{includedInMaintenance:false,normal:24000,summer:62000,winter:28000},
+     gas:{includedInMaintenance:false,normal:38000,summer:12000,winter:118000},
+     water:{includedInMaintenance:true,normal:12000,summer:14000,winter:12000}
+   },
+   contractTerms:{cleaningFeeConfirmed:false,repairRuleConfirmed:false,maintenanceWritten:false},
+   moveOut:{cleaningFee:80000,repairFee:0,unpaidUtility:42000}},
+  {id:'room-b',name:'강남역 소형 오피스텔',housingType:'오피스텔',region:'서울 강남구',areaPyeong:7.2,
+   deposit:15000000,monthlyRent:450000,maintenanceFee:150000,
+   maintenanceItems:{internet:false,water:'unknown',commonElectricity:true,cleaning:true,elevator:true,security:true,parking:false,tv:false},
+   heatingType:'전기난방',electricityMeterConfirmed:true,gasPaymentConfirmed:false,
+   includesInternet:false,includesParking:false,internetFee:25000,parkingFee:0,otherMonthlyCost:10000,
+   includeDepositOpportunityCost:true,opportunityRate:0.035,
+   utilities:{
+     electricity:{includedInMaintenance:false,normal:48000,summer:92000,winter:145000},
+     gas:{includedInMaintenance:true,normal:0,summer:0,winter:0},
+     water:{includedInMaintenance:false,normal:14000,summer:16000,winter:14000}
+   },
+   contractTerms:{cleaningFeeConfirmed:false,repairRuleConfirmed:false,maintenanceWritten:true},
+   moveOut:{cleaningFee:120000,repairFee:0,unpaidUtility:78000}},
+  {id:'room-c',name:'성수동 다가구 원룸',housingType:'다가구',region:'서울 성동구',areaPyeong:6.8,
+   deposit:8000000,monthlyRent:580000,maintenanceFee:50000,
+   maintenanceItems:{internet:true,water:true,commonElectricity:true,cleaning:false,elevator:false,security:false,parking:false,tv:false},
+   heatingType:'도시가스 개별난방',electricityMeterConfirmed:true,gasPaymentConfirmed:true,
+   includesInternet:true,includesParking:false,internetFee:0,parkingFee:0,otherMonthlyCost:0,
+   includeDepositOpportunityCost:true,opportunityRate:0.035,
+   utilities:{
+     electricity:{includedInMaintenance:false,normal:22000,summer:52000,winter:25000},
+     gas:{includedInMaintenance:false,normal:28000,summer:10000,winter:88000},
+     water:{includedInMaintenance:true,normal:12000,summer:13000,winter:12000}
+   },
+   contractTerms:{cleaningFeeConfirmed:true,repairRuleConfirmed:true,maintenanceWritten:true},
+   moveOut:{cleaningFee:50000,repairFee:0,unpaidUtility:33000}}
+];
+const ML={internet:'인터넷',water:'수도',commonElectricity:'공용전기',cleaning:'청소비',elevator:'엘리베이터',security:'경비비',parking:'주차',tv:'TV'};
+const SL={normal:'평상시',summer:'여름',winter:'겨울'};
+const MBILLS=[
+  {month:'2026-01',rent:520000,maintenance:80000,electricity:29000,gas:126000,water:0,other:0},
+  {month:'2026-02',rent:520000,maintenance:80000,electricity:28000,gas:112000,water:0,other:0},
+  {month:'2026-03',rent:520000,maintenance:80000,electricity:23000,gas:45000,water:0,other:0},
+  {month:'2026-04',rent:520000,maintenance:80000,electricity:23400,gas:31800,water:0,other:0}
+];
+const CHECKLIST=[
+  {id:'maintenance-detail',cat:'관리비',title:'관리비 세부 항목을 계약서에 적기',q:'관리비에 포함된 항목과 항목별 금액을 계약서에 적을 수 있을까요?',important:true},
+  {id:'electricity-meter',cat:'공과금',title:'전기 계량기 단독 여부 확인',q:'전기 계량기는 호실별 단독 계량기인가요?',important:true},
+  {id:'gas-payment',cat:'공과금',title:'가스요금 납부 방식 확인',q:'가스요금은 개별 납부인가요, 관리비에 포함인가요?',important:true},
+  {id:'internet',cat:'관리비',title:'인터넷 포함 여부 확인',q:'인터넷은 건물 제공인가요, 개인 설치가 필요한가요?',important:false},
+  {id:'water',cat:'관리비',title:'수도요금 포함 여부 확인',q:'수도요금은 관리비 포함인가요, 별도 정산인가요?',important:true},
+  {id:'cleaning-fee',cat:'퇴실',title:'퇴실 청소비 금액과 기준 확인',q:'퇴실 청소비가 있다면 금액과 기준을 계약서에 적을 수 있을까요?',important:true},
+  {id:'repair-rule',cat:'퇴실',title:'벽지·장판·수리비 차감 기준 확인',q:'생활 마모와 파손의 수리비 기준은 어떻게 정하나요?',important:true},
+  {id:'final-utility',cat:'퇴실',title:'마지막 공과금 정산 방식 확인',q:'퇴실일 기준 전기·가스·수도는 어떻게 정산하나요?',important:false}
+];
+
+// ── CORE FUNCTIONS ────────────────────────────────────────────
+function n(v){const p=Number(v);return Number.isFinite(p)?p:0;}
+function fmt(v){return Math.round(n(v)).toLocaleString('ko-KR')+'원';}
+function cloneRoom(r){return JSON.parse(JSON.stringify(r));}
+function depositOpp(dep,rate){return Math.round((n(dep)*n(rate))/12);}
+
+function seasonCost(room,season){
+  const u=room.utilities??{};
+  let elec=0,gas=0,water=0;
+  if(u.electricity&&!u.electricity.includedInMaintenance) elec=n(u.electricity[season]??u.electricity.normal);
+  if(u.gas&&!u.gas.includedInMaintenance) gas=n(u.gas[season]??u.gas.normal);
+  if(u.water&&!u.water.includedInMaintenance) water=n(u.water[season]??u.water.normal);
+  const internet=room.includesInternet?0:n(room.internetFee);
+  const parking=room.includesParking?0:n(room.parkingFee);
+  const other=n(room.otherMonthlyCost);
+  const depOpp=room.includeDepositOpportunityCost?depositOpp(room.deposit,room.opportunityRate):0;
+  const total=n(room.monthlyRent)+n(room.maintenanceFee)+elec+gas+water+internet+parking+other+depOpp;
+  return {season,rent:n(room.monthlyRent),maintenance:n(room.maintenanceFee),elec,gas,water,internet,parking,other,depOpp,total};
+}
+function summary(room){
+  const nm=seasonCost(room,'normal'),su=seasonCost(room,'summer'),wi=seasonCost(room,'winter');
+  return {normal:nm,summer:su,winter:wi,hiddenGap:nm.total-n(room.monthlyRent)};
+}
+function wave(room){
+  const nor=seasonCost(room,'normal').total,sum=seasonCost(room,'summer').total,win=seasonCost(room,'winter').total;
+  return [{m:'1월',c:win},{m:'2월',c:win-12000},{m:'3월',c:nor+12000},{m:'4월',c:nor},{m:'5월',c:nor},
+          {m:'6월',c:sum-18000},{m:'7월',c:sum},{m:'8월',c:sum+14000},{m:'9월',c:nor+8000},
+          {m:'10월',c:nor},{m:'11월',c:win-30000},{m:'12월',c:win}];
+}
+function transparencyScore(room){
+  let s=100;
+  const inc=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v===true);
+  const unk=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v==='unknown');
+  if(n(room.maintenanceFee)>0&&inc.length===0) s-=20;
+  if(n(room.maintenanceFee)>=100000&&inc.length<3) s-=18;
+  if(unk.length>=2) s-=12;
+  if(!room.electricityMeterConfirmed) s-=12;
+  if(!room.gasPaymentConfirmed) s-=10;
+  if(!room.heatingType) s-=10;
+  if(!room.contractTerms?.cleaningFeeConfirmed) s-=10;
+  if(!room.contractTerms?.repairRuleConfirmed) s-=10;
+  if(!room.contractTerms?.maintenanceWritten) s-=13;
+  return Math.max(0,Math.min(100,s));
+}
+function tStatus(sc){
+  if(sc>=80) return {label:'명확',cls:'pill-success',col:'#00A86B'};
+  if(sc>=60) return {label:'일부 확인 필요',cls:'pill-warning',col:'#FF8C00'};
+  return {label:'불명확',cls:'pill-danger',col:'#E60000'};
+}
+function risks(room){
+  const s=summary(room);
+  const inc=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v===true);
+  const unk=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v==='unknown');
+  const r=[];
+  if(n(room.maintenanceFee)>=100000&&inc.length<3) r.push({sev:'warning',title:'관리비 세부항목 확인 필요',desc:'관리비가 높은 편이지만 포함 항목이 충분히 구분되어 있지 않습니다.',q:'관리비에 포함된 항목과 항목별 금액을 계약서에 적을 수 있을까요?'});
+  if(unk.length>0) r.push({sev:'warning',title:'포함 여부 불명확 항목 있음',desc:`${unk.length}개 항목의 포함 여부가 아직 확인되지 않았습니다.`,q:'수도, 인터넷, 공용전기, 청소비가 관리비에 포함인지 확인해주세요.'});
+  if(!room.electricityMeterConfirmed) r.push({sev:'danger',title:'전기 계량기 단독 여부 확인 필요',desc:'공동 계량 방식이면 요금 분쟁이 생길 수 있습니다.',q:'전기 계량기는 호실별 단독 계량기인가요?'});
+  if(s.winter.total-s.normal.total>=80000) r.push({sev:'danger',title:'겨울 난방비 변동 주의',desc:'겨울 예상 주거비가 평상시보다 크게 높아집니다.',q:'지난 겨울 평균 가스비가 어느 정도였나요?'});
+  if(s.hiddenGap>=150000) r.push({sev:'warning',title:'광고 월세와 실제 부담액 차이 큼',desc:'관리비·공과금·보증금 기회비용까지 더하면 차이가 큽니다.',q:'월세 외 매월 고정으로 나가는 비용이 더 있나요?'});
+  if(!room.contractTerms?.cleaningFeeConfirmed) r.push({sev:'warning',title:'퇴실 청소비 기준 확인 필요',desc:'퇴실 때 보증금에서 차감되는 비용을 계약서에 명확히 적어야 합니다.',q:'퇴실 청소비 금액과 기준을 계약서에 적을 수 있을까요?'});
+  return r;
+}
+function checklistForRoom(room){
+  const riskList=risks(room);
+  const flagged=new Set();
+  riskList.forEach(r=>{
+    if(r.title.includes('관리비 세부')) flagged.add('maintenance-detail');
+    if(r.title.includes('전기 계량')) flagged.add('electricity-meter');
+    if(r.title.includes('청소비')) flagged.add('cleaning-fee');
+    if(r.title.includes('포함 여부')){flagged.add('water');flagged.add('internet');}
+  });
+  return CHECKLIST.map(item=>({...item,priority:flagged.has(item.id)||item.important?'high':'normal'}));
+}
+function settlement(room,overrides){
+  const o=overrides||{};
+  const cleaningFee=n(o.cleaningFee??room.moveOut?.cleaningFee??80000);
+  const repairFee=n(o.repairFee??room.moveOut?.repairFee??0);
+  const unpaidUtility=n(o.unpaidUtility??room.moveOut?.unpaidUtility??42000);
+  const dep=n(room.deposit);
+  const ded=cleaningFee+repairFee+unpaidUtility;
+  return {deposit:dep,deductions:ded,finalReturn:Math.max(0,dep-ded),
+    items:[
+      {label:'퇴실 청소비',amount:cleaningFee,confirmed:Boolean(room.contractTerms?.cleaningFeeConfirmed)},
+      {label:'수리비',amount:repairFee,confirmed:Boolean(room.contractTerms?.repairRuleConfirmed)},
+      {label:'마지막 공과금',amount:unpaidUtility,confirmed:false}
+    ].filter(i=>i.amount>0)};
+}
+
+// ── STATE ─────────────────────────────────────────────────────
+const SK='one-room-v1';
+const DEFAULT={roomId:'room-a',rooms:ROOMS.map(cloneRoom),tab:'home',checked:{},settle:{}};
+let S=(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(DEFAULT);const p=JSON.parse(s);return{...structuredClone(DEFAULT),...p,rooms:p.rooms?.length?p.rooms:ROOMS.map(cloneRoom)};}catch{return structuredClone(DEFAULT);}})();
+function save(){localStorage.setItem(SK,JSON.stringify(S));}
+function setState(patch){S={...S,...patch};save();render();}
+function getRoom(){return S.rooms.find(r=>r.id===S.roomId)??S.rooms[0];}
+function updateRoom(patch){const room=getRoom();setState({rooms:S.rooms.map(r=>r.id===room.id?{...r,...patch}:r)});}
+function updateRoomDeep(path,val){const room=cloneRoom(getRoom());let c=room;path.slice(0,-1).forEach(k=>{if(!c[k])c[k]={};c=c[k];});c[path[path.length-1]]=val;setState({rooms:S.rooms.map(r=>r.id===room.id?room:r)});}
+function resetData(){if(confirm('모든 데이터를 초기화할까요?')){localStorage.removeItem(SK);S=structuredClone(DEFAULT);render();}}
+
+// ── RENDER HELPERS ────────────────────────────────────────────
+function prog(pct,cls='red'){return `<div class="prog"><div class="prog-fill ${cls}" style="width:${Math.max(3,Math.min(100,pct))}%"></div></div>`;}
+function pill(label,cls){return `<span class="pill ${cls}">${label}</span>`;}
+
+// ── RENDER SCREENS ────────────────────────────────────────────
+function renderHome(room){
+  const s=summary(room);const sc=transparencyScore(room);const st=tStatus(sc);const rk=risks(room);
+  const inc=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v===true);
+  const exc=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v===false);
+  const unk=Object.entries(room.maintenanceItems??{}).filter(([,v])=>v==='unknown');
+  const chips=(arr,cls)=>arr.length?arr.map(([k])=>`<span class="chip ${cls}">${ML[k]??k}</span>`).join(''):'<span class="chip chip-bad">없음</span>';
+  return `
+    <div class="dep-card">
+      <div class="eyebrow">이 방의 진짜 월 주거비</div>
+      <div class="big-num">${fmt(s.normal.total)}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.8);">광고 월세 ${fmt(room.monthlyRent)}보다 <strong style="color:#FFF">${fmt(s.hiddenGap)} 더</strong> 봐야 해요</div>
+    </div>
+    <div class="card">
+      <div class="season-grid">
+        <div class="season-cell"><span>평상시</span><strong>${fmt(s.normal.total)}</strong></div>
+        <div class="season-cell"><span>여름 예상</span><strong>${fmt(s.summer.total)}</strong></div>
+        <div class="season-cell"><span>겨울 예상</span><strong>${fmt(s.winter.total)}</strong></div>
+      </div>
+      <div class="notice">실제 청구액이 아닌 입력값 기반 계약 전 참고 추정입니다.</div>
+    </div>
+    <div class="card">
+      <div class="sect-title"><h2>비용 투명도</h2>${pill(st.label,st.cls)}</div>
+      <div style="font-size:24px;font-weight:800;color:${st.col};margin-bottom:6px;">${sc}점</div>
+      ${prog(sc,sc>=80?'green':sc>=60?'orange':'red')}
+      <p style="font-size:12px;color:var(--muted);margin-top:6px;">관리비 항목·전기가스 납부방식·퇴실 정산 기준이 명확할수록 올라갑니다.</p>
+    </div>
+    <div class="card">
+      <div class="sect-title"><h2>관리비 구성</h2><span style="font-size:14px;font-weight:700;color:var(--red)">${fmt(room.maintenanceFee)}</span></div>
+      <div style="margin-bottom:6px;"><span class="chip-label">포함</span>${chips(inc,'chip-good')}</div>
+      <div style="margin-bottom:6px;"><span class="chip-label">미포함</span>${chips(exc,'chip-bad')}</div>
+      <div><span class="chip-label">확인 필요</span>${chips(unk,'chip-warn')}</div>
+    </div>
+    <div class="card">
+      <div class="sect-title"><h2>꼭 물어볼 질문 ${Math.min(rk.length,3)}개</h2><button class="link-btn" onclick="setState({tab:'checklist'})">전체 체크리스트</button></div>
+      ${rk.slice(0,3).map(r=>`
+        <div class="risk-item ${r.sev}">
+          <strong>${r.title}</strong>
+          <p>${r.desc}</p>
+          <code>${r.q}</code>
+        </div>`).join('')}
+    </div>
+    <div class="card card-sm">
+      <div class="eyebrow">3분 입력 — 방 비용 조건</div>
+      <div style="margin-top:10px;">
+        <div class="field"><label>보증금</label><input inputmode="numeric" data-input="deposit" value="${fmt(room.deposit).replace('원','').replace(/,/g,'')}"></div>
+        <div class="field"><label>월세</label><input inputmode="numeric" data-input="monthlyRent" value="${fmt(room.monthlyRent).replace('원','').replace(/,/g,'')}"></div>
+        <div class="field"><label>관리비</label><input inputmode="numeric" data-input="maintenanceFee" value="${fmt(room.maintenanceFee).replace('원','').replace(/,/g,'')}"></div>
+        <div class="field"><label>전기 (평상시)</label><input inputmode="numeric" data-input="electricity.normal" value="${n(room.utilities?.electricity?.normal)}"></div>
+        <div class="field"><label>가스 (겨울)</label><input inputmode="numeric" data-input="gas.winter" value="${n(room.utilities?.gas?.winter)}"></div>
+      </div>
+      <div class="toggle-row">
+        <label><input type="checkbox" data-toggle="electricityMeterConfirmed" ${room.electricityMeterConfirmed?'checked':''}> 전기 단독 계량기 확인</label>
+        <label><input type="checkbox" data-toggle="contractTerms.maintenanceWritten" ${room.contractTerms?.maintenanceWritten?'checked':''}> 관리비 계약서 기재</label>
+        <label><input type="checkbox" data-toggle="contractTerms.cleaningFeeConfirmed" ${room.contractTerms?.cleaningFeeConfirmed?'checked':''}> 퇴실 청소비 기준 확인</label>
+      </div>
+    </div>`;
+}
+
+function renderBreakdown(room){
+  const s=summary(room);
+  const items=[
+    {label:'월세',amount:s.normal.rent,type:'fixed'},
+    {label:'관리비',amount:s.normal.maintenance,type:'fixed'},
+    {label:'전기',amount:s.normal.elec,type:'variable'},
+    {label:'가스',amount:s.normal.gas,type:'variable'},
+    {label:'수도',amount:s.normal.water,type:'variable'},
+    {label:'인터넷',amount:s.normal.internet,type:'fixed'},
+    {label:'주차',amount:s.normal.parking,type:'fixed'},
+    {label:'기타',amount:s.normal.other,type:'other'},
+    {label:'보증금 기회비용',amount:s.normal.depOpp,type:'hidden'}
+  ].filter(i=>i.amount>0).map(i=>({...i,pct:s.normal.total>0?Math.round(i.amount/s.normal.total*100):0}));
+  const wv=wave(room);const maxW=Math.max(...wv.map(w=>w.c));
+  return `
+    <div class="card">
+      <div class="sect-title">
+        <div><div class="eyebrow">진짜 월세 게이지</div><h2>총액 ${fmt(s.normal.total)}</h2></div>
+        ${pill(`+${fmt(s.hiddenGap)}`,'pill-warning')}
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:10px;margin-bottom:4px;">
+        <div><span style="font-size:11px;color:var(--muted);">광고 월세</span><div style="font-size:15px;font-weight:700;">${fmt(s.normal.rent)}</div></div>
+        <div style="text-align:right;"><span style="font-size:11px;color:var(--muted);">진짜 월 주거비</span><div style="font-size:15px;font-weight:700;color:var(--red);">${fmt(s.normal.total)}</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">생활비 해부도</div>
+      <div style="margin-top:10px;">
+        ${items.map(i=>`
+          <div class="bd-row">
+            <div class="bd-row-top">
+              <div><strong>${i.label}</strong> <span>${i.pct}%</span></div>
+              <b>${fmt(i.amount)}</b>
+            </div>
+            ${prog(i.pct,i.type==='hidden'?'orange':'red')}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">계절별 비용 파도 — 1년</div>
+      <div style="margin-top:12px;">
+        ${wv.map(w=>`
+          <div class="wave-row">
+            <span>${w.m}</span>
+            <div class="wave-bar"><i style="width:${Math.round(w.c/maxW*100)}%"></i></div>
+            <strong>${fmt(w.c)}</strong>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">보증금 기회비용</div>
+      <div class="big-num" style="font-size:24px;">${fmt(depositOpp(room.deposit,room.opportunityRate))}<span style="font-size:14px;font-weight:500;color:var(--muted);">/월</span></div>
+      <p style="font-size:12px;color:var(--muted);">보증금 ${fmt(room.deposit)}이 묶이는 비용을 연 ${(room.opportunityRate*100).toFixed(1)}% 기준으로 환산했습니다.</p>
+    </div>`;
+}
+
+function renderCompare(){
+  const rows=S.rooms.map(room=>{const s=summary(room);const sc=transparencyScore(room);return{room,s,sc,st:tStatus(sc)};})
+    .sort((a,b)=>(a.s.winter.total-a.sc*1500)-(b.s.winter.total-b.sc*1500));
+  const best=rows[0];
+  return `
+    <div class="card">
+      <div class="sect-title"><h2>방 후보 비교</h2>${pill('추천: '+best.room.name,'pill-info')}</div>
+      <div style="overflow-x:auto;">
+        <table class="cmp-table">
+          <thead><tr><th>항목</th>${rows.map(({room})=>`<th>${room.name.split(' ').slice(0,2).join(' ')}</th>`).join('')}</tr></thead>
+          <tbody>
+            <tr><td>월세</td>${rows.map(({room})=>`<td>${fmt(room.monthlyRent)}</td>`).join('')}</tr>
+            <tr><td>관리비</td>${rows.map(({room})=>`<td>${fmt(room.maintenanceFee)}</td>`).join('')}</tr>
+            <tr><td>평상시 총액</td>${rows.map(({s})=>`<td><strong>${fmt(s.normal.total)}</strong></td>`).join('')}</tr>
+            <tr><td>여름 총액</td>${rows.map(({s})=>`<td>${fmt(s.summer.total)}</td>`).join('')}</tr>
+            <tr><td>겨울 총액</td>${rows.map(({s})=>`<td>${fmt(s.winter.total)}</td>`).join('')}</tr>
+            <tr><td>투명도</td>${rows.map(({sc,st})=>`<td>${pill(sc+'점',st.cls)}</td>`).join('')}</tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="cand-cards">
+      ${rows.map(({room,s,sc,st},i)=>`
+        <div class="cand-card ${i===0?'best':''}">
+          <div class="cand-rank">${['🥇 1위','🥈 2위','🥉 3위'][i]??i+1+'위'}</div>
+          <div class="cand-name">${room.name}</div>
+          <div class="cand-sub">${room.region} · ${room.areaPyeong}평 · ${room.housingType}</div>
+          <div class="cand-metric"><span>평상시</span><strong>${fmt(s.normal.total)}</strong></div>
+          <div class="cand-metric"><span>겨울 예상</span><strong>${fmt(s.winter.total)}</strong></div>
+          <div class="cand-metric"><span>투명도</span><strong>${sc}점 · ${st.label}</strong></div>
+          <button class="choose-btn" onclick="setState({roomId:'${room.id}',tab:'home'})">이 방으로 보기 →</button>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderChecklist(room){
+  const items=checklistForRoom(room);
+  const checked=S.checked[room.id]??{};
+  const done=items.filter(i=>checked[i.id]).length;
+  const highItems=items.filter(i=>i.priority==='high');
+  return `
+    <div class="card">
+      <div class="sect-title"><h2>${done}/${items.length}개 확인</h2>${pill(done===items.length?'완료!':'진행 중',done===items.length?'pill-success':'pill-warning')}</div>
+      ${prog(done/items.length*100,'green')}
+    </div>
+    <div class="card">
+      ${items.map(item=>`
+        <label class="cl-item ${item.priority==='high'?'high':''}">
+          <input type="checkbox" data-cl="${item.id}" ${checked[item.id]?'checked':''}>
+          <div class="cl-item-body">
+            <strong>${item.priority==='high'?'⚡ ':''} ${item.title}</strong>
+            <p>${item.q}</p>
+            <small>${item.cat}</small>
+          </div>
+        </label>`).join('')}
+    </div>
+    <div class="card">
+      <div class="eyebrow">복사해서 물어보기</div>
+      <textarea rows="8" readonly>${highItems.map((i,idx)=>`${idx+1}. ${i.q}`).join('\n')}</textarea>
+      <button class="btn-red" id="copy-btn">질문 복사</button>
+    </div>`;
+}
+
+function renderMoveOut(room){
+  const settle=settlement(room,S.settle[room.id]);
+  return `
+    <div class="dep-card">
+      <div class="eyebrow">퇴실 정산 예상 반환액</div>
+      <div class="big-num">${fmt(settle.finalReturn)}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.8);">보증금 ${fmt(settle.deposit)}에서 차감 ${fmt(settle.deductions)} 후</div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">차감 가능 항목</div>
+      ${settle.items.map(i=>`
+        <div class="ded-row">
+          <div><strong style="font-size:13px;">${i.label}</strong><div><span>${i.confirmed?'✅ 계약서 확인':'⚠️ 추가 확인 필요'}</span></div></div>
+          <b>${fmt(i.amount)}</b>
+        </div>`).join('')}
+      <div class="notice">계약서·고지서·임대인 확인 전에는 확정 금액으로 보지 마세요.</div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">정산 값 직접 조정</div>
+      <div class="field"><label>청소비</label><input inputmode="numeric" data-settle="cleaningFee" value="${settle.items.find(i=>i.label==='퇴실 청소비')?.amount??0}"></div>
+      <div class="field"><label>수리비</label><input inputmode="numeric" data-settle="repairFee" value="${settle.items.find(i=>i.label==='수리비')?.amount??0}"></div>
+      <div class="field"><label>마지막 공과금</label><input inputmode="numeric" data-settle="unpaidUtility" value="${settle.items.find(i=>i.label==='마지막 공과금')?.amount??0}"></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">최근 고지서 기록</div>
+      ${MBILLS.slice(-3).map(b=>`<div class="bill-row"><span>${b.month}</span><strong>${fmt(b.rent+b.maintenance+b.electricity+b.gas+b.water+b.other)}</strong></div>`).join('')}
+    </div>`;
+}
+
+// ── RENDER ────────────────────────────────────────────────────
+const TABS=[
+  {id:'home',icon:'🏠',label:'홈'},
+  {id:'breakdown',icon:'📊',label:'해부도'},
+  {id:'compare',icon:'🏘',label:'비교'},
+  {id:'checklist',icon:'✅',label:'체크'},
+  {id:'moveout',icon:'💰',label:'정산'}
+];
+
+function render(){
+  const room=getRoom();
+  // Room select
+  const sel=document.getElementById('room-select');
+  if(sel){sel.innerHTML=S.rooms.map(r=>`<option value="${r.id}" ${r.id===S.roomId?'selected':''}>${r.name}</option>`).join('');}
+  // Bottom nav
+  document.getElementById('bottomnav').innerHTML=TABS.map(t=>`
+    <button class="nav-btn ${S.tab===t.id?'active':''}" onclick="setState({tab:'${t.id}'})">
+      <span class="nav-icon">${t.icon}</span>${t.label}
+    </button>`).join('');
+  // Content
+  const content={
+    home:()=>renderHome(room),
+    breakdown:()=>renderBreakdown(room),
+    compare:()=>renderCompare(),
+    checklist:()=>renderChecklist(room),
+    moveout:()=>renderMoveOut(room)
+  }[S.tab]?.()??renderHome(room);
+  document.getElementById('content').innerHTML=content;
+  document.getElementById('content').scrollTop=0;
+  bindEvents();
+}
+
+function bindEvents(){
+  const room=getRoom();
+  // Data inputs
+  document.querySelectorAll('[data-input]').forEach(el=>{
+    el.addEventListener('change',e=>{
+      const key=el.dataset.input;const val=Number(e.target.value.replace(/,/g,''));
+      if(key.includes('.')){const [cat,field]=key.split('.');updateRoomDeep(['utilities',cat,field],val);}
+      else updateRoom({[key]:val});
+    });
+  });
+  // Toggle checkboxes
+  document.querySelectorAll('[data-toggle]').forEach(el=>{
+    el.addEventListener('change',()=>{
+      const path=el.dataset.toggle.split('.');
+      if(path.length>1) updateRoomDeep(path,el.checked);
+      else updateRoom({[el.dataset.toggle]:el.checked});
+    });
+  });
+  // Checklist
+  document.querySelectorAll('[data-cl]').forEach(el=>{
+    el.addEventListener('change',()=>{
+      const checked=structuredClone(S.checked);
+      checked[room.id]={...(checked[room.id]??{}),[el.dataset.cl]:el.checked};
+      setState({checked});
+    });
+  });
+  // Settlement inputs
+  document.querySelectorAll('[data-settle]').forEach(el=>{
+    el.addEventListener('change',e=>{
+      const settle=structuredClone(S.settle);
+      settle[room.id]={...(settle[room.id]??{}),[el.dataset.settle]:Number(e.target.value)};
+      setState({settle});
+    });
+  });
+  // Copy button
+  document.getElementById('copy-btn')?.addEventListener('click',async()=>{
+    const txt=document.querySelector('textarea')?.value??'';
+    try{await navigator.clipboard.writeText(txt);alert('질문을 복사했습니다.');}
+    catch{alert('복사 권한이 없어 텍스트를 직접 선택해 복사해주세요.');}
+  });
+}
+
+render();
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 
 ---
 
-## 📂 전체 결과물 목록 (21건)
+## 📂 전체 결과물 목록 (23건)
 
 ### 🤖 AI · 컨설팅
 
@@ -62,6 +62,8 @@
 | 업무로그 기반 경력기술서 빌더 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-업무로그%20기반%20경력기술서%20빌더/index.html) |
 | 전주 맛집 지도 · 全州味房 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/jeonju-food-map/index.html) |
 | 청년혜택 레이더 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-%EC%B2%AD%EB%85%84%ED%98%9C%ED%83%9D%20%EB%A0%88%EC%9D%B4%EB%8D%94/youth-benefit-radar-codex/index.html) |
+| 원룸 생활비 투명화 도우미 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-%EC%9B%90%EB%A3%B8%20%EC%83%9D%ED%99%9C%EB%B9%84%20%ED%88%AC%EB%AA%85%ED%99%94%20%EB%8F%84%EC%9A%B0%EB%AF%B8/one-room-cost-transparency/index.html) |
+| 연차·퇴사·급여 실수방지 | [열기](https://jinhan0603.github.io/DORO-TEST-Web/html-output/Claude/plan-%EC%97%B0%EC%B0%A8%C2%B7%ED%87%B4%EC%82%AC%C2%B7%EA%B8%89%EC%97%AC%20%EC%8B%A4%EC%88%98%EB%B0%A9%EC%A7%80/index.html) |
 
 ---
 
