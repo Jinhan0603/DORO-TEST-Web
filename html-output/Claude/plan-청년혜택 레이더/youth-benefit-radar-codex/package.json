@@ -1,0 +1,16 @@
+{
+  "name": "youth-benefit-radar-codex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "청년혜택 레이더 Codex CLI용 로컬 UI/UX 시제품",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "serve": "python3 -m http.server 5173",
+    "lint": "node scripts/check-js.mjs",
+    "build": "node scripts/build-static.mjs",
+    "codex:prompt": "bash scripts/print-codex-prompt.sh"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
