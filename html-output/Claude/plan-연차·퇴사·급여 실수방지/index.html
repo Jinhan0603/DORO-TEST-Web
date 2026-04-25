@@ -141,12 +141,17 @@ const SALARY_CL=[
 
 // ── STATE ─────────────────────────────────────────────────────
 const DEMO=new URLSearchParams(location.search).has('demo');
-const DEFAULT={
+const BLANK={
+  tab:'home',
+  profile:{joinDate:'',monthlySalary:0,salaryDay:25,usedLeaveDays:0,dependents:0,hasFourInsurance:true,plannedLeaveDate:''},
+  salaryCl:{}
+};
+const DEMO_DATA={
   tab:'home',
   profile:{joinDate:'2023-04-01',monthlySalary:3000000,salaryDay:25,usedLeaveDays:5,dependents:0,hasFourInsurance:true,plannedLeaveDate:'2026-12-31'},
   salaryCl:{}
 };
-let S=DEMO?structuredClone(DEFAULT):(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(DEFAULT);return{...structuredClone(DEFAULT),...JSON.parse(s)};}catch{return structuredClone(DEFAULT);}})();
+let S=DEMO?structuredClone(DEMO_DATA):(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(BLANK);return{...structuredClone(BLANK),...JSON.parse(s)};}catch{return structuredClone(BLANK);}})();
 function save(){localStorage.setItem(SK,JSON.stringify(S));}
 function setState(patch){S={...S,...patch};save();render();}
 function setProfile(patch){S={...S,profile:{...S.profile,...patch}};save();render();}

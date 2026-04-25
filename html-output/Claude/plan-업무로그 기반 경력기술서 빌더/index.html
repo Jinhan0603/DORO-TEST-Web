@@ -732,12 +732,20 @@ input[type=range] { width: 100%; accent-color: var(--matcha-600); cursor: pointe
 const KEY = 'career-log-builder-v1';
 const DEMO = new URLSearchParams(location.search).has('demo');
 const DEMO_STATE_CLB = {
-  profile:{name:'김민준',currentRole:'마케팅 매니저',targetRole:'마케팅 팀장',yearsOfExperience:4,industry:'IT/스타트업',goal:'데이터 기반 마케팅 전략 리드'},
+  profile:{name:'김민준',currentRole:'마케팅 매니저',targetRole:'그로스 마케팅 팀장',yearsOfExperience:4,industry:'IT/스타트업',goal:'데이터 기반 마케팅 전략 수립 및 팀 리드 경험을 쌓아 그로스 팀장으로 성장'},
   logs:[
-    {id:'l1',date:'2026-03-15',project:'앱 리텐션 캠페인',situation:'월간 활성 사용자(MAU) 15% 하락',task:'리텐션 개선 캠페인 기획 및 실행 담당',action:'푸시 알림 A/B 테스트 12개 시나리오 설계, 개인화 메시지 도입',result:'캠페인 2개월 만에 MAU 22% 회복, 앱 평점 4.1→4.4 상승',tags:['마케팅','데이터분석','A/B테스트'],isPrivate:false},
-    {id:'l2',date:'2026-01-20',project:'신규 기능 론칭 홍보',situation:'경쟁사 대비 인지도 낮은 신규 결제 기능 론칭',task:'런칭 마케팅 전략 수립 및 전채널 실행',action:'인플루언서 콜라보 10건, SNS 광고 예산 3,000만원 집행, 언론 보도자료 배포 8건',result:'런칭 2주 내 신규 결제 사용자 8,200명 달성(목표 대비 137%)'},
+    {id:'l1',date:'2026-03-15',project:'앱 리텐션 개선 캠페인',situation:'신규 경쟁 앱 출시 이후 월간 활성 사용자(MAU) 3개월 연속 하락, 최대 15% 감소 → 이탈 원인 파악 및 복구 필요',task:'리텐션 캠페인 전략 수립, 푸시·인앱 채널 실행, 성과 분석 총괄 담당',action:'Amplitude 코호트 분석으로 Day7 이탈 원인 특정 → 12가지 푸시 시나리오 A/B 설계, 개인화 메시지(이름·최근활동 기반) 도입, 인앱 온보딩 리마인더 3종 추가',result:'캠페인 집행 2개월 후 MAU 22% 회복(목표 15%), D7 잔존율 34%→47% 상승, 앱스토어 평점 4.1→4.4 개선',tags:['그로스마케팅','리텐션','A/B테스트','데이터분석'],isPrivate:false},
+    {id:'l2',date:'2026-01-20',project:'결제 기능 론칭 마케팅',situation:'경쟁사 대비 인지도 낮은 자체 결제 기능 론칭 → 3주 내 사용자 6,000명 유치 목표',task:'런칭 마케팅 전략 수립 및 전 채널(SNS·PR·인플루언서) 실행 책임',action:'마이크로 인플루언서 10명 콜라보(팔로워 합계 82만), Meta 광고 3,000만원 집행·CPC 최적화 3회, 언론 보도자료 8건 배포(IT조선·테크M 등 6곳 게재)',result:'런칭 2주 내 신규 결제 사용자 8,200명(목표 대비 137%), 광고 ROAS 4.1 달성, 언론 노출 누적 42만 뷰',tags:['퍼포먼스마케팅','PR','인플루언서'],isPrivate:false},
+    {id:'l3',date:'2025-10-08',project:'연간 콘텐츠 전략 수립',situation:'마케팅팀 콘텐츠가 팀별 개별 운영되어 브랜드 톤 불일치, 콘텐츠 ROI 추적 불가',task:'연간 콘텐츠 캘린더 기획, 채널별 KPI 체계 설계, 팀원 3명 가이드라인 교육',action:'경쟁사 12곳 콘텐츠 벤치마킹 → 채널별 포맷·빈도 가이드 작성, 분기별 OKR 연동 콘텐츠 캘린더 구축, Notion 기반 협업 템플릿 배포',result:'콘텐츠 제작 리드타임 40% 단축(평균 8일→5일), 채널 평균 인게이지먼트율 2.1%→3.4% 향상, 분기 말 팀장 리뷰에서 "사내 모범 사례"로 선정',tags:['콘텐츠전략','브랜드','팀리드'],isPrivate:false},
+    {id:'l4',date:'2025-07-22',project:'여름 시즌 성과 캠페인',situation:'여름 비수기 GMV 목표 달성 위기 → 전년 동기 대비 매출 11% 하락 구간',task:'7~8월 시즌 프로모션 기획·실행, 광고 예산 배분 최적화',action:'Heat Map 분석으로 전환율 낮은 랜딩 페이지 3개 개선, 쿠폰 세그먼트 4단계 설계(휴면·신규·VIP·일반), Google·Meta 광고 믹스 비율 조정(Google 60%→40% 재배분)',result:'7월 GMV 전월 대비 18% 성장, 8월 목표 102% 달성, 쿠폰 실사용률 31%(업계 평균 19%)',tags:['캠페인기획','CRM','퍼포먼스마케팅'],isPrivate:false},
+    {id:'l5',date:'2025-04-03',project:'마케팅 대시보드 구축',situation:'마케팅 성과 데이터가 GA4·Meta·Amplitude에 분산 → 주간 리포트 수작업 4시간 소요',task:'통합 대시보드 설계 및 데이터팀 협업 주도, 보고 체계 표준화',action:'데이터팀과 3주 협업 → Looker Studio 대시보드 설계(채널별 CAC·ROAS·전환율 자동 집계), 마케팅 정의서 작성(GTM 이벤트 22개 정비)',result:'주간 리포트 작업 시간 4시간→30분 단축, 전사 마케팅 회의 데이터 신뢰도 향상, 타 부서 2곳 동일 프레임 도입',tags:['데이터분석','대시보드','협업'],isPrivate:false},
+    {id:'l6',date:'2024-11-14',project:'신규 파트너사 공동 마케팅',situation:'스타트업 단독 브랜드 인지도 한계 → 파트너 공동 캠페인으로 신규 유저 풀 확장 필요',task:'파트너사 3곳 협의·계약 조율, 공동 이벤트 기획 및 성과 배분 협상',action:'B2B 제안서 작성 및 직접 미팅 5회, 공동 SNS 이벤트·이메일 뉴스레터 설계, 수익 배분(Revenue Share) 계약 조율',result:'파트너 채널 통해 신규 가입자 3,400명 확보(CPM 기준 기존 대비 62% 절감), 파트너 2곳과 연간 계약 체결',tags:['파트너십','B2B','협상'],isPrivate:false},
   ],
-  cards:[],selectedCardIds:[],template:'project',jdInput:'',jdResult:null,onboardingDone:true,currentScreen:'dashboard'
+  cards:[
+    {id:'c1',logId:'l1',title:'MAU 22% 회복 이끈 리텐션 캠페인 기획·실행',body:'Amplitude 코호트 분석으로 Day7 이탈 원인을 특정하고, 12개 A/B 시나리오·개인화 메시지 도입으로 2개월 만에 MAU 22% 회복, D7 잔존율 34%→47% 개선',tags:['그로스마케팅','데이터분석'],highlight:'MAU +22%, D7 잔존율 +13%p'},
+    {id:'c2',logId:'l2',title:'결제 기능 론칭 2주 만에 목표 137% 달성',body:'인플루언서 10명 협업, Meta 광고 3,000만원 집행, 언론 보도 8건으로 신규 결제 사용자 8,200명 달성. ROAS 4.1 기록.',tags:['퍼포먼스마케팅','PR'],highlight:'목표 대비 137%, ROAS 4.1'},
+  ],
+  selectedCardIds:['c1','c2'],template:'project',jdInput:'',jdResult:null,onboardingDone:true,currentScreen:'dashboard'
 };
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY)) || defaultState(); }

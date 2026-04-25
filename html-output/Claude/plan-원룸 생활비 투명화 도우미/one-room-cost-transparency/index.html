@@ -261,7 +261,9 @@
         if (override&&typeof override==="object"){Object.keys(override).forEach(function (key){if (!Object.prototype.hasOwnProperty.call(out,key)){out[key]=cloneValue(override[key]);
         }});
         }return out;
-        }function createInitialState(){return{roomId:ROOMS[0].id,rooms:cloneRoom(ROOMS),tab:"home",checked:{},settlement:{}};
+        }var BLANK_ROOM={id:"room-new",name:"내 후보 방",housingType:"원룸",region:"",areaPyeong:0,deposit:0,monthlyRent:0,maintenanceFee:0,maintenanceItems:{internet:false,water:false,commonElectricity:false,cleaning:false,elevator:false,security:false,parking:false,tv:false},heatingType:"",electricityMeterConfirmed:false,gasPaymentConfirmed:false,includesInternet:false,includesParking:false,internetFee:0,parkingFee:0,otherMonthlyCost:0,includeDepositOpportunityCost:true,opportunityRate:0.035,utilities:{electricity:{includedInMaintenance:false,normal:0,summer:0,winter:0},gas:{includedInMaintenance:false,normal:0,summer:0,winter:0},water:{includedInMaintenance:false,normal:0,summer:0,winter:0}},contractTerms:{cleaningFeeConfirmed:false,repairRuleConfirmed:false,maintenanceWritten:false},moveOut:{cleaningFee:0,repairFee:0,unpaidUtility:0}};
+        function createInitialState(){return{roomId:BLANK_ROOM.id,rooms:cloneRoom([BLANK_ROOM]),tab:"home",checked:{},settlement:{}};
+        }function createDemoState(){return{roomId:ROOMS[0].id,rooms:cloneRoom(ROOMS),tab:"home",checked:{},settlement:{}};
         }function loadState(){var initial=createInitialState();
         try{var raw=JSON.parse(localStorage.getItem(SK)||"null");
         if (!raw||typeof raw!=="object"){return initial;
@@ -729,7 +731,7 @@
         window.getRiskSignals=getRiskSignals;
         window.getChecklistForRoom=getChecklistForRoom;
         window.getMoveOutSettlement=getMoveOutSettlement;
-        var S=DEMO?createInitialState():loadState();
+        var S=DEMO?createDemoState():loadState();
         window.S=S;
         render();
         })();
