@@ -140,12 +140,13 @@ const SALARY_CL=[
 ];
 
 // ── STATE ─────────────────────────────────────────────────────
+const DEMO=new URLSearchParams(location.search).has('demo');
 const DEFAULT={
   tab:'home',
   profile:{joinDate:'2023-04-01',monthlySalary:3000000,salaryDay:25,usedLeaveDays:5,dependents:0,hasFourInsurance:true,plannedLeaveDate:'2026-12-31'},
   salaryCl:{}
 };
-let S=(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(DEFAULT);return{...structuredClone(DEFAULT),...JSON.parse(s)};}catch{return structuredClone(DEFAULT);}})();
+let S=DEMO?structuredClone(DEFAULT):(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(DEFAULT);return{...structuredClone(DEFAULT),...JSON.parse(s)};}catch{return structuredClone(DEFAULT);}})();
 function save(){localStorage.setItem(SK,JSON.stringify(S));}
 function setState(patch){S={...S,...patch};save();render();}
 function setProfile(patch){S={...S,profile:{...S.profile,...patch}};save();render();}

@@ -121,7 +121,7 @@
       background: var(--card-bg); border: 1.5px solid var(--border);
       border-radius: 16px; padding: 20px;
       display: flex; flex-direction: column; gap: 12px;
-      text-decoration: none; color: inherit;
+      color: inherit; cursor: default;
       transition: border-color .2s, box-shadow .2s, transform .2s;
       box-shadow: var(--shadow);
       position: relative; overflow: hidden;
@@ -149,19 +149,32 @@
       color: var(--text-primary); transition: color .15s;
     }
     .card:hover h3 { color: var(--orange-dark); }
-    .card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-    .card-filename {
-      font-size: 10.5px; color: var(--text-muted); font-family: 'Courier New', monospace;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;
+    .card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+
+    /* ── CARD ACTIONS (dual buttons) ── */
+    .card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .btn-primary, .btn-demo, .btn-view {
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 9px 14px; border-radius: 10px; font-size: 12px; font-weight: 700;
+      text-decoration: none; transition: all .18s; border: 1.5px solid transparent;
+      white-space: nowrap; position: relative; z-index: 1;
     }
-    .card-arrow {
-      width: 28px; height: 28px; border-radius: 8px;
+    .btn-primary { background: var(--orange); color: #fff; flex: 1; }
+    .btn-primary:hover { background: var(--orange-dark); }
+    .btn-demo {
       background: var(--orange-light); color: var(--orange);
-      display: flex; align-items: center; justify-content: center;
-      transition: background .15s, color .15s; flex-shrink: 0;
+      border-color: var(--border); flex: 1;
     }
-    .card:hover .card-arrow { background: var(--orange); color: white; }
+    .btn-demo:hover { background: rgba(249,115,22,.12); border-color: var(--orange); }
+    .btn-view { background: var(--orange); color: #fff; flex: 1; }
+    .btn-view:hover { background: var(--orange-dark); }
+
+    /* ── badge on demo button ── */
+    .demo-badge {
+      display: inline-block; background: rgba(249,115,22,.18); color: var(--orange);
+      border-radius: 4px; font-size: 9px; font-weight: 800; padding: 1px 5px;
+      letter-spacing: .04em;
+    }
 
     /* ── CATEGORY COLOURS ── */
     .cat-ai    { background:#EFF6FF; color:#3B82F6; } .icon-ai    { background:#EFF6FF; }
@@ -333,7 +346,8 @@ const ITEMS = [
     cat: 'life', icon: '🗺️', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '전주 맛집 지도 · 全州味房',
     desc: '전주 청창사 대표님들을 위한 맛집 아카이브. 104곳을 지역·카테고리·검색으로 Leaflet 지도에서 탐색. 한옥마을 무드의 에디토리얼 디자인.',
-    file: 'jeonju-food-map/index.html'
+    file: 'jeonju-food-map/index.html',
+    isApp: true, demoSame: true
   },
 
   /* ── 산학연·협력 ── */
@@ -361,31 +375,36 @@ const ITEMS = [
     cat: 'life', icon: '💰', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '월급생존OS',
     desc: '월급날부터 월급날까지 살아남는 개인 재무 앱. 생존율 링 차트, 일별 사용 가능 금액, 구독 누수 감지, "써도 될까?" 시뮬레이터까지 — Miro 디자인 시스템 기반.',
-    file: 'Claude/plan-월급생존OS/index.html'
+    file: 'Claude/plan-월급생존OS/index.html',
+    isApp: true
   },
   {
     cat: 'life', icon: '📋', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '업무로그 기반 경력기술서 빌더',
     desc: '업무로그를 STAR 성과카드로 변환하는 경력 관리 앱. 채용공고 JD 키워드 매칭, 보안 민감정보 감지·마스킹, 경력기술서 미리보기까지 — Clay 디자인 시스템 기반.',
-    file: 'Claude/plan-업무로그 기반 경력기술서 빌더/index.html'
+    file: 'Claude/plan-업무로그 기반 경력기술서 빌더/index.html',
+    isApp: true
   },
   {
     cat: 'life', icon: '🎯', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '청년혜택 레이더',
     desc: '26~33세 사회초년생의 조건(나이·소득·주거·직장)을 입력하면 신청 가능성 높은 청년정책·지원금·저축상품을 매칭. 마감 D-day 타임라인·서류 체크리스트 포함 — Cohere 디자인 시스템 기반.',
-    file: 'Claude/plan-청년혜택 레이더/youth-benefit-radar-codex/index.html'
+    file: 'Claude/plan-청년혜택 레이더/youth-benefit-radar-codex/index.html',
+    isApp: true
   },
   {
     cat: 'life', icon: '🏠', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '원룸 생활비 투명화 도우미',
     desc: '계약 전 진짜 월 주거비를 파악하세요. 월세·관리비·공과금·보증금 기회비용 합산, 계절별 비용 시뮬레이션, 방 후보 비교, 계약 체크리스트, 보증금 정산 계산기 — Vodafone 디자인.',
-    file: 'Claude/plan-원룸 생활비 투명화 도우미/one-room-cost-transparency/index.html'
+    file: 'Claude/plan-원룸 생활비 투명화 도우미/one-room-cost-transparency/index.html',
+    isApp: true
   },
   {
     cat: 'life', icon: '📅', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
     title: '연차·퇴사·급여 실수방지',
     desc: '연차 부여일·수당 자동 계산, 4대보험 실수령액 계산기, 퇴사일 기준 퇴직금·일할 급여·연차수당 정산 예상. 급여 점검 체크리스트로 내 근로 권리를 지키는 도구 — Framer 디자인.',
-    file: 'Claude/plan-연차·퇴사·급여 실수방지/index.html'
+    file: 'Claude/plan-연차·퇴사·급여 실수방지/index.html',
+    isApp: true
   },
 ];
 
@@ -419,8 +438,18 @@ function renderCards(filter = 'all', query = '') {
     const grid = document.createElement('div');
     grid.className = 'grid';
     items.forEach(it => {
+      const arrow = `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>`;
+      let actions;
+      if (it.isApp) {
+        const demoUrl = it.demoSame ? it.file : (it.file + '?demo=1');
+        actions = `
+          <a href="${it.file}" class="btn-primary">${arrow} 직접 사용</a>
+          <a href="${demoUrl}" class="btn-demo">📊 예시 데이터</a>`;
+      } else {
+        actions = `<a href="${it.file}" class="btn-view">${arrow} 바로 보기</a>`;
+      }
       grid.innerHTML += `
-        <a href="${it.file}" class="card" data-cat="${it.cat}">
+        <div class="card" data-cat="${it.cat}">
           <div class="card-top">
             <div class="card-icon ${it.iconCls}">${it.icon}</div>
             <div class="card-meta">
@@ -429,15 +458,8 @@ function renderCards(filter = 'all', query = '') {
             </div>
           </div>
           <p class="card-desc">${it.desc}</p>
-          <div class="card-footer">
-            <span class="card-filename">${it.file}</span>
-            <span class="card-arrow">
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
-              </svg>
-            </span>
-          </div>
-        </a>`;
+          <div class="card-actions">${actions}</div>
+        </div>`;
     });
     sec.appendChild(grid);
     root.appendChild(sec);

@@ -730,6 +730,15 @@ input[type=range] { width: 100%; accent-color: var(--matcha-600); cursor: pointe
 <script>
 // ── Storage ──────────────────────────────────────────
 const KEY = 'career-log-builder-v1';
+const DEMO = new URLSearchParams(location.search).has('demo');
+const DEMO_STATE_CLB = {
+  profile:{name:'김민준',currentRole:'마케팅 매니저',targetRole:'마케팅 팀장',yearsOfExperience:4,industry:'IT/스타트업',goal:'데이터 기반 마케팅 전략 리드'},
+  logs:[
+    {id:'l1',date:'2026-03-15',project:'앱 리텐션 캠페인',situation:'월간 활성 사용자(MAU) 15% 하락',task:'리텐션 개선 캠페인 기획 및 실행 담당',action:'푸시 알림 A/B 테스트 12개 시나리오 설계, 개인화 메시지 도입',result:'캠페인 2개월 만에 MAU 22% 회복, 앱 평점 4.1→4.4 상승',tags:['마케팅','데이터분석','A/B테스트'],isPrivate:false},
+    {id:'l2',date:'2026-01-20',project:'신규 기능 론칭 홍보',situation:'경쟁사 대비 인지도 낮은 신규 결제 기능 론칭',task:'런칭 마케팅 전략 수립 및 전채널 실행',action:'인플루언서 콜라보 10건, SNS 광고 예산 3,000만원 집행, 언론 보도자료 배포 8건',result:'런칭 2주 내 신규 결제 사용자 8,200명 달성(목표 대비 137%)'},
+  ],
+  cards:[],selectedCardIds:[],template:'project',jdInput:'',jdResult:null,onboardingDone:true,currentScreen:'dashboard'
+};
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY)) || defaultState(); }
   catch { return defaultState(); }
@@ -749,7 +758,7 @@ function defaultState() {
   };
 }
 
-let state = load();
+let state = DEMO ? JSON.parse(JSON.stringify(DEMO_STATE_CLB)) : load();
 // ─────────────────────────────────────────────────────
 
 // ── Navigation ───────────────────────────────────────

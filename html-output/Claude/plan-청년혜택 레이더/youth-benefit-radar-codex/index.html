@@ -504,13 +504,14 @@ const POLICIES=[
 ];
 
 /* ── State ── */
+const DEMO=new URLSearchParams(location.search).has('demo');
 const state={
   tab:'home',
   detailId:null,
   prevTab:null,
   statusFilter:'all',
-  profile:rSt(PK,DEFAULT),
-  docProgress:rSt(DK,[]),
+  profile:DEMO?{...DEFAULT}:rSt(PK,DEFAULT),
+  docProgress:DEMO?[]:rSt(DK,[]),
 };
 
 /* ── Helpers ── */

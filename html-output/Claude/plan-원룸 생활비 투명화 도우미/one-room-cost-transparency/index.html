@@ -141,6 +141,7 @@
     <script>
       (function (){"use strict";
         var SK="one-room-v1";
+        var DEMO=new URLSearchParams(location.search).has("demo");
         var TABS=["home","breakdown","compare","checklist","moveout"];
         var TOPBAR=document.getElementById("topbar");
         var APP=document.getElementById("app");
@@ -728,7 +729,7 @@
         window.getRiskSignals=getRiskSignals;
         window.getChecklistForRoom=getChecklistForRoom;
         window.getMoveOutSettlement=getMoveOutSettlement;
-        var S=loadState();
+        var S=DEMO?createInitialState():loadState();
         window.S=S;
         render();
         })();

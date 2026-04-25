@@ -929,6 +929,27 @@ function setFmtValue(el, num) {
 // ═══════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════
+const DEMO = new URLSearchParams(location.search).has('demo');
+const DEMO_STATE = {
+  nick:'김지수', income:2800000, payday:25, obDone:true,
+  fixedExpenses:[
+    {id:'f1',name:'월세',amount:550000,cat:'주거'},
+    {id:'f2',name:'통신비',amount:55000,cat:'통신'},
+    {id:'f3',name:'헬스장',amount:60000,cat:'기타'}
+  ],
+  subscriptions:[
+    {id:'s1',name:'넷플릭스',amount:17000,cat:'OTT',billingDay:15},
+    {id:'s2',name:'유튜브 프리미엄',amount:14900,cat:'OTT',billingDay:20},
+    {id:'s3',name:'멜론',amount:10900,cat:'음악',billingDay:5}
+  ],
+  transactions:[
+    {id:'t1',date:new Date().toISOString().slice(0,10),amount:12000,cat:'카페',memo:'스타벅스'},
+    {id:'t2',date:new Date().toISOString().slice(0,10),amount:35000,cat:'식비',memo:'점심 회식'},
+    {id:'t3',date:new Date(Date.now()-86400000).toISOString().slice(0,10),amount:8500,cat:'교통',memo:'교통카드 충전'},
+    {id:'t4',date:new Date(Date.now()-86400000).toISOString().slice(0,10),amount:54000,cat:'쇼핑',memo:'다이소'}
+  ],
+  buckets:{식비:400000,카페:80000,교통:100000,쇼핑:150000,플렉스:100000}
+};
 let S = {
   nick: '', income: 0, payday: 25,
   fixedExpenses: [], subscriptions: [], transactions: [],
@@ -1433,7 +1454,7 @@ function buildPaydayOptions(selId, selected) {
 // ═══════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════
-load();
+if (DEMO) { S = JSON.parse(JSON.stringify(DEMO_STATE)); } else { load(); }
 buildPaydayOptions('ob-payday', S.payday||25);
 buildPaydayOptions('set-payday', S.payday||25);
 if (S.nick) document.getElementById('ob-nick').value = S.nick;
