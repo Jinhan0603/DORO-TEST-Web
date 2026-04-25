@@ -9,16 +9,16 @@
 <style>
 /* ── Cohere Design Tokens ── */
 :root {
-  --bg:       #060A14;
-  --shell:    #080D18;
-  --surface:  #0C1628;
-  --surface2: #111D33;
-  --border:   rgba(255,255,255,0.07);
-  --border2:  rgba(255,255,255,0.13);
+  --bg:       #F5F7FA;
+  --shell:    #FFFFFF;
+  --surface:  #F8FAFE;
+  --surface2: #EEF2F8;
+  --border:   rgba(0,0,0,0.08);
+  --border2:  rgba(0,0,0,0.13);
 
-  --text:    #EDF1FF;
-  --text2:   #8B9CB6;
-  --muted:   #4E5D73;
+  --text:    #0F172A;
+  --text2:   #5A7A9F;
+  --muted:   #94A3B8;
 
   --coral:   #FF6B35;
   --purple:  #9B5DE5;
@@ -366,10 +366,166 @@ select.form-input option { background:#0C1628; color:var(--text); }
 .prog-badge.done   { color:var(--green); }
 .prog-badge.partial{ color:var(--amber); }
 .prog-badge.none   { color:var(--text2); }
+
+/* ── Light Theme Overrides ── */
+html,body { background:var(--bg); }
+@media(min-width:500px){
+  body { background:radial-gradient(ellipse 60% 50% at 20% 10%,rgba(155,93,229,.07),transparent 55%),
+                    radial-gradient(ellipse 50% 45% at 80% 90%,rgba(255,107,53,.05),transparent 55%),
+                    var(--bg); }
+}
+#topbar { background:rgba(255,255,255,.96); border-bottom:1px solid var(--border); backdrop-filter:blur(20px); }
+#nav { background:rgba(255,255,255,.96); border-top:1px solid var(--border); backdrop-filter:blur(20px); }
+.btn-ghost { background:rgba(0,0,0,.05); color:var(--text2); border:1px solid var(--border2); }
+.btn-ghost:hover { background:rgba(0,0,0,.09); color:var(--text); }
+.chip { background:rgba(0,0,0,.04); color:var(--text2); border:1px solid var(--border); }
+.radar-bar { background:rgba(0,0,0,.07); }
+.hero-stat { background:rgba(0,0,0,.04); }
+.bc-reason { background:rgba(255,107,53,.05); }
+.doc-mini-item { background:rgba(0,0,0,.04); }
+.doc-prog-bar { background:rgba(0,0,0,.06); }
+.check-item:hover { background:rgba(0,0,0,.02); }
+.form-input { background:var(--surface2); border:1px solid var(--border2); color:var(--text); }
+.form-input:focus { border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,53,.12); }
+select.form-input option { background:#FFFFFF; color:var(--text); }
+.interest-chip { background:rgba(0,0,0,.04); color:var(--text2); border:1px solid var(--border); }
+.score-circle { box-shadow:0 0 12px rgba(255,107,53,.22); }
+.radar-card { background:var(--shell); border:1px solid var(--border); }
+.timeline-item { background:var(--shell); }
+.action-strip { background:var(--shell); }
+.hero-card { background:linear-gradient(135deg,rgba(255,107,53,.07),rgba(155,93,229,.05)); border:1px solid rgba(255,107,53,.18); }
+.hero-stat { border:1px solid var(--border); }
+.trust-card { background:rgba(6,200,220,.04); border:1px solid rgba(6,200,220,.18); }
+
+/* ── Onboarding ── */
+#phone { position:relative; }
+#ob { position:absolute; inset:0; background:var(--bg); z-index:100; display:flex; flex-direction:column; overflow:hidden; }
+#ob.hidden { display:none; }
+.ob-progress { padding:52px 24px 0; display:flex; gap:8px; }
+.ob-dot { flex:1; height:4px; border-radius:2px; background:var(--border2); transition:background .3s; }
+.ob-dot.on { background:var(--coral); }
+.ob-body-scroll { flex:1; overflow-y:auto; padding:28px 24px 24px; }
+.ob-body-scroll::-webkit-scrollbar { display:none; }
+.ob-emoji { font-size:48px; margin-bottom:20px; line-height:1; }
+.ob-title { font-size:26px; font-weight:800; line-height:1.25; letter-spacing:-.5px; color:var(--text); margin-bottom:8px; }
+.ob-sub { font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:28px; }
+.ob-field { margin-bottom:16px; }
+.ob-field label { font-size:13px; font-weight:600; color:var(--text2); display:block; margin-bottom:6px; }
+.ob-input { width:100%; padding:12px 14px; background:var(--surface2); border:1.5px solid var(--border2); border-radius:12px; font-size:15px; font-family:var(--font); color:var(--text); outline:none; transition:border-color .15s,box-shadow .15s; }
+.ob-input:focus { border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,53,.12); }
+select.ob-input option { background:#FFFFFF; color:var(--text); }
+.ob-chip-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+.ob-chip { padding:9px 16px; border-radius:99px; font-size:13px; font-weight:700; border:1.5px solid var(--border2); background:rgba(0,0,0,.04); color:var(--text2); cursor:pointer; transition:all .15s; font-family:var(--font); }
+.ob-chip.on { border-color:var(--coral); background:var(--coral-bg); color:var(--coral); }
+.ob-foot { padding:14px 24px calc(20px + var(--safe)); display:flex; gap:10px; background:var(--shell); border-top:1px solid var(--border); }
+.ob-btn { flex:1; padding:14px; border:none; border-radius:14px; font-size:15px; font-family:var(--font); font-weight:700; cursor:pointer; transition:all .15s; }
+.ob-btn-primary { background:var(--grad); color:#fff; box-shadow:0 4px 16px rgba(255,107,53,.28); }
+.ob-btn-ghost { background:rgba(0,0,0,.05); color:var(--text2); flex:0 0 72px; }
 </style>
 </head>
 <body>
 <div id="phone">
+
+<!-- ─── ONBOARDING ─── -->
+<div id="ob">
+  <div class="ob-progress">
+    <div class="ob-dot on" id="ob-d1"></div>
+    <div class="ob-dot" id="ob-d2"></div>
+    <div class="ob-dot" id="ob-d3"></div>
+  </div>
+
+  <div class="ob-body-scroll" id="ob-s1">
+    <div class="ob-emoji">🎯</div>
+    <div class="ob-title">내 조건을 알려주세요</div>
+    <div class="ob-sub">나이와 지역을 입력하면<br>나에게 맞는 청년 혜택을 찾아드려요.</div>
+    <div class="ob-field">
+      <label>만 나이</label>
+      <input class="ob-input" id="ob-age" type="number" min="15" max="50" placeholder="예: 27">
+    </div>
+    <div class="ob-field">
+      <label>거주 지역</label>
+      <select class="ob-input" id="ob-sido">
+        <option value="">지역 선택</option>
+        <option value="서울특별시">서울</option>
+        <option value="경기도">경기</option>
+        <option value="부산광역시">부산</option>
+        <option value="인천광역시">인천</option>
+        <option value="대구광역시">대구</option>
+        <option value="광주광역시">광주</option>
+        <option value="대전광역시">대전</option>
+        <option value="울산광역시">울산</option>
+        <option value="세종특별자치시">세종</option>
+        <option value="강원도">강원</option>
+        <option value="충청북도">충북</option>
+        <option value="충청남도">충남</option>
+        <option value="전라북도">전북</option>
+        <option value="전라남도">전남</option>
+        <option value="경상북도">경북</option>
+        <option value="경상남도">경남</option>
+        <option value="제주특별자치도">제주</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="ob-body-scroll hidden" id="ob-s2">
+    <div class="ob-emoji">💼</div>
+    <div class="ob-title">현재 상황을<br>알려주세요</div>
+    <div class="ob-sub">소득, 취업 상태, 주거 형태에 따라<br>받을 수 있는 혜택이 달라져요.</div>
+    <div class="ob-field">
+      <label>연 소득 수준</label>
+      <select class="ob-input" id="ob-income">
+        <option value="unknown">잘 모르겠음</option>
+        <option value="under_2000">2,000만 원 미만</option>
+        <option value="2000_3000">2,000~3,000만 원</option>
+        <option value="3000_4000">3,000~4,000만 원</option>
+        <option value="4000_5000">4,000~5,000만 원</option>
+        <option value="5000_6000">5,000~6,000만 원</option>
+        <option value="over_6000">6,000만 원 이상</option>
+      </select>
+    </div>
+    <div class="ob-field">
+      <label>취업 상태</label>
+      <select class="ob-input" id="ob-emp">
+        <option value="employed">재직 중</option>
+        <option value="job_seeker">구직 중</option>
+        <option value="freelancer">프리랜서</option>
+        <option value="student">학생</option>
+        <option value="leaving_soon">퇴사 예정</option>
+      </select>
+    </div>
+    <div class="ob-field">
+      <label>주거 형태</label>
+      <select class="ob-input" id="ob-house">
+        <option value="monthly_rent">월세</option>
+        <option value="jeonse">전세</option>
+        <option value="with_parents">부모님과 거주</option>
+        <option value="moving_soon">독립/이사 예정</option>
+        <option value="own_home">자가</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="ob-body-scroll hidden" id="ob-s3">
+    <div class="ob-emoji">✨</div>
+    <div class="ob-title">관심 있는 혜택을<br>선택해주세요</div>
+    <div class="ob-sub">선택한 분야를 우선적으로 보여드려요.<br>나중에 언제든 바꿀 수 있어요.</div>
+    <div class="ob-chip-grid">
+      <button class="ob-chip" data-val="housing" onclick="this.classList.toggle('on')">🏠 주거</button>
+      <button class="ob-chip" data-val="savings" onclick="this.classList.toggle('on')">💰 저축</button>
+      <button class="ob-chip" data-val="employment" onclick="this.classList.toggle('on')">💼 취업</button>
+      <button class="ob-chip" data-val="living" onclick="this.classList.toggle('on')">🌿 생활</button>
+      <button class="ob-chip" data-val="transport" onclick="this.classList.toggle('on')">🚌 교통</button>
+      <button class="ob-chip" data-val="education" onclick="this.classList.toggle('on')">📚 교육</button>
+      <button class="ob-chip" data-val="entrepreneurship" onclick="this.classList.toggle('on')">🚀 창업</button>
+    </div>
+  </div>
+
+  <div class="ob-foot">
+    <button class="ob-btn ob-btn-ghost" id="ob-back" onclick="obBack()" style="display:none;">이전</button>
+    <button class="ob-btn ob-btn-primary" id="ob-next" onclick="obNext()">다음 →</button>
+  </div>
+</div>
+
   <!-- Topbar -->
   <div id="topbar">
     <div class="logo">YR</div>
@@ -506,13 +662,15 @@ const POLICIES=[
 
 /* ── State ── */
 const DEMO=new URLSearchParams(location.search).has('demo');
+const _savedProfile=rSt(PK,null);
 const state={
   tab:'home',
   detailId:null,
   prevTab:null,
   statusFilter:'all',
-  profile:DEMO?{...DEFAULT}:(rSt(PK,null)||{...BLANK_PROFILE}),
+  profile:DEMO?{...DEFAULT}:(_savedProfile||{...BLANK_PROFILE}),
   docProgress:DEMO?[]:rSt(DK,[]),
+  onboardingDone: DEMO ? true : !!_savedProfile,
 };
 
 /* ── Helpers ── */
@@ -952,10 +1110,12 @@ function bindEvents(){
   document.querySelectorAll('[data-reset]').forEach(b=>{
     b.addEventListener('click',()=>{
       rmSt(PK);rmSt(DK);
-      state.profile=JSON.parse(JSON.stringify(DEFAULT));
-      state.docProgress=[];state.tab='home';state.detailId=null;
+      state.profile={...BLANK_PROFILE};
+      state.docProgress=[];state.tab='home';state.detailId=null;state.onboardingDone=false;
       document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.tab==='home'));
-      render();
+      obStep=1;
+      document.getElementById('ob').classList.remove('hidden');
+      showObStep();
     });
   });
   // action strip click (whole strip)
@@ -973,7 +1133,49 @@ document.getElementById('settings-btn').addEventListener('click',()=>{
   state.tab='settings';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));render();
 });
 
-render();
+/* ── Onboarding ── */
+let obStep=1;
+function showObStep(){
+  [1,2,3].forEach(i=>{
+    document.getElementById('ob-s'+i).classList.toggle('hidden',i!==obStep);
+    document.getElementById('ob-d'+i).classList.toggle('on',i<=obStep);
+  });
+  document.getElementById('ob-back').style.display=obStep>1?'':'none';
+  document.getElementById('ob-next').textContent=obStep===3?'시작하기 →':'다음 →';
+}
+function obNext(){
+  if(obStep===1){
+    const age=parseInt(document.getElementById('ob-age').value)||null;
+    if(!age||age<15||age>55){alert('나이를 입력해주세요 (15~55세)');return;}
+    state.profile={...state.profile,age,regionSido:document.getElementById('ob-sido').value};
+    obStep=2;showObStep();
+  } else if(obStep===2){
+    state.profile={...state.profile,
+      incomeRange:document.getElementById('ob-income').value,
+      employmentStatus:document.getElementById('ob-emp').value,
+      housingStatus:document.getElementById('ob-house').value};
+    obStep=3;showObStep();
+  } else {
+    const interests=[];
+    document.querySelectorAll('#ob-s3 .ob-chip.on').forEach(el=>interests.push(el.dataset.val));
+    state.profile={...state.profile,interests};
+    state.onboardingDone=true;
+    wSt(PK,state.profile);
+    document.getElementById('ob').classList.add('hidden');
+    render();
+  }
+}
+function obBack(){if(obStep>1){obStep--;showObStep();}}
+
+function startApp(){
+  if(!state.onboardingDone){
+    showObStep();
+  } else {
+    document.getElementById('ob').classList.add('hidden');
+    render();
+  }
+}
+startApp();
 </script>
 </body>
 </html>

@@ -8,43 +8,46 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0C0C1A;--shell:#111127;--surface:#16163A;--surface2:#1E1E4A;
+  --bg:#F5F7FA;--shell:#FFFFFF;--surface:#F8FAFE;--surface2:#EEF2F8;
   --purple:#8B5CF6;--blue:#3B82F6;--cyan:#06B6D4;--green:#10B981;
-  --amber:#F59E0B;--red:#EF4444;--text:#F0F0FF;--mid:#9090B0;--muted:#6060A0;
-  --border:rgba(139,92,246,.18);--grad:linear-gradient(135deg,#8B5CF6,#3B82F6);
+  --amber:#F59E0B;--red:#EF4444;--text:#0F172A;--mid:#5A7A9F;--muted:#94A3B8;
+  --border:rgba(0,0,0,0.08);--grad:linear-gradient(135deg,#8B5CF6,#3B82F6);
+  --safe:env(safe-area-inset-bottom,0px);
 }
 body{background:var(--bg);font-family:'Inter',sans-serif;min-height:100vh;color:var(--text);}
-#phone{display:flex;flex-direction:column;height:100vh;width:100%;max-width:430px;margin:0 auto;background:var(--shell);overflow:hidden;}
+#phone{display:flex;flex-direction:column;height:100vh;width:100%;max-width:430px;margin:0 auto;background:var(--shell);overflow:hidden;position:relative;}
 @media(min-width:500px){
-  body{display:flex;align-items:center;justify-content:center;padding:20px;}
-  #phone{height:min(900px,96vh);border-radius:32px;box-shadow:0 0 0 1px rgba(139,92,246,.25),0 40px 80px rgba(0,0,0,.8);}
+  body{display:flex;align-items:center;justify-content:center;padding:20px;
+    background:radial-gradient(ellipse 60% 50% at 20% 10%,rgba(139,92,246,.07),transparent 55%),
+              radial-gradient(ellipse 50% 45% at 80% 90%,rgba(59,130,246,.05),transparent 55%),var(--bg);}
+  #phone{height:min(900px,96vh);border-radius:32px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 40px 80px rgba(0,0,0,.1);}
 }
 /* Top bar */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--shell);}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);}
 .topbar-title{font-size:15px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .topbar-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-.topbar-btn{background:rgba(139,92,246,.15);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--mid);}
+.topbar-btn{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.18);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--purple);}
 /* Content */
 .content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;}
 /* Bottom nav */
-.bottomnav{display:flex;border-top:1px solid var(--border);background:var(--shell);flex-shrink:0;}
+.bottomnav{display:flex;border-top:1px solid var(--border);background:rgba(255,255,255,.96);backdrop-filter:blur(16px);flex-shrink:0;}
 .nav-btn{flex:1;padding:10px 4px 8px;background:none;border:none;font-size:10px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);transition:color .15s;border-top:2px solid transparent;}
 .nav-btn.active{color:var(--purple);border-top-color:var(--purple);}
 .nav-btn .icon{font-size:20px;line-height:1;}
 /* Cards */
-.card{background:var(--surface);border-radius:16px;padding:16px;border:1px solid var(--border);margin-bottom:12px;}
+.card{background:var(--shell);border-radius:16px;padding:16px;border:1px solid var(--border);margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.04);}
 .card-sm{padding:12px;}
 /* Hero card */
 .hero-card{background:var(--grad);border-radius:16px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;}
-.hero-card::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.08);border-radius:50%;}
-.hero-card .eyebrow{font-size:11px;color:rgba(255,255,255,.7);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.hero-card::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%;}
+.hero-card .eyebrow{font-size:11px;color:rgba(255,255,255,.75);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
 .hero-card .big-num{font-size:32px;font-weight:900;color:#FFF;letter-spacing:-1px;}
-.hero-card .sub{font-size:13px;color:rgba(255,255,255,.8);margin-top:6px;}
+.hero-card .sub{font-size:13px;color:rgba(255,255,255,.82);margin-top:6px;}
 /* Warning card */
-.warn-card{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:12px;margin-bottom:8px;}
+.warn-card{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:12px;margin-bottom:8px;}
 .warn-card .wt{font-size:13px;font-weight:600;color:var(--amber);}
 .warn-card p{font-size:12px;color:var(--mid);margin-top:3px;}
-.danger-card{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-left:3px solid var(--red);border-radius:0 12px 12px 0;padding:12px;margin-bottom:8px;}
+.danger-card{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-left:3px solid var(--red);border-radius:0 12px 12px 0;padding:12px;margin-bottom:8px;}
 .danger-card .wt{font-size:13px;font-weight:600;color:var(--red);}
 .danger-card p{font-size:12px;color:var(--mid);margin-top:3px;}
 /* Typography */
@@ -54,11 +57,11 @@ body{background:var(--bg);font-family:'Inter',sans-serif;min-height:100vh;color:
 .grad-num{font-size:28px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;margin:4px 0;}
 /* Pill */
 .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
-.pill-purple{background:rgba(139,92,246,.15);color:var(--purple);}
-.pill-green{background:rgba(16,185,129,.15);color:var(--green);}
-.pill-amber{background:rgba(245,158,11,.15);color:var(--amber);}
-.pill-red{background:rgba(239,68,68,.15);color:var(--red);}
-.pill-blue{background:rgba(59,130,246,.15);color:var(--blue);}
+.pill-purple{background:rgba(139,92,246,.12);color:var(--purple);}
+.pill-green{background:rgba(16,185,129,.12);color:var(--green);}
+.pill-amber{background:rgba(245,158,11,.12);color:var(--amber);}
+.pill-red{background:rgba(239,68,68,.12);color:var(--red);}
+.pill-blue{background:rgba(59,130,246,.12);color:var(--blue);}
 /* Progress */
 .prog{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin:8px 0;}
 .prog-fill{height:100%;border-radius:3px;}
@@ -111,10 +114,95 @@ body{background:var(--bg);font-family:'Inter',sans-serif;min-height:100vh;color:
 .notice{font-size:11px;color:var(--muted);background:var(--surface2);border-radius:8px;padding:8px 10px;margin-top:10px;line-height:1.5;}
 /* Divider */
 .divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+/* Light overrides */
+.ins-row{border-bottom-color:var(--border);}
+.ins-total{background:var(--surface2);}
+.ins-total span{color:var(--mid);}
+.cl-item{background:var(--surface2);}
+.cl-item strong{color:var(--text);}
+.cl-item p{color:var(--mid);}
+.tl-dot{border-color:var(--shell);}
+.timeline::before{background:var(--border);}
+.calc-table td{border-bottom-color:var(--border);}
+.notice{background:var(--surface2);}
+/* Onboarding */
+#ob{position:absolute;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;overflow:hidden;}
+#ob.hidden{display:none;}
+.ob-progress{padding:52px 24px 0;display:flex;gap:8px;}
+.ob-dot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+.ob-dot.on{background:var(--purple);}
+.ob-body-scroll{flex:1;overflow-y:auto;padding:28px 24px 24px;}
+.ob-body-scroll::-webkit-scrollbar{display:none;}
+.ob-emoji{font-size:48px;margin-bottom:20px;line-height:1;}
+.ob-title{font-size:26px;font-weight:800;line-height:1.25;letter-spacing:-.5px;color:var(--text);margin-bottom:8px;}
+.ob-sub{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:28px;}
+.ob-field{margin-bottom:16px;}
+.ob-field label{font-size:13px;font-weight:600;color:var(--mid);display:block;margin-bottom:6px;}
+.ob-input{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;}
+.ob-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,92,246,.1);}
+.ob-input option{background:#FFF;color:var(--text);}
+.ob-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ob-toggle-row{display:flex;align-items:center;gap:10px;padding:12px 0;font-size:14px;color:var(--text);cursor:pointer;}
+.ob-toggle-row input{width:18px;height:18px;accent-color:var(--purple);flex-shrink:0;}
+.ob-foot{padding:14px 24px calc(20px + var(--safe));display:flex;gap:10px;background:var(--shell);border-top:1px solid var(--border);}
+.ob-btn{flex:1;padding:14px;border:none;border-radius:14px;font-size:15px;font-family:'Inter',sans-serif;font-weight:700;cursor:pointer;transition:all .15s;}
+.ob-btn-primary{background:var(--grad);color:#FFF;box-shadow:0 4px 16px rgba(139,92,246,.28);}
+.ob-btn-ghost{background:rgba(0,0,0,.05);color:var(--mid);flex:0 0 72px;}
+.hidden{display:none!important;}
 </style>
 </head>
 <body>
 <div id="phone">
+
+<!-- ─── ONBOARDING ─── -->
+<div id="ob">
+  <div class="ob-progress">
+    <div class="ob-dot on" id="ob-d1"></div>
+    <div class="ob-dot" id="ob-d2"></div>
+  </div>
+
+  <div class="ob-body-scroll" id="ob-s1">
+    <div class="ob-emoji">📋</div>
+    <div class="ob-title">내 근무 정보를<br>입력해주세요</div>
+    <div class="ob-sub">입사일과 급여를 알면<br>연차·퇴직금·실수령액을 바로 계산해드려요.</div>
+    <div class="ob-field">
+      <label>입사일</label>
+      <input class="ob-input" id="ob-join" type="date">
+    </div>
+    <div class="ob-field">
+      <label>세전 월 기본급 (원)</label>
+      <input class="ob-input" id="ob-sal" type="number" placeholder="예: 3000000" inputmode="numeric">
+    </div>
+    <div class="ob-field">
+      <label>급여일 (매월 몇 일)</label>
+      <input class="ob-input" id="ob-sd" type="number" min="1" max="31" placeholder="25">
+    </div>
+  </div>
+
+  <div class="ob-body-scroll hidden" id="ob-s2">
+    <div class="ob-emoji">✅</div>
+    <div class="ob-title">조금 더 알려주세요</div>
+    <div class="ob-sub">정확한 연차수당과 퇴직금 계산을 위해<br>아래 정보를 입력해주세요.</div>
+    <div class="ob-field">
+      <label>사용한 연차 (일)</label>
+      <input class="ob-input" id="ob-used" type="number" min="0" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="ob-field">
+      <label>퇴사 예정일 (선택)</label>
+      <input class="ob-input" id="ob-leave" type="date">
+    </div>
+    <label class="ob-toggle-row" id="ob-ins-row">
+      <input type="checkbox" id="ob-ins" checked>
+      4대보험 가입 중
+    </label>
+  </div>
+
+  <div class="ob-foot">
+    <button class="ob-btn ob-btn-ghost" id="ob-back" onclick="obBack()" style="display:none;">이전</button>
+    <button class="ob-btn ob-btn-primary" id="ob-next" onclick="obNext()">다음 →</button>
+  </div>
+</div>
+
   <div class="topbar">
     <div>
       <div class="topbar-title">연차·퇴사·급여 실수방지</div>
@@ -144,18 +232,19 @@ const DEMO=new URLSearchParams(location.search).has('demo');
 const BLANK={
   tab:'home',
   profile:{joinDate:'',monthlySalary:0,salaryDay:25,usedLeaveDays:0,dependents:0,hasFourInsurance:true,plannedLeaveDate:''},
-  salaryCl:{}
+  salaryCl:{},onboardingDone:false
 };
 const DEMO_DATA={
   tab:'home',
   profile:{joinDate:'2023-04-01',monthlySalary:3000000,salaryDay:25,usedLeaveDays:5,dependents:0,hasFourInsurance:true,plannedLeaveDate:'2026-12-31'},
-  salaryCl:{}
+  salaryCl:{},onboardingDone:true
 };
-let S=DEMO?structuredClone(DEMO_DATA):(()=>{try{const s=localStorage.getItem(SK);if(!s)return structuredClone(BLANK);return{...structuredClone(BLANK),...JSON.parse(s)};}catch{return structuredClone(BLANK);}})();
+const _saved=(()=>{try{const s=localStorage.getItem(SK);return s?JSON.parse(s):null;}catch{return null;}})();
+let S=DEMO?structuredClone(DEMO_DATA):(_saved?{...structuredClone(BLANK),..._saved}:structuredClone(BLANK));
 function save(){localStorage.setItem(SK,JSON.stringify(S));}
 function setState(patch){S={...S,...patch};save();render();}
 function setProfile(patch){S={...S,profile:{...S.profile,...patch}};save();render();}
-function resetData(){if(confirm('모든 데이터를 초기화할까요?')){localStorage.removeItem(SK);S=structuredClone(DEFAULT);render();}}
+function resetData(){if(confirm('모든 데이터를 초기화할까요?')){localStorage.removeItem(SK);S=structuredClone(BLANK);obStep=1;document.getElementById('ob').classList.remove('hidden');showObStep();}}
 
 // ── CALC FUNCTIONS ────────────────────────────────────────────
 function parseD(s){return new Date(s);}
@@ -462,7 +551,42 @@ function bindEvents(){
   });
 }
 
-render();
+/* ── Onboarding ── */
+let obStep=1;
+function showObStep(){
+  [1,2].forEach(i=>{
+    document.getElementById('ob-s'+i).classList.toggle('hidden',i!==obStep);
+    document.getElementById('ob-d'+i).classList.toggle('on',i<=obStep);
+  });
+  document.getElementById('ob-back').style.display=obStep>1?'':'none';
+  document.getElementById('ob-next').textContent=obStep===2?'시작하기 →':'다음 →';
+}
+function obNext(){
+  if(obStep===1){
+    const join=document.getElementById('ob-join').value;
+    const sal=parseInt(document.getElementById('ob-sal').value)||0;
+    if(!join){alert('입사일을 입력해주세요');return;}
+    if(!sal){alert('월급을 입력해주세요');return;}
+    const sd=parseInt(document.getElementById('ob-sd').value)||25;
+    setProfile({joinDate:join,monthlySalary:sal,salaryDay:sd});
+    obStep=2;showObStep();
+  } else {
+    const used=parseInt(document.getElementById('ob-used').value)||0;
+    const leave=document.getElementById('ob-leave').value||'';
+    const ins=document.getElementById('ob-ins').checked;
+    S={...S,profile:{...S.profile,usedLeaveDays:used,plannedLeaveDate:leave,hasFourInsurance:ins},onboardingDone:true};
+    save();
+    document.getElementById('ob').classList.add('hidden');
+    render();
+  }
+}
+function obBack(){if(obStep>1){obStep--;showObStep();}}
+
+function startApp(){
+  if(!S.onboardingDone){showObStep();}
+  else{document.getElementById('ob').classList.add('hidden');render();}
+}
+startApp();
 </script>
 </body>
 </html>
