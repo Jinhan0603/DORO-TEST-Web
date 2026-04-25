@@ -194,7 +194,7 @@
     <h1>DORO <em>결과물</em> 아카이브</h1>
     <p>팀원 누구나 바로 열어볼 수 있는 인터랙티브 결과물 모음입니다.<br>카테고리 필터 또는 검색으로 원하는 자료를 찾아보세요.</p>
     <div class="stats-row">
-      <div class="stat"><div class="stat-num" id="total-cnt"><em>20</em></div><div class="stat-label">전체 문서</div></div>
+      <div class="stat"><div class="stat-num" id="total-cnt"><em>21</em></div><div class="stat-label">전체 문서</div></div>
       <div class="stat"><div class="stat-num"><em>6</em></div><div class="stat-label">카테고리</div></div>
       <div class="stat"><div class="stat-num"><em>2026</em></div><div class="stat-label">최신 업데이트</div></div>
     </div>
@@ -211,13 +211,13 @@
       <input type="text" id="search" placeholder="결과물 검색 (예: 컨설팅, AI, 사업 계획…)">
     </div>
     <div class="filter-tabs">
-      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">18</span></button>
+      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">21</span></button>
       <button class="filter-tab" data-cat="ai">AI·컨설팅 <span class="cnt" id="cnt-ai">2</span></button>
       <button class="filter-tab" data-cat="biz">사업·전략 <span class="cnt" id="cnt-biz">5</span></button>
       <button class="filter-tab" data-cat="edu">교육 프로그램 <span class="cnt" id="cnt-edu">4</span></button>
       <button class="filter-tab" data-cat="road">Open Road <span class="cnt" id="cnt-road">3</span></button>
       <button class="filter-tab" data-cat="collab">산학연·협력 <span class="cnt" id="cnt-collab">3</span></button>
-      <button class="filter-tab" data-cat="life">기타·커뮤니티 <span class="cnt" id="cnt-life">2</span></button>
+      <button class="filter-tab" data-cat="life">기타·커뮤니티 <span class="cnt" id="cnt-life">4</span></button>
     </div>
   </div>
 
@@ -368,6 +368,12 @@ const ITEMS = [
     title: '업무로그 기반 경력기술서 빌더',
     desc: '업무로그를 STAR 성과카드로 변환하는 경력 관리 앱. 채용공고 JD 키워드 매칭, 보안 민감정보 감지·마스킹, 경력기술서 미리보기까지 — Clay 디자인 시스템 기반.',
     file: 'Claude/plan-업무로그 기반 경력기술서 빌더/index.html'
+  },
+  {
+    cat: 'life', icon: '🎯', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
+    title: '청년혜택 레이더',
+    desc: '26~33세 사회초년생의 조건(나이·소득·주거·직장)을 입력하면 신청 가능성 높은 청년정책·지원금·저축상품을 매칭. 마감 D-day 타임라인·서류 체크리스트 포함 — Cohere 디자인 시스템 기반.',
+    file: 'Claude/plan-청년혜택 레이더/youth-benefit-radar-codex/index.html'
   },
 ];
 
