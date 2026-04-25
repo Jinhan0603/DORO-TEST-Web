@@ -1,725 +1,977 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="청년혜택 레이더 — 내 조건 기준 청년정책 매칭" />
-  <title>청년혜택 레이더</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-/* ======================================================
-   COHERE-INSPIRED DESIGN SYSTEM — 청년혜택 레이더
-   Dark base · Coral-Purple-Teal gradient palette
-   ====================================================== */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>청년혜택 레이더</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── Cohere Design Tokens ── */
 :root {
-  --bg:#060A14; --surface:#0C1628; --card:#0D1A2F; --hover:#112040;
-  --line:rgba(255,255,255,0.07); --line-mid:rgba(255,255,255,0.12);
-  --text:#EDF1FF; --text-2:#B0BEDD; --muted:#6B7A99;
-  --coral:#FF6B35; --coral-light:#FF8A5B;
-  --purple:#9B5DE5; --purple-light:#B57BF0;
-  --teal:#06C8DC; --teal-light:#3DD8EA;
-  --green:#05E39C; --amber:#FFB800; --red:#FF4D6A;
-  --coral-bg:rgba(255,107,53,0.12); --purple-bg:rgba(155,93,229,0.12);
-  --teal-bg:rgba(6,200,220,0.12);   --green-bg:rgba(5,227,156,0.12);
-  --amber-bg:rgba(255,184,0,0.12);  --red-bg:rgba(255,77,106,0.12);
-  --blue:var(--coral); --blue-dark:#e55c25; --mint:var(--teal);
-  --soft-blue:var(--coral-bg); --soft-green:var(--green-bg);
-  --soft-amber:var(--amber-bg); --soft-red:var(--red-bg);
-  --grad-brand:linear-gradient(135deg,var(--coral),var(--purple));
-  --grad-cool:linear-gradient(135deg,var(--purple),var(--teal));
-  --grad-bar:linear-gradient(90deg,var(--coral),var(--purple),var(--teal));
-  font-family:'Inter',Pretendard,SUIT,'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
-  color:var(--text); background:var(--bg);
+  --bg:       #060A14;
+  --shell:    #080D18;
+  --surface:  #0C1628;
+  --surface2: #111D33;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.13);
+
+  --text:    #EDF1FF;
+  --text2:   #8B9CB6;
+  --muted:   #4E5D73;
+
+  --coral:   #FF6B35;
+  --purple:  #9B5DE5;
+  --teal:    #06C8DC;
+  --green:   #05E39C;
+  --amber:   #FFB800;
+  --red:     #FF4D6A;
+
+  --coral-bg:  rgba(255,107,53,0.12);
+  --purple-bg: rgba(155,93,229,0.12);
+  --teal-bg:   rgba(6,200,220,0.12);
+  --green-bg:  rgba(5,227,156,0.12);
+  --amber-bg:  rgba(255,184,0,0.12);
+  --red-bg:    rgba(255,77,106,0.12);
+
+  --grad:      linear-gradient(135deg,#FF6B35,#9B5DE5);
+  --grad-cool: linear-gradient(135deg,#9B5DE5,#06C8DC);
+  --grad-bar:  linear-gradient(90deg,#FF6B35,#9B5DE5,#06C8DC);
+
+  --nav-h: 62px;
+  --top-h: 58px;
+  --safe:  env(safe-area-inset-bottom, 0px);
+  --font:  'Inter', -apple-system, sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;}
-body{
-  margin:0; min-height:100vh;
-  background:
-    radial-gradient(ellipse 70% 45% at 10% -5%,rgba(155,93,229,.16) 0%,transparent 55%),
-    radial-gradient(ellipse 55% 40% at 90% 105%,rgba(255,107,53,.12) 0%,transparent 55%),
-    var(--bg);
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+
+/* ── Phone Shell ── */
+#phone {
+  display:flex; flex-direction:column;
+  height:100vh; width:100%; max-width:430px;
+  margin:0 auto; overflow:hidden;
+  background:var(--shell);
+  position:relative;
 }
-button,input,select{font:inherit;} button{cursor:pointer;}
-.app-shell{min-height:100vh;padding-bottom:96px;}
-.topbar{
-  position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;
-  padding:14px 24px;background:rgba(6,10,20,.82);backdrop-filter:blur(22px);
-  border-bottom:1px solid var(--line);
+@media(min-width:500px){
+  body { display:flex; align-items:center; justify-content:center; min-height:100vh;
+    background: radial-gradient(ellipse 60% 50% at 20% 10%,rgba(155,93,229,.18),transparent 55%),
+                radial-gradient(ellipse 50% 45% at 80% 90%,rgba(255,107,53,.14),transparent 55%),
+                var(--bg); }
+  #phone { height:min(900px,96vh); border-radius:36px; overflow:hidden;
+    box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 40px 80px rgba(0,0,0,.8); }
 }
-.brand-mark{
-  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
-  background:var(--grad-brand);color:#fff;font-weight:900;font-size:14px;letter-spacing:-.5px;
-  box-shadow:0 0 0 1px rgba(255,107,53,.25),0 0 22px rgba(255,107,53,.35);
+
+/* ── Topbar ── */
+#topbar {
+  height:var(--top-h); flex-shrink:0;
+  display:flex; align-items:center; gap:12px; padding:0 18px;
+  background:rgba(8,13,24,.88); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  position:relative; z-index:10;
 }
-.brand-text{display:flex;flex-direction:column;line-height:1.3;}
-.brand-text strong{font-size:15px;font-weight:800;color:var(--text);}
-.brand-text span{font-size:11px;color:var(--muted);}
-.top-nav{margin-left:auto;display:flex;gap:4px;}
-.top-nav button,.bottom-nav button{
-  border:0;background:transparent;padding:8px 14px;border-radius:999px;
-  color:var(--muted);font-weight:700;font-size:14px;transition:color .15s,background .15s;
+.logo {
+  width:34px; height:34px; border-radius:10px; flex-shrink:0;
+  background:var(--grad); display:grid; place-items:center;
+  font-size:13px; font-weight:900; color:#fff; letter-spacing:-.5px;
+  box-shadow:0 0 16px rgba(255,107,53,.4);
 }
-.top-nav button:hover{color:var(--text);background:rgba(255,255,255,.05);}
-.nav-active{background:rgba(255,107,53,.15)!important;color:var(--coral)!important;}
-.workspace{
-  width:min(1440px,100%);margin:0 auto;padding:28px 24px;
-  display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;
+.brand { flex:1; }
+.brand-name { font-size:15px; font-weight:800; color:var(--text); letter-spacing:-.3px; }
+.brand-sub  { font-size:11px; color:var(--muted); margin-top:1px; }
+.top-btn {
+  width:34px; height:34px; border-radius:10px; border:1px solid var(--border2);
+  background:var(--surface); display:grid; place-items:center;
+  color:var(--text2); font-size:16px; cursor:pointer; transition:background .15s;
 }
-.content-stack{display:flex;flex-direction:column;gap:20px;min-width:0;}
-.panel,.benefit-card,.hero-card{background:var(--card);border:1px solid var(--line);border-radius:20px;}
-.panel{padding:22px;}
-.profile-panel{position:sticky;top:82px;display:flex;flex-direction:column;gap:14px;}
-.panel-header,.section-title-row,.card-topline,.score-row,.progress-top{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+.top-btn:hover { background:var(--surface2); }
+
+/* ── Screen ── */
+#screen {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + var(--safe) + 8px);
+  background:var(--shell);
+  scroll-behavior:smooth;
 }
-.panel-header h2,.section-title-row h1,.section-title-row h2{margin:4px 0 0;}
-.eyebrow{
-  font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:0;
-  background:var(--grad-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+#screen::-webkit-scrollbar { display:none; }
+
+/* ── Bottom Nav ── */
+#nav {
+  height:calc(var(--nav-h) + var(--safe));
+  padding-bottom:var(--safe);
+  flex-shrink:0;
+  display:flex; align-items:flex-start; padding-top:6px;
+  background:rgba(8,13,24,.94); backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
 }
-h1{font-size:clamp(26px,4vw,40px);line-height:1.16;margin:8px 0;font-weight:800;color:var(--text);}
-h2{font-size:19px;margin:6px 0 12px;font-weight:700;color:var(--text);}
-h3{font-size:15px;margin:8px 0 6px;font-weight:700;color:var(--text);}
-p{line-height:1.65;color:var(--text-2);margin:6px 0;}
-.small-muted,.summary-text{color:var(--muted);font-size:13px;}
-.hero-card{
-  padding:28px;display:grid;grid-template-columns:1fr minmax(200px,280px);
-  gap:28px;align-items:center;overflow:hidden;position:relative;
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 0; border:none; background:none; cursor:pointer;
+  color:var(--muted); font-size:10px; font-weight:600; font-family:var(--font);
+  transition:color .15s; position:relative;
 }
-.hero-card::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 65% 90% at 105% 50%,rgba(155,93,229,.09),transparent 65%);
+.nav-item.active { color:var(--coral); }
+.nav-item.active::before {
+  content:''; position:absolute; top:-7px; left:50%; transform:translateX(-50%);
+  width:24px; height:2px; border-radius:2px; background:var(--coral);
 }
-.hero-metrics{display:grid;gap:12px;}
-.hero-metrics div{
-  border:1px solid rgba(255,107,53,.2);background:rgba(255,107,53,.07);
-  border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;
+.nav-icon { font-size:20px; line-height:1; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
 }
-.hero-metrics div::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,107,53,.5),transparent);
+.section-label { font-size:14px; font-weight:800; color:var(--text); }
+
+/* ── Padding Wrappers ── */
+.px { padding:0 16px; }
+.py { padding:14px 0; }
+.gap { height:12px; }
+.gap-lg { height:20px; }
+
+/* ── Hero Card ── */
+.hero-card {
+  margin:14px 16px 0;
+  background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(155,93,229,.08));
+  border:1px solid rgba(255,107,53,.22); border-radius:20px; padding:20px;
+  position:relative; overflow:hidden;
 }
-.hero-metrics strong{display:block;font-size:28px;font-weight:900;color:var(--coral);line-height:1;margin-bottom:4px;}
-.hero-metrics span{color:var(--muted);font-size:12px;}
-.action-panel{
-  display:flex;align-items:center;justify-content:space-between;
-  border-color:rgba(155,93,229,.2);
-  background:linear-gradient(135deg,var(--card),rgba(155,93,229,.08));
+.hero-card::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 80% 80% at 110% 110%,rgba(155,93,229,.15),transparent);
+  pointer-events:none;
 }
-label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:13px;font-weight:600;}
-input,select{
-  width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 14px;
-  background:rgba(255,255,255,.04);color:var(--text);
-  transition:border-color .15s,box-shadow .15s;outline:none;
+.hero-row { display:flex; gap:12px; margin-top:12px; }
+.hero-stat {
+  flex:1; background:rgba(255,255,255,.05); border:1px solid var(--border2);
+  border-radius:14px; padding:14px 12px;
 }
-input:focus,select:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,107,53,.16);}
-select option{background:#0D1A2F;color:var(--text);}
-.field-grid{display:grid;gap:10px;}
-.field-grid.two{grid-template-columns:1fr 1fr;}
-.label-text{display:block;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:8px;}
-.chip-list{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{
-  border:1px solid var(--line);background:rgba(255,255,255,.04);
-  padding:7px 13px;border-radius:999px;color:var(--muted);font-weight:700;font-size:13px;transition:all .15s;
+.hero-stat-num { font-size:26px; font-weight:900; line-height:1; }
+.hero-stat-num.coral { color:var(--coral); }
+.hero-stat-num.purple { color:var(--purple); }
+.hero-stat-label { font-size:11px; color:var(--text2); margin-top:4px; }
+.hero-action { margin-top:14px; text-align:right; }
+
+/* ── Action Strip ── */
+.action-strip {
+  margin:12px 16px 0;
+  background:var(--surface); border:1px solid var(--border2); border-radius:16px;
+  padding:14px 16px; display:flex; align-items:center; gap:12px;
+  border-left:3px solid var(--coral);
 }
-.chip:hover{border-color:var(--line-mid);color:var(--text);}
-.chip-active{border-color:var(--coral);background:var(--coral-bg);color:var(--coral);}
-.privacy-note{
-  background:rgba(255,255,255,.03);border:1px dashed var(--line-mid);
-  padding:12px;border-radius:14px;color:var(--muted);font-size:12px;margin:0;
+.action-strip-body { flex:1; min-width:0; }
+.action-strip-tag { font-size:10px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:.08em; }
+.action-strip-title { font-size:14px; font-weight:700; color:var(--text); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.action-strip-meta { font-size:11px; color:var(--text2); margin-top:2px; }
+
+/* ── Section Header ── */
+.sec-header { display:flex; align-items:center; justify-content:space-between; padding:16px 16px 8px; }
+
+/* ── Radar Bars ── */
+.radar-card { margin:0 16px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; }
+.radar-row { display:grid; grid-template-columns:52px 1fr 32px; align-items:center; gap:10px; margin-bottom:10px; }
+.radar-row:last-child { margin-bottom:0; }
+.radar-label { font-size:12px; font-weight:600; color:var(--text2); }
+.radar-bar  { height:6px; border-radius:99px; background:rgba(255,255,255,.07); overflow:hidden; }
+.radar-bar i { display:block; height:100%; border-radius:inherit; background:var(--grad-bar); }
+.radar-score { font-size:12px; font-weight:800; color:var(--text); text-align:right; }
+
+/* ── Benefit Cards ── */
+.benefit-card {
+  margin:0 16px 10px;
+  background:var(--surface); border:1px solid var(--border); border-radius:18px;
+  padding:16px; transition:border-color .2s, transform .2s;
 }
-.primary-button,.ghost-button,.danger-button{
-  border:0;border-radius:12px;padding:10px 18px;font-weight:700;font-size:14px;transition:all .15s;
+.benefit-card:hover { border-color:rgba(255,107,53,.3); transform:translateY(-1px); }
+.benefit-card:last-child { margin-bottom:0; }
+.bc-top { display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.bc-body { margin-bottom:12px; }
+.bc-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:4px; line-height:1.3; }
+.bc-summary { font-size:12px; color:var(--text2); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.bc-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.bc-reason { font-size:11px; color:var(--text2); background:rgba(255,255,255,.04); border-radius:8px; padding:8px 10px; border-left:2px solid var(--coral); margin-bottom:12px; line-height:1.5; }
+
+/* ── Pills ── */
+.pill {
+  display:inline-flex; align-items:center; border-radius:99px;
+  padding:4px 10px; font-size:11px; font-weight:700;
 }
-.primary-button{
-  background:var(--grad-brand);color:#fff;
-  box-shadow:0 4px 18px rgba(255,107,53,.32),0 0 0 1px rgba(255,107,53,.1);
+.pill-teal   { background:var(--teal-bg);   color:#3DD8EA; border:1px solid rgba(6,200,220,.22); }
+.pill-purple { background:var(--purple-bg);  color:#B57BF0; border:1px solid rgba(155,93,229,.22); }
+.pill-coral  { background:var(--coral-bg);   color:var(--coral); border:1px solid rgba(255,107,53,.22); }
+.pill-amber  { background:var(--amber-bg);   color:var(--amber); border:1px solid rgba(255,184,0,.22); }
+.pill-red    { background:var(--red-bg);     color:var(--red);   border:1px solid rgba(255,77,106,.22); }
+.pill-gray   { background:rgba(255,255,255,.06); color:var(--text2); border:1px solid var(--border2); }
+.pill-green  { background:var(--green-bg);   color:var(--green); border:1px solid rgba(5,227,156,.22); }
+
+/* ── Score Circle ── */
+.score-circle {
+  width:48px; height:48px; border-radius:14px; flex-shrink:0;
+  background:var(--grad); display:grid; place-items:center;
+  font-size:18px; font-weight:900; color:#fff;
+  box-shadow:0 0 16px rgba(255,107,53,.35);
 }
-.primary-button:hover{
-  box-shadow:0 6px 24px rgba(255,107,53,.48),0 0 0 1px rgba(255,107,53,.2);transform:translateY(-1px);
+
+/* ── Buttons ── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  border:none; border-radius:12px; padding:10px 16px;
+  font-family:var(--font); font-size:14px; font-weight:700; cursor:pointer; transition:all .15s;
 }
-.primary-button.full{width:100%;}
-.ghost-button{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line);}
-.ghost-button:hover{background:rgba(255,255,255,.1);color:var(--text);}
-.danger-button{background:var(--red-bg);color:var(--red);border:1px solid rgba(255,77,106,.2);}
-.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-.benefit-card{
-  padding:20px;display:flex;flex-direction:column;gap:12px;
-  transition:border-color .2s,transform .2s,box-shadow .2s;
+.btn-primary { background:var(--grad); color:#fff; box-shadow:0 4px 16px rgba(255,107,53,.3); }
+.btn-primary:hover { box-shadow:0 6px 22px rgba(255,107,53,.48); transform:translateY(-1px); }
+.btn-ghost { background:rgba(255,255,255,.07); color:var(--text2); border:1px solid var(--border2); }
+.btn-ghost:hover { background:rgba(255,255,255,.12); color:var(--text); }
+.btn-sm { font-size:12px; padding:7px 12px; border-radius:10px; }
+.btn-full { width:100%; }
+.btn-danger { background:var(--red-bg); color:var(--red); border:1px solid rgba(255,77,106,.2); }
+.btn-link { background:none; color:var(--coral); font-size:12px; padding:0; }
+
+/* ── Filter Chips ── */
+.filter-row { display:flex; gap:8px; padding:0 16px 12px; overflow-x:auto; }
+.filter-row::-webkit-scrollbar { display:none; }
+.chip {
+  flex-shrink:0; padding:7px 14px; border-radius:99px; font-size:12px; font-weight:700;
+  border:1px solid var(--border2); background:rgba(255,255,255,.04); color:var(--text2);
+  cursor:pointer; white-space:nowrap; transition:all .15s; font-family:var(--font);
 }
-.benefit-card:hover{border-color:rgba(255,107,53,.28);transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.45);}
-.category-pill,.deadline-pill,.financial-chip{
-  display:inline-flex;align-items:center;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;
+.chip:hover { border-color:var(--coral); color:var(--text); }
+.chip.active { background:var(--coral); border-color:var(--coral); color:#fff; box-shadow:0 4px 12px rgba(255,107,53,.3); }
+
+/* ── Match Screen Header ── */
+.screen-hero {
+  padding:18px 16px 0;
+  background:linear-gradient(180deg,rgba(155,93,229,.08) 0%,transparent 100%);
 }
-.category-pill{background:var(--teal-bg);color:var(--teal-light);border:1px solid rgba(6,200,220,.22);}
-.deadline-pill{background:var(--purple-bg);color:var(--purple-light);border:1px solid rgba(155,93,229,.22);}
-.financial-chip,.financial-note{
-  background:var(--amber-bg);color:var(--amber);border-radius:10px;
-  padding:7px 11px;font-size:12px;font-weight:700;border:1px solid rgba(255,184,0,.2);
+.screen-hero h1 { font-size:22px; font-weight:900; color:var(--text); margin-top:6px; letter-spacing:-.5px; }
+.screen-hero p  { font-size:13px; color:var(--text2); margin-top:4px; line-height:1.5; }
+
+/* ── Calendar ── */
+.timeline-item {
+  margin:0 16px 10px;
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  display:flex; align-items:center; gap:14px; padding:14px;
+  cursor:pointer; width:calc(100% - 32px); text-align:left; font-family:var(--font);
+  transition:border-color .15s, background .15s;
 }
-.status-badge{display:inline-flex;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;}
-.status-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(5,227,156,.22);}
-.status-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(255,184,0,.22);}
-.status-gray{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line);}
-.status-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(255,77,106,.22);}
-.score-circle{
-  width:56px;height:56px;border-radius:16px;background:var(--grad-brand);color:#fff;
-  display:grid;place-items:center;font-size:21px;font-weight:900;
-  box-shadow:0 0 22px rgba(255,107,53,.4);flex-shrink:0;
+.timeline-item:hover { border-color:rgba(255,107,53,.3); background:rgba(255,107,53,.04); }
+.tl-day { min-width:52px; text-align:center; }
+.tl-day-num { font-size:22px; font-weight:900; line-height:1; }
+.tl-day-date { font-size:10px; color:var(--text2); margin-top:2px; }
+.tl-body { flex:1; min-width:0; }
+.tl-title { font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tl-meta { font-size:11px; color:var(--text2); margin-top:3px; }
+.tl-score { font-size:14px; font-weight:800; color:var(--purple); flex-shrink:0; }
+.urgency-urgent .tl-day-num { color:var(--red); }
+.urgency-soon   .tl-day-num { color:var(--amber); }
+.urgency-safe   .tl-day-num { color:var(--teal); }
+.urgency-closed .tl-day-num { color:var(--muted); }
+.urgency-always .tl-day-num { color:var(--green); }
+.urgency-urgent { border-color:rgba(255,77,106,.25); }
+.urgency-soon   { border-color:rgba(255,184,0,.22); }
+
+/* ── Documents ── */
+.doc-policy {
+  margin:0 16px 12px; background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden;
 }
-.meta-grid{display:grid;grid-template-columns:1fr;}
-.meta-grid div,.info-list div{
-  display:flex;justify-content:space-between;gap:12px;
-  padding:9px 0;border-top:1px solid var(--line);
+.doc-policy-head { padding:14px 16px 10px; }
+.doc-policy-title { font-size:14px; font-weight:700; color:var(--text); }
+.doc-policy-meta  { font-size:11px; color:var(--text2); margin-top:2px; }
+.doc-prog-bar { height:4px; background:rgba(255,255,255,.07); }
+.doc-prog-bar i { display:block; height:100%; background:var(--grad-bar); transition:width .4s; }
+.check-item {
+  display:flex; align-items:flex-start; gap:12px; padding:12px 16px;
+  border-top:1px solid var(--border); cursor:pointer; transition:background .15s;
 }
-.meta-grid span,.info-list span{color:var(--muted);font-size:12px;}
-.meta-grid strong,.info-list strong{text-align:right;font-size:13px;font-weight:600;color:var(--text);}
-.reason-box{background:rgba(255,255,255,.03);border-radius:14px;padding:14px;border:1px solid var(--line);}
-.reason-box strong{font-size:13px;color:var(--text-2);}
-.reason-box ul{margin:8px 0 0;padding:0;list-style:none;color:var(--muted);font-size:13px;display:grid;gap:6px;}
-.radar-list,.deadline-list,.doc-progress-list,.evaluation-list{display:grid;gap:12px;}
-.radar-row{display:grid;grid-template-columns:60px 1fr 40px;align-items:center;gap:10px;}
-.radar-row span{color:var(--muted);font-weight:700;font-size:13px;}
-.radar-row strong{color:var(--text);font-weight:800;font-size:13px;text-align:right;}
-.radar-bar,.progress-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;}
-.radar-bar i,.progress-bar i{display:block;height:100%;border-radius:inherit;background:var(--grad-bar);}
-.progress-bar.large{height:12px;margin:10px 0 14px;}
-.deadline-item{
-  display:grid;grid-template-columns:70px 1fr;text-align:left;
-  border:1px solid var(--line);background:rgba(255,255,255,.03);
-  border-radius:14px;padding:13px;width:100%;transition:border-color .15s,background .15s;
+.check-item:hover { background:rgba(255,255,255,.03); }
+.check-item.checked { background:var(--green-bg); }
+.check-item input { width:18px; height:18px; accent-color:var(--coral); flex-shrink:0; margin-top:2px; cursor:pointer; }
+.check-item-body { flex:1; }
+.check-item-name  { font-size:13px; font-weight:600; color:var(--text); }
+.check-item.checked .check-item-name { text-decoration:line-through; color:var(--text2); }
+.check-item-issuer{ font-size:11px; color:var(--text2); margin-top:2px; }
+.check-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; flex-shrink:0; margin-top:2px; }
+.check-badge.req { background:var(--coral-bg); color:var(--coral); }
+.check-badge.opt { background:rgba(255,255,255,.06); color:var(--muted); }
+
+/* ── Profile Form ── */
+.form-section { margin:0 16px 12px; background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+.form-section-title { padding:14px 16px 0; font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.08em; }
+.form-field { padding:10px 16px; }
+.form-label { font-size:12px; font-weight:600; color:var(--text2); margin-bottom:6px; display:block; }
+.form-input {
+  width:100%; background:rgba(255,255,255,.05); border:1px solid var(--border2);
+  border-radius:10px; padding:10px 12px; color:var(--text); font-family:var(--font); font-size:14px;
+  outline:none; transition:border-color .15s, box-shadow .15s;
 }
-.deadline-item:hover{border-color:var(--coral);background:rgba(255,107,53,.06);}
-.deadline-item strong{color:var(--red);font-size:13px;font-weight:700;}
-.deadline-item span{color:var(--text);font-size:13px;}
-.premium-card{
-  background:linear-gradient(135deg,var(--card),rgba(155,93,229,.1));
-  border-color:rgba(155,93,229,.22);
+.form-input:focus { border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,53,.15); }
+select.form-input option { background:#0C1628; color:var(--text); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+.form-row .form-field { border-right:1px solid var(--border); }
+.form-row .form-field:last-child { border-right:none; }
+.interest-grid { padding:10px 16px 14px; display:flex; flex-wrap:wrap; gap:8px; }
+.interest-chip {
+  padding:7px 12px; border-radius:99px; font-size:12px; font-weight:700;
+  border:1px solid var(--border2); background:rgba(255,255,255,.04); color:var(--text2);
+  cursor:pointer; transition:all .15s; font-family:var(--font);
 }
-.premium-price{margin:14px 0;font-size:32px;font-weight:900;color:var(--purple);line-height:1;}
-.premium-price span{font-size:14px;color:var(--muted);font-weight:400;}
-.tab-row{display:flex;flex-wrap:wrap;gap:8px;}
-.tab{
-  border:1px solid var(--line);background:rgba(255,255,255,.04);
-  padding:8px 14px;border-radius:999px;color:var(--muted);font-weight:700;font-size:13px;transition:all .15s;
+.interest-chip.on { border-color:var(--coral); background:var(--coral-bg); color:var(--coral); }
+.privacy-note { margin:0 16px 12px; padding:12px 14px; border:1px dashed var(--border2); border-radius:12px; }
+.privacy-note p { font-size:11px; color:var(--muted); line-height:1.6; }
+
+/* ── Detail Screen ── */
+.detail-hero {
+  padding:16px 16px 0;
+  background:linear-gradient(180deg,rgba(255,107,53,.07) 0%,transparent 100%);
 }
-.tab:hover{border-color:var(--line-mid);color:var(--text);}
-.tab.active{background:var(--coral);color:#fff;border-color:var(--coral);box-shadow:0 4px 16px rgba(255,107,53,.35);}
-.detail-score{
-  background:var(--card);border:1px solid var(--line);border-radius:18px;
-  padding:20px;min-width:148px;text-align:center;flex-shrink:0;
-}
-.detail-score strong{display:block;font-size:38px;margin-top:10px;font-weight:900;color:var(--coral);}
-.detail-score small{color:var(--muted);font-size:12px;}
-.evaluation-item{border:1px solid var(--line);border-radius:14px;padding:13px;}
-.evaluation-item.matched{background:var(--green-bg);border-color:rgba(5,227,156,.22);}
-.evaluation-item.needs_check{background:var(--amber-bg);border-color:rgba(255,184,0,.22);}
-.evaluation-item.failed{background:rgba(255,255,255,.03);}
-.evaluation-item p{margin:5px 0 0;color:var(--muted);font-size:13px;}
-.evaluation-item strong{color:var(--text);font-size:14px;}
-.document-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
-.document-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.03);}
-.document-card strong{color:var(--text);font-size:13px;font-weight:700;}
-.document-card p,.document-card small{color:var(--muted);margin:5px 0 0;font-size:13px;}
-.trust-box{border-color:rgba(6,200,220,.2);background:rgba(6,200,220,.05);}
-.timeline-panel{display:grid;gap:10px;}
-.timeline-item{
-  width:100%;display:grid;grid-template-columns:100px 1fr 64px;
-  align-items:center;gap:14px;text-align:left;
-  border:1px solid var(--line);background:rgba(255,255,255,.03);
-  border-radius:18px;padding:14px;transition:border-color .15s,background .15s;
-}
-.timeline-item:hover{border-color:rgba(255,107,53,.28);background:rgba(255,107,53,.05);}
-.timeline-date{display:grid;gap:4px;}
-.timeline-date strong{color:var(--coral);font-size:20px;font-weight:800;line-height:1;}
-.timeline-date span,.timeline-item p{color:var(--muted);font-size:13px;margin:0;}
-.timeline-item h3{margin:0 0 2px;font-size:14px;font-weight:700;color:var(--text);}
-.timeline-score{justify-self:end;font-weight:800;color:var(--purple);font-size:15px;}
-.urgency-urgent{border-color:rgba(255,77,106,.28);background:rgba(255,77,106,.06);}
-.urgency-soon{border-color:rgba(255,184,0,.22);background:rgba(255,184,0,.05);}
-.document-policy-list{display:grid;gap:16px;}
-.checklist{display:grid;gap:10px;}
-.check-item{
-  display:flex;flex-direction:row;align-items:flex-start;gap:12px;
-  border:1px solid var(--line);background:rgba(255,255,255,.03);
-  border-radius:14px;padding:13px;transition:border-color .15s,background .15s;
-}
-.check-item:has(input:checked){border-color:rgba(5,227,156,.22);background:var(--green-bg);}
-.check-item input{width:18px;height:18px;accent-color:var(--coral);flex-shrink:0;margin-top:2px;}
-.check-item span{flex:1;color:var(--text);font-size:14px;}
-.check-item small{display:block;color:var(--muted);margin-top:3px;font-size:12px;}
-.check-item em{font-style:normal;color:var(--muted);font-size:12px;}
-.section-block{display:grid;gap:16px;}
-.bottom-nav{
-  position:fixed;left:12px;right:12px;bottom:12px;z-index:20;
-  display:none;grid-template-columns:repeat(5,1fr);padding:6px;
-  background:rgba(10,18,34,.92);border:1px solid var(--line);
-  border-radius:22px;box-shadow:0 16px 52px rgba(0,0,0,.65);backdrop-filter:blur(22px);
-}
-.back-button{align-self:flex-start;}
-@media(max-width:1180px){
-  .workspace{grid-template-columns:1fr;}
-  .profile-panel{position:static;}
-  .card-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
-@media(max-width:760px){
-  .top-nav{display:none;} .bottom-nav{display:grid;}
-  .workspace{padding:14px;gap:14px;} .topbar{padding:12px 16px;}
-  .hero-card,.dashboard-grid,.card-grid,.document-grid{grid-template-columns:1fr;}
-  .action-panel,.panel-header,.section-title-row{flex-direction:column;align-items:stretch;}
-  .field-grid.two{grid-template-columns:1fr;}
-  .timeline-item{grid-template-columns:82px 1fr;} .timeline-score{display:none;}
-  h1{font-size:27px;}
-}
-  </style>
+.detail-hero h1 { font-size:20px; font-weight:800; color:var(--text); margin:8px 0; letter-spacing:-.3px; line-height:1.3; }
+.detail-score-row { display:flex; align-items:center; gap:10px; margin-top:12px; }
+.detail-score-big { font-size:36px; font-weight:900; color:var(--coral); line-height:1; }
+.detail-score-label { font-size:11px; color:var(--text2); }
+.detail-card { margin:12px 16px 0; background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.detail-card-head { padding:14px 16px 10px; border-bottom:1px solid var(--border); }
+.detail-card-head h3 { font-size:13px; font-weight:700; color:var(--text); }
+.eval-item { padding:10px 16px; border-bottom:1px solid var(--border); }
+.eval-item:last-child { border-bottom:none; }
+.eval-matched    { border-left:3px solid var(--green); }
+.eval-needs_check{ border-left:3px solid var(--amber); }
+.eval-failed     { border-left:3px solid var(--muted); }
+.eval-title { font-size:13px; font-weight:600; color:var(--text); }
+.eval-msg   { font-size:12px; color:var(--text2); margin-top:3px; line-height:1.5; }
+.info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid var(--border); }
+.info-row:last-child { border-bottom:none; }
+.info-label { font-size:12px; color:var(--text2); }
+.info-value { font-size:13px; font-weight:600; color:var(--text); text-align:right; }
+.doc-mini { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:12px 16px; }
+.doc-mini-item { background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px; }
+.doc-mini-name   { font-size:12px; font-weight:700; color:var(--text); }
+.doc-mini-issuer { font-size:11px; color:var(--text2); margin-top:3px; }
+.trust-card { margin:12px 16px 0; background:rgba(6,200,220,.05); border:1px solid rgba(6,200,220,.2); border-radius:16px; padding:16px; }
+.trust-card h3 { font-size:14px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.trust-card p  { font-size:12px; color:var(--text2); line-height:1.6; }
+
+/* ── Empty State ── */
+.empty { text-align:center; padding:60px 24px; }
+.empty-icon { font-size:48px; margin-bottom:12px; }
+.empty p { font-size:14px; color:var(--text2); }
+
+/* ── Divider ── */
+.divider { height:1px; background:var(--border); margin:0 16px; }
+
+/* ── Progress Badge ── */
+.prog-badge { font-size:11px; font-weight:700; }
+.prog-badge.done   { color:var(--green); }
+.prog-badge.partial{ color:var(--amber); }
+.prog-badge.none   { color:var(--text2); }
+</style>
 </head>
 <body>
-  <div id="app"></div>
-  <script>
-// ── deadlines.js ──────────────────────────────────────
-const PROTOTYPE_TODAY = new Date('2026-04-24T09:00:00+09:00');
-function getDaysLeft(endDate, today = PROTOTYPE_TODAY) {
-  if (!endDate) return null;
-  const deadline = new Date(endDate + 'T23:59:59+09:00');
-  return Math.ceil((deadline.getTime() - today.getTime()) / (1000*60*60*24));
-}
-function getDeadlineLabel(policy) {
-  if (policy.deadline.status === 'always' || !policy.deadline.endDate) return '상시';
-  const d = getDaysLeft(policy.deadline.endDate);
-  if (d === null) return '상시';
-  if (d < 0) return '마감';
-  if (d === 0) return '오늘 마감';
-  return 'D-' + d;
-}
-function getDeadlineUrgency(policy) {
-  if (policy.deadline.status === 'always' || !policy.deadline.endDate) return 'always';
-  const d = getDaysLeft(policy.deadline.endDate);
-  if (d === null) return 'always';
-  if (d < 0) return 'closed';
-  if (d <= 3) return 'urgent';
-  if (d <= 7) return 'soon';
-  return 'safe';
+<div id="phone">
+  <!-- Topbar -->
+  <div id="topbar">
+    <div class="logo">YR</div>
+    <div class="brand">
+      <div class="brand-name">청년혜택 레이더</div>
+      <div class="brand-sub">내 조건 기준 청년정책 매칭</div>
+    </div>
+    <button class="top-btn" id="settings-btn" title="설정">⚙</button>
+  </div>
+
+  <!-- Screen -->
+  <div id="screen"></div>
+
+  <!-- Bottom Nav -->
+  <nav id="nav">
+    <button class="nav-item active" data-tab="home">
+      <span class="nav-icon">🏠</span>홈
+    </button>
+    <button class="nav-item" data-tab="matches">
+      <span class="nav-icon">🎯</span>매칭
+    </button>
+    <button class="nav-item" data-tab="calendar">
+      <span class="nav-icon">📅</span>마감
+    </button>
+    <button class="nav-item" data-tab="docs">
+      <span class="nav-icon">📋</span>서류
+    </button>
+    <button class="nav-item" data-tab="profile">
+      <span class="nav-icon">👤</span>내 조건
+    </button>
+  </nav>
+</div>
+
+<script>
+/* ── deadlines ── */
+const TODAY = new Date('2026-04-24T09:00:00+09:00');
+function getDaysLeft(d,t=TODAY){if(!d)return null;return Math.ceil((new Date(d+'T23:59:59+09:00')-t)/(864e5));}
+function deadlineLabel(p){if(p.deadline.status==='always'||!p.deadline.endDate)return'상시';const d=getDaysLeft(p.deadline.endDate);if(d===null)return'상시';if(d<0)return'마감';if(d===0)return'오늘';return'D-'+d;}
+function deadlineUrgency(p){if(p.deadline.status==='always'||!p.deadline.endDate)return'always';const d=getDaysLeft(p.deadline.endDate);if(d===null)return'always';if(d<0)return'closed';if(d<=3)return'urgent';if(d<=7)return'soon';return'safe';}
+
+/* ── format ── */
+const CAT={housing:'주거',savings:'저축',employment:'취업',living:'생활',transport:'교통',education:'교육',entrepreneurship:'창업'};
+const EMP={employed:'재직 중',job_seeker:'구직 중',freelancer:'프리랜서',student:'학생',leaving_soon:'퇴사 예정'};
+const HOUSE={monthly_rent:'월세',jeonse:'전세',with_parents:'부모님과 거주',moving_soon:'독립/이사 예정',own_home:'자가'};
+const INC={'under_2000':'2,000만 원 미만','2000_3000':'2,000~3,000만 원','3000_4000':'3,000~4,000만 원','4000_5000':'4,000~5,000만 원','5000_6000':'5,000~6,000만 원','over_6000':'6,000만 원 이상','unknown':'잘 모르겠음'};
+const LIFE={first_job:'첫 취업',moving_soon:'이사 예정',leaving_job:'퇴사 예정',marriage:'혼인 예정',none:'없음'};
+const SLABEL={likely_eligible:'신청 가능성 높음',needs_check:'추가 확인 필요',not_eligible:'현재 조건상 어려움',closed:'마감됨'};
+function fmtMoney(v){return v>=10000?Math.round(v/10000).toLocaleString('ko-KR')+'만 원':v.toLocaleString('ko-KR')+'원';}
+function fmtDate(s){if(!s)return'상시';return new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric'}).format(new Date(s+'T00:00:00+09:00'));}
+function sClass(s){return{likely_eligible:'pill-green',needs_check:'pill-amber',not_eligible:'pill-gray',closed:'pill-red'}[s]||'pill-gray';}
+function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');}
+
+/* ── storage ── */
+const PK='yr-profile', DK='yr-docs';
+function rSt(k,fb){try{const r=localStorage.getItem(k);return r?JSON.parse(r):fb;}catch{return fb;}}
+function wSt(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function rmSt(k){localStorage.removeItem(k);}
+
+/* ── doc progress ── */
+function docProg(policy,prog){
+  const req=policy.requiredDocuments.filter(d=>d.required);
+  const checked=new Set(prog?.checkedDocumentIds??[]);
+  const done=req.filter(d=>checked.has(d.id)).length;
+  return{total:req.length,done,pct:req.length?Math.round(done/req.length*100):100};
 }
 
-// ── documents.js ──────────────────────────────────────
-function getDocumentProgress(policy, progress) {
-  const req = policy.requiredDocuments.filter(d => d.required);
-  const checked = new Set(progress?.checkedDocumentIds ?? []);
-  const completed = req.filter(d => checked.has(d.id)).length;
-  const total = req.length;
-  return { total, completed, percent: total === 0 ? 100 : Math.round(completed/total*100) };
+/* ── matching ── */
+function evalRule(r,profile,policy){
+  const base={id:r.id,text:r.plainText,required:r.required};
+  if(r.operator==='requires_check'){const s=r.checkWeight==='high'?50:r.checkWeight==='medium'?65:75;return{...base,status:'needs_check',score:s,msg:r.plainText+'. 공식 기준 확인이 필요해요.'};}
+  if(r.operator==='region_match'){const ok=policy.regionScope==='전국'||(policy.regionSido&&policy.regionSido===profile.regionSido);return{...base,status:ok?'matched':'failed',score:ok?100:0,msg:ok?'지역 조건에 맞아요.':'지역 조건이 맞지 않을 수 있어요.'};}
+  if(r.operator==='interest_match'){const ok=(r.value||[]).some(v=>profile.interests.includes(v));return{...base,status:ok?'matched':'needs_check',score:ok?100:55,msg:ok?'관심 분야와 일치해요.':'관심 분야와 직접 일치하지 않지만 확인해볼 수 있어요.'};}
+  const pv=profile[r.field];
+  if(r.operator==='between'){const[mn,mx]=r.value.map(Number);const n=Number(pv);const ok=n>=mn&&n<=mx;return{...base,status:ok?'matched':'failed',score:ok?100:0,msg:ok?`만 ${n}세는 대상 범위예요.`:`만 ${n}세는 대상 범위와 맞지 않아요.`};}
+  if(r.operator==='equals'){const ok=String(pv)===String(r.value);return{...base,status:ok?'matched':'failed',score:ok?100:0,msg:ok?'조건과 일치해요.':'조건과 일치하지 않아요.'};}
+  if(r.operator==='one_of'){const ok=(r.value||[]).includes(String(pv));return{...base,status:ok?'matched':'failed',score:ok?100:0,msg:ok?'허용 범위에 포함돼요.':'주요 대상과 다를 수 있어요.'};}
+  return{...base,status:'needs_check',score:50,msg:'조건 해석이 필요해요.'};
+}
+function matchP(policy,profile){
+  const ev=policy.eligibilityRules.map(r=>evalRule(r,profile,policy));
+  const req=ev.filter(e=>e.required),opt=ev.filter(e=>!e.required);
+  const rs=req.length?req.reduce((s,e)=>s+e.score,0)/req.length:100;
+  const os=opt.length?opt.reduce((s,e)=>s+e.score,0)/opt.length:80;
+  const dl=getDaysLeft(policy.deadline.endDate);
+  const ds=dl===null?82:dl<0?0:dl<=3?70:dl<=14?92:82;
+  const score=Math.max(0,Math.min(100,Math.round(rs*.68+os*.18+ds*.14)));
+  const hasFail=ev.some(e=>e.required&&e.status==='failed');
+  const hasCheck=ev.some(e=>e.status==='needs_check');
+  const isClosed=policy.deadline.status==='closed'||(dl!==null&&dl<0);
+  const status=isClosed?'closed':hasFail?'not_eligible':hasCheck?'needs_check':'likely_eligible';
+  return{policy,score:status==='closed'?Math.min(score,30):score,status,
+    matchedReasons:ev.filter(e=>e.status==='matched').map(e=>e.msg),
+    checkReasons:ev.filter(e=>e.status==='needs_check').map(e=>e.msg),
+    evals:ev};
+}
+function matchAll(policies,profile){
+  const w={likely_eligible:4,needs_check:3,not_eligible:2,closed:1};
+  return policies.map(p=>matchP(p,profile)).sort((a,b)=>w[a.status]!==w[b.status]?w[b.status]-w[a.status]:b.score-a.score);
 }
 
-// ── format.js ─────────────────────────────────────────
-const CATEGORY_LABELS = { housing:'주거', savings:'저축', employment:'취업', living:'생활', transport:'교통', education:'교육', entrepreneurship:'창업' };
-const EMPLOYMENT_LABELS = { employed:'재직 중', job_seeker:'구직 중', freelancer:'프리랜서', student:'학생', leaving_soon:'퇴사 예정' };
-const HOUSING_LABELS = { monthly_rent:'월세', jeonse:'전세', with_parents:'부모님과 거주', moving_soon:'독립/이사 예정', own_home:'자가' };
-const INCOME_LABELS = { under_2000:'2,000만 원 미만', '2000_3000':'2,000만~3,000만 원', '3000_4000':'3,000만~4,000만 원', '4000_5000':'4,000만~5,000만 원', '5000_6000':'5,000만~6,000만 원', over_6000:'6,000만 원 이상', unknown:'잘 모르겠음' };
-const LIFE_EVENT_LABELS = { first_job:'첫 취업', moving_soon:'이사 예정', leaving_job:'퇴사 예정', marriage:'혼인 예정', none:'없음' };
-const STATUS_LABELS = { likely_eligible:'신청 가능성 높음', needs_check:'추가 확인 필요', not_eligible:'현재 조건상 어려움', closed:'마감됨' };
-function formatMoney(v) { return v >= 10000 ? Math.round(v/10000).toLocaleString('ko-KR')+'만 원' : v.toLocaleString('ko-KR')+'원'; }
-function formatDate(s) {
-  if (!s) return '상시';
-  return new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric'}).format(new Date(s+'T00:00:00+09:00'));
-}
-function statusClassName(s) { return ({likely_eligible:'status-green',needs_check:'status-amber',not_eligible:'status-gray',closed:'status-red'})[s]??'status-gray'; }
-function escapeHtml(v) { return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
-
-// ── storage.js ────────────────────────────────────────
-function readStorage(key, fallback) { try { const r=localStorage.getItem(key); return r?JSON.parse(r):fallback; } catch { return fallback; } }
-function writeStorage(key, v) { localStorage.setItem(key, JSON.stringify(v)); }
-function removeStorage(key) { localStorage.removeItem(key); }
-
-// ── matching.js ───────────────────────────────────────
-function evaluateRule(rule, profile, policy) {
-  const base = { ruleId:rule.id, plainText:rule.plainText, required:rule.required };
-  if (rule.operator === 'requires_check') {
-    const s = rule.checkWeight==='high'?50:rule.checkWeight==='medium'?65:75;
-    return {...base, status:'needs_check', score:s, message:rule.plainText+'. 공식 기준 확인이 필요해요.'};
-  }
-  if (rule.operator === 'region_match') {
-    const nat = policy.regionScope==='전국';
-    const sm = policy.regionSido ? policy.regionSido===profile.regionSido : false;
-    const gm = policy.regionSigungu ? policy.regionSigungu===profile.regionSigungu : true;
-    const ok = nat||(sm&&gm);
-    return {...base, status:ok?'matched':'failed', score:ok?100:0,
-      message:ok?profile.regionSido+' '+profile.regionSigungu+' 조건과 맞거나 전국 정책이에요.'
-               :profile.regionSido+' '+profile.regionSigungu+' 조건과 맞지 않을 수 있어요.'};
-  }
-  if (rule.operator === 'interest_match') {
-    const vs = Array.isArray(rule.value)?rule.value.map(String):[];
-    const ok = profile.interests.some(i=>vs.includes(i));
-    return {...base, status:ok?'matched':'needs_check', score:ok?100:55,
-      message:ok?'관심 분야와 잘 맞아요.':'관심 분야와 직접 일치하지는 않지만 확인해볼 수 있어요.'};
-  }
-  const pv = profile[rule.field];
-  if (rule.operator === 'between') {
-    const [mn,mx] = Array.isArray(rule.value)?rule.value.map(Number):[0,0];
-    const n = Number(pv); const ok = n>=mn&&n<=mx;
-    return {...base, status:ok?'matched':'failed', score:ok?100:0,
-      message:ok?'만 '+n+'세는 대상 범위에 포함돼요.':'만 '+n+'세는 대상 범위와 맞지 않을 수 있어요.'};
-  }
-  if (rule.operator === 'equals') {
-    const ok = String(pv)===String(rule.value);
-    return {...base, status:ok?'matched':'failed', score:ok?100:0, message:ok?'입력한 조건과 일치해요.':'입력한 조건과 일치하지 않아요.'};
-  }
-  if (rule.operator === 'one_of') {
-    const vs = Array.isArray(rule.value)?rule.value.map(String):[];
-    const ok = vs.includes(String(pv));
-    return {...base, status:ok?'matched':'failed', score:ok?100:0, message:ok?'입력한 조건이 허용 범위에 포함돼요.':'입력한 조건이 주요 대상과 다를 수 있어요.'};
-  }
-  return {...base, status:'needs_check', score:50, message:'조건 해석이 필요해요.'};
-}
-function getStatus(evals, policy) {
-  const dl = getDaysLeft(policy.deadline.endDate);
-  if (policy.deadline.status==='closed'||(dl!==null&&dl<0)) return 'closed';
-  if (evals.filter(e=>e.required&&e.status==='failed').length>0) return 'not_eligible';
-  if (evals.some(e=>e.status==='needs_check')) return 'needs_check';
-  return 'likely_eligible';
-}
-function getConfidence(evals, status) {
-  if (status==='closed'||status==='not_eligible') return 'medium';
-  const cc = evals.filter(e=>e.status==='needs_check').length;
-  return cc>=2?'low':cc===1?'medium':'high';
-}
-function matchPolicy(policy, profile) {
-  const re = policy.eligibilityRules.map(r=>evaluateRule(r,profile,policy));
-  const req = re.filter(e=>e.required); const opt = re.filter(e=>!e.required);
-  const rs = req.length?req.reduce((s,e)=>s+e.score,0)/req.length:100;
-  const os = opt.length?opt.reduce((s,e)=>s+e.score,0)/opt.length:80;
-  const dl = getDaysLeft(policy.deadline.endDate);
-  const ds = dl===null?82:dl<0?0:dl<=3?70:dl<=14?92:82;
-  const score = Math.max(0,Math.min(100,Math.round(rs*.68+os*.18+ds*.14)));
-  const status = getStatus(re,policy);
-  return {
-    policy, score:status==='closed'?Math.min(score,30):score, status,
-    confidence:getConfidence(re,status),
-    matchedReasons:re.filter(e=>e.status==='matched').map(e=>e.message),
-    checkReasons:re.filter(e=>e.status==='needs_check').map(e=>e.message),
-    missingReasons:re.filter(e=>e.status==='failed').map(e=>e.message),
-    ruleEvaluations:re, daysLeft:dl
-  };
-}
-function matchPolicies(policies, profile) {
-  const sw = {likely_eligible:4,needs_check:3,not_eligible:2,closed:1};
-  return policies.map(p=>matchPolicy(p,profile))
-    .sort((a,b)=>sw[a.status]!==sw[b.status]?sw[b.status]-sw[a.status]:b.score-a.score);
-}
-
-// ── policies.js ───────────────────────────────────────
-const DEFAULT_PROFILE = {
-  id:'local-user', age:29, regionSido:'서울특별시', regionSigungu:'마포구',
-  incomeRange:'3000_4000', employmentStatus:'employed', companyType:'small_medium',
-  housingStatus:'monthly_rent', householdType:'single', lifeEvent:'moving_soon',
-  interests:['housing','savings','living']
-};
-const POLICIES = [
-  {
-    id:'policy_youth_monthly_rent_mock', title:'청년월세 지원 매칭 예시', category:'housing',
-    provider:'국토교통부/지자체', regionScope:'전국',
-    summary:'월세로 거주하는 청년의 주거비 부담을 줄이기 위한 지원 제도 예시입니다. 실제 신청 전 공식 공고 확인이 필요합니다.',
-    estimatedValueLabel:'월 최대 20만 원 수준 지원 가능성', estimatedValue:2400000,
-    sourceLabel:'공식 공고 확인 필요', cautionNote:'소득·주거·가구 기준은 실제 신청 시 공식 기준으로 다시 확인해야 합니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'만 19~34세 청년 대상'},
-      {id:'housing',field:'housingStatus',operator:'one_of',value:['monthly_rent','moving_soon'],required:true,plainText:'월세 거주 또는 독립 예정자 중심'},
-      {id:'region',field:'region',operator:'region_match',value:null,required:false,plainText:'전국 또는 거주 지자체 조건 확인'},
-      {id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'소득 및 가구 기준 추가 확인 필요',checkWeight:'high'}
-    ],
-    requiredDocuments:[
-      {id:'resident_register',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:true,memo:'최근 발급본 요구 여부 확인'},
-      {id:'lease_contract',name:'임대차계약서',issuer:'본인 보관',issueMethod:'계약서 사본 준비',required:true},
-      {id:'rent_payment',name:'월세 납입 증빙',issuer:'은행/카드사',issueMethod:'이체내역 또는 카드내역',required:true},
-      {id:'income_doc',name:'소득 확인 서류',issuer:'국세청/건보공단',issueMethod:'대상 기준 확인 후 발급',required:true},
-      {id:'bankbook_copy',name:'통장 사본',issuer:'은행',issueMethod:'앱 또는 인터넷뱅킹',required:false}
-    ],
-    deadline:{startDate:'2026-04-01',endDate:'2026-05-10',status:'open'}
-  },
-  {
-    id:'policy_youth_leap_savings_mock', title:'청년도약계좌 조건 체크 예시', category:'savings',
-    provider:'금융위원회/서민금융진흥원', regionScope:'전국',
-    summary:'청년의 중장기 자산형성을 돕는 정책금융상품 조건 체크 예시입니다. 가입 권유가 아니며 은행과 공식 안내 확인이 필요합니다.',
-    estimatedValueLabel:'정부기여금·비과세 혜택 가능성', estimatedValue:1980000,
-    sourceLabel:'공식 금융기관 안내 확인 필요', cautionNote:'정책금융상품은 가입 기간, 소득요건, 중도해지 조건을 반드시 공식 안내에서 확인해야 합니다.',
-    isFinancialProduct:true, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건 확인'},
-      {id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'개인소득 및 가구소득 조건 확인 필요',checkWeight:'high'},
-      {id:'employment',field:'employmentStatus',operator:'one_of',value:['employed','freelancer','job_seeker'],required:false,plainText:'소득 신고 또는 소득 확인 가능 여부 확인'},
-      {id:'interest',field:'interest',operator:'interest_match',value:['savings'],required:false,plainText:'저축·자산형성 관심 분야와 관련'}
-    ],
-    requiredDocuments:[
-      {id:'id_card',name:'신분 확인 서류',issuer:'본인',issueMethod:'은행 앱 또는 지점 기준 확인',required:true},
-      {id:'income_check',name:'소득 확인 자료',issuer:'국세청/서민금융진흥원',issueMethod:'가입 심사 과정에서 확인',required:true},
-      {id:'bank_app',name:'은행 앱 신청 정보',issuer:'취급 은행',issueMethod:'은행별 신청 절차 확인',required:true}
-    ],
-    deadline:{startDate:'2026-04-01',endDate:'2026-05-31',status:'open'}
-  },
-  {
-    id:'policy_seoul_transport_mock', title:'지역 청년 교통비 지원 예시', category:'transport',
-    provider:'서울특별시/지자체', regionScope:'지역', regionSido:'서울특별시',
-    summary:'서울 거주 청년의 교통비 부담을 줄이기 위한 지역형 지원 정책 예시입니다.',
-    estimatedValueLabel:'연 최대 10만 원 수준 지원 가능성', estimatedValue:100000,
-    sourceLabel:'지자체 공고 확인 필요', cautionNote:'연령·거주·사용 교통카드 등 세부 조건은 매년 바뀔 수 있습니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건'},
-      {id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'서울 거주 조건'},
-      {id:'interest',field:'interest',operator:'interest_match',value:['transport','living'],required:false,plainText:'생활비·교통비 관심 분야와 관련'}
-    ],
-    requiredDocuments:[
-      {id:'resident_register',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:true},
-      {id:'transport_card',name:'교통카드 정보',issuer:'카드사/앱',issueMethod:'사용 카드번호 또는 이용내역 확인',required:true}
-    ],
-    deadline:{startDate:'2026-04-12',endDate:'2026-04-30',status:'open'}
-  },
-  {
-    id:'policy_moving_cost_mock', title:'청년 이사비·중개보수 지원 예시', category:'housing',
-    provider:'지자체', regionScope:'지역', regionSido:'서울특별시',
-    summary:'독립 또는 이사 예정 청년이 이사비와 중개보수 부담을 줄일 수 있는 지역형 지원 예시입니다.',
-    estimatedValueLabel:'최대 40만 원 수준 지원 가능성', estimatedValue:400000,
-    sourceLabel:'지자체 공고 확인 필요', cautionNote:'이사일, 계약일, 전입신고일 기준이 다를 수 있으므로 공식 공고 확인이 필요합니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,39],required:true,plainText:'청년 연령 조건'},
-      {id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'해당 지자체 거주 또는 전입 조건'},
-      {id:'life_event',field:'lifeEvent',operator:'one_of',value:['moving_soon','first_job'],required:false,plainText:'이사·독립 이벤트와 관련'},
-      {id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'소득 또는 재산 기준 추가 확인 필요',checkWeight:'medium'}
-    ],
-    requiredDocuments:[
-      {id:'lease_contract',name:'임대차계약서',issuer:'본인 보관',issueMethod:'계약서 사본 준비',required:true},
-      {id:'moving_receipt',name:'이사비 영수증',issuer:'이사업체/플랫폼',issueMethod:'결제 영수증 또는 거래내역',required:true},
-      {id:'brokerage_receipt',name:'중개보수 영수증',issuer:'공인중개사',issueMethod:'중개보수 납부 증빙',required:false},
-      {id:'resident_register',name:'주민등록등본',issuer:'정부24',issueMethod:'전입 후 발급 기준 확인',required:true}
-    ],
-    deadline:{startDate:'2026-04-20',endDate:'2026-05-15',status:'open'}
-  },
-  {
-    id:'policy_sme_welfare_mock', title:'중소기업 재직 청년 복지포인트 예시', category:'living',
-    provider:'지자체/공공기관', regionScope:'지역', regionSido:'경기도',
-    summary:'중소기업 재직 청년의 복지비를 지원하는 지역형 정책 예시입니다.',
-    estimatedValueLabel:'연 최대 120만 원 수준 지원 가능성', estimatedValue:1200000,
-    sourceLabel:'지자체 공고 확인 필요', cautionNote:'근무지 소재지, 기업 규모, 재직 기간, 4대보험 가입 여부 확인이 필요합니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,39],required:true,plainText:'청년 연령 조건'},
-      {id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'해당 지자체 거주 또는 근무지 조건'},
-      {id:'employment',field:'employmentStatus',operator:'equals',value:'employed',required:true,plainText:'재직자 대상'},
-      {id:'company',field:'companyType',operator:'one_of',value:['small_medium','unknown'],required:true,plainText:'중소기업 재직 여부 확인'},
-      {id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'건강보험료 또는 월 급여 기준 확인 필요',checkWeight:'medium'}
-    ],
-    requiredDocuments:[
-      {id:'employment_certificate',name:'재직증명서',issuer:'회사',issueMethod:'회사 또는 인사 시스템 발급',required:true},
-      {id:'insurance_certificate',name:'4대보험 가입확인서',issuer:'4대사회보험 정보연계센터',issueMethod:'온라인 발급',required:true},
-      {id:'income_doc',name:'소득 확인 서류',issuer:'건보공단/회사',issueMethod:'공고 기준에 따라 확인',required:true}
-    ],
-    deadline:{startDate:'2026-05-01',endDate:'2026-05-24',status:'upcoming'}
-  },
-  {
-    id:'policy_job_support_mock', title:'청년 취업지원 프로그램 예시', category:'employment',
-    provider:'고용노동부/지자체', regionScope:'전국',
-    summary:'구직 청년을 대상으로 상담, 직무교육, 취업 준비 비용 등을 지원하는 프로그램 예시입니다.',
-    estimatedValueLabel:'상담·교육·수당 지원 가능성', estimatedValue:500000,
-    sourceLabel:'공식 취업지원 포털 확인 필요', cautionNote:'재직 중인 경우 대상에서 제외되거나 별도 유형으로 분류될 수 있습니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[18,34],required:true,plainText:'청년 연령 조건'},
-      {id:'employment',field:'employmentStatus',operator:'one_of',value:['job_seeker','student','leaving_soon'],required:true,plainText:'구직자 또는 취업 준비 상태 중심'},
-      {id:'income',field:'incomeRange',operator:'requires_check',value:null,required:false,plainText:'일부 유형은 소득 기준 확인 필요',checkWeight:'low'},
-      {id:'interest',field:'interest',operator:'interest_match',value:['employment','education'],required:false,plainText:'취업·교육 관심 분야와 관련'}
-    ],
-    requiredDocuments:[
-      {id:'application_form',name:'참여 신청서',issuer:'운영기관',issueMethod:'온라인 작성',required:true},
-      {id:'job_status_doc',name:'구직 상태 확인 자료',issuer:'고용 포털/본인',issueMethod:'유형별 확인',required:false}
-    ],
-    deadline:{startDate:'2026-03-01',endDate:null,status:'always'}
-  },
-  {
-    id:'policy_youth_mental_health_mock', title:'청년 마음건강 상담 지원 예시', category:'living',
-    provider:'보건복지부/지자체', regionScope:'전국',
-    summary:'청년의 심리상담 비용 부담을 줄이는 생활·건강 지원 정책 예시입니다.',
-    estimatedValueLabel:'상담 바우처 또는 비용 지원 가능성', estimatedValue:600000,
-    sourceLabel:'복지로/지자체 공고 확인 필요', cautionNote:'지역별 접수 기간과 본인부담금이 다를 수 있습니다.',
-    isFinancialProduct:false, lastCheckedAt:'2026-04-24',
-    eligibilityRules:[
-      {id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건'},
-      {id:'region',field:'region',operator:'region_match',value:null,required:false,plainText:'거주 지역별 접수기관 확인'},
-      {id:'interest',field:'interest',operator:'interest_match',value:['living'],required:false,plainText:'생활·복지 관심 분야와 관련'}
-    ],
-    requiredDocuments:[
-      {id:'application_form',name:'서비스 신청서',issuer:'행정복지센터/온라인',issueMethod:'지역별 신청 경로 확인',required:true},
-      {id:'resident_register',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:false}
-    ],
-    deadline:{startDate:'2026-01-01',endDate:null,status:'always'}
-  }
+/* ── Data ── */
+const DEFAULT={id:'local',age:29,regionSido:'서울특별시',regionSigungu:'마포구',incomeRange:'3000_4000',employmentStatus:'employed',companyType:'small_medium',housingStatus:'monthly_rent',householdType:'single',lifeEvent:'moving_soon',interests:['housing','savings','living']};
+const POLICIES=[
+  {id:'p1',title:'청년월세 지원 매칭 예시',category:'housing',provider:'국토교통부/지자체',regionScope:'전국',summary:'월세로 거주하는 청년의 주거비 부담을 줄이기 위한 지원 제도 예시입니다.',estimatedValueLabel:'월 최대 20만 원 수준',estimatedValue:2400000,sourceLabel:'공식 공고 확인 필요',cautionNote:'소득·주거·가구 기준은 실제 신청 시 공식 기준으로 확인해야 합니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'만 19~34세 청년 대상'},{id:'housing',field:'housingStatus',operator:'one_of',value:['monthly_rent','moving_soon'],required:true,plainText:'월세 거주 또는 독립 예정자'},{id:'region',field:'region',operator:'region_match',value:null,required:false,plainText:'전국 또는 거주 지자체'},{id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'소득 및 가구 기준 확인 필요',checkWeight:'high'}],
+    requiredDocuments:[{id:'d1',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:true,memo:'최근 발급본'},{id:'d2',name:'임대차계약서',issuer:'본인 보관',issueMethod:'계약서 사본',required:true},{id:'d3',name:'월세 납입 증빙',issuer:'은행/카드사',issueMethod:'이체내역',required:true},{id:'d4',name:'소득 확인 서류',issuer:'국세청/건보공단',issueMethod:'기준 확인 후 발급',required:true},{id:'d5',name:'통장 사본',issuer:'은행',issueMethod:'앱 또는 인터넷뱅킹',required:false}],
+    deadline:{startDate:'2026-04-01',endDate:'2026-05-10',status:'open'}},
+  {id:'p2',title:'청년도약계좌 조건 체크 예시',category:'savings',provider:'금융위원회/서민금융진흥원',regionScope:'전국',summary:'청년의 중장기 자산형성을 돕는 정책금융상품 조건 체크 예시입니다.',estimatedValueLabel:'정부기여금·비과세 혜택',estimatedValue:1980000,sourceLabel:'공식 금융기관 안내 확인 필요',cautionNote:'가입 기간, 소득요건, 중도해지 조건을 공식 안내에서 확인해야 합니다.',isFinancialProduct:true,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건'},{id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'소득 조건 확인 필요',checkWeight:'high'},{id:'emp',field:'employmentStatus',operator:'one_of',value:['employed','freelancer','job_seeker'],required:false,plainText:'소득 신고 가능 여부'},{id:'int',field:'interest',operator:'interest_match',value:['savings'],required:false,plainText:'저축 관심 분야'}],
+    requiredDocuments:[{id:'d1',name:'신분 확인 서류',issuer:'본인',issueMethod:'은행 앱 또는 지점',required:true},{id:'d2',name:'소득 확인 자료',issuer:'국세청/서민금융진흥원',issueMethod:'가입 심사 중 확인',required:true},{id:'d3',name:'은행 앱 신청 정보',issuer:'취급 은행',issueMethod:'은행별 신청 절차',required:true}],
+    deadline:{startDate:'2026-04-01',endDate:'2026-05-31',status:'open'}},
+  {id:'p3',title:'지역 청년 교통비 지원 예시',category:'transport',provider:'서울특별시/지자체',regionScope:'지역',regionSido:'서울특별시',summary:'서울 거주 청년의 교통비 부담을 줄이기 위한 지역형 지원 정책 예시입니다.',estimatedValueLabel:'연 최대 10만 원 수준',estimatedValue:100000,sourceLabel:'지자체 공고 확인 필요',cautionNote:'연령·거주·교통카드 등 세부 조건은 매년 바뀔 수 있습니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건'},{id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'서울 거주 조건'},{id:'int',field:'interest',operator:'interest_match',value:['transport','living'],required:false,plainText:'교통비 관심 분야'}],
+    requiredDocuments:[{id:'d1',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:true},{id:'d2',name:'교통카드 정보',issuer:'카드사/앱',issueMethod:'사용 카드 확인',required:true}],
+    deadline:{startDate:'2026-04-12',endDate:'2026-04-30',status:'open'}},
+  {id:'p4',title:'청년 이사비·중개보수 지원 예시',category:'housing',provider:'지자체',regionScope:'지역',regionSido:'서울특별시',summary:'독립 또는 이사 예정 청년이 이사비와 중개보수 부담을 줄일 수 있는 지원 예시입니다.',estimatedValueLabel:'최대 40만 원 수준',estimatedValue:400000,sourceLabel:'지자체 공고 확인 필요',cautionNote:'이사일, 계약일, 전입신고일 기준이 다를 수 있어 공식 공고 확인이 필요합니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,39],required:true,plainText:'청년 연령 조건'},{id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'해당 지자체 거주 또는 전입'},{id:'le',field:'lifeEvent',operator:'one_of',value:['moving_soon','first_job'],required:false,plainText:'이사·독립 이벤트'},{id:'income',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'소득 기준 확인 필요',checkWeight:'medium'}],
+    requiredDocuments:[{id:'d1',name:'임대차계약서',issuer:'본인 보관',issueMethod:'계약서 사본',required:true},{id:'d2',name:'이사비 영수증',issuer:'이사업체',issueMethod:'결제 영수증',required:true},{id:'d3',name:'중개보수 영수증',issuer:'공인중개사',issueMethod:'납부 증빙',required:false},{id:'d4',name:'주민등록등본',issuer:'정부24',issueMethod:'전입 후 발급',required:true}],
+    deadline:{startDate:'2026-04-20',endDate:'2026-05-15',status:'open'}},
+  {id:'p5',title:'중소기업 재직 청년 복지포인트 예시',category:'living',provider:'지자체/공공기관',regionScope:'지역',regionSido:'경기도',summary:'중소기업 재직 청년의 복지비를 지원하는 지역형 정책 예시입니다.',estimatedValueLabel:'연 최대 120만 원 수준',estimatedValue:1200000,sourceLabel:'지자체 공고 확인 필요',cautionNote:'근무지 소재지, 기업 규모, 재직 기간, 4대보험 가입 여부 확인이 필요합니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,39],required:true,plainText:'청년 연령 조건'},{id:'region',field:'region',operator:'region_match',value:null,required:true,plainText:'해당 지자체 거주 또는 근무지'},{id:'emp',field:'employmentStatus',operator:'equals',value:'employed',required:true,plainText:'재직자 대상'},{id:'co',field:'companyType',operator:'one_of',value:['small_medium','unknown'],required:true,plainText:'중소기업 재직 여부'},{id:'inc',field:'incomeRange',operator:'requires_check',value:null,required:true,plainText:'건보료 또는 급여 기준 확인',checkWeight:'medium'}],
+    requiredDocuments:[{id:'d1',name:'재직증명서',issuer:'회사',issueMethod:'인사 시스템 발급',required:true},{id:'d2',name:'4대보험 가입확인서',issuer:'4대사회보험센터',issueMethod:'온라인 발급',required:true},{id:'d3',name:'소득 확인 서류',issuer:'건보공단/회사',issueMethod:'공고 기준 확인',required:true}],
+    deadline:{startDate:'2026-05-01',endDate:'2026-05-24',status:'upcoming'}},
+  {id:'p6',title:'청년 취업지원 프로그램 예시',category:'employment',provider:'고용노동부/지자체',regionScope:'전국',summary:'구직 청년을 대상으로 상담, 직무교육, 취업 준비 비용 등을 지원하는 프로그램 예시입니다.',estimatedValueLabel:'상담·교육·수당 지원',estimatedValue:500000,sourceLabel:'공식 취업지원 포털 확인 필요',cautionNote:'재직 중인 경우 대상에서 제외될 수 있습니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[18,34],required:true,plainText:'청년 연령 조건'},{id:'emp',field:'employmentStatus',operator:'one_of',value:['job_seeker','student','leaving_soon'],required:true,plainText:'구직자·취업 준비 상태'},{id:'inc',field:'incomeRange',operator:'requires_check',value:null,required:false,plainText:'일부 유형 소득 기준 확인',checkWeight:'low'},{id:'int',field:'interest',operator:'interest_match',value:['employment','education'],required:false,plainText:'취업·교육 관심 분야'}],
+    requiredDocuments:[{id:'d1',name:'참여 신청서',issuer:'운영기관',issueMethod:'온라인 작성',required:true},{id:'d2',name:'구직 상태 확인 자료',issuer:'고용 포털/본인',issueMethod:'유형별 확인',required:false}],
+    deadline:{startDate:'2026-03-01',endDate:null,status:'always'}},
+  {id:'p7',title:'청년 마음건강 상담 지원 예시',category:'living',provider:'보건복지부/지자체',regionScope:'전국',summary:'청년의 심리상담 비용 부담을 줄이는 생활·건강 지원 정책 예시입니다.',estimatedValueLabel:'상담 바우처 지원',estimatedValue:600000,sourceLabel:'복지로/지자체 공고 확인 필요',cautionNote:'지역별 접수 기간과 본인부담금이 다를 수 있습니다.',isFinancialProduct:false,lastCheckedAt:'2026-04-24',
+    eligibilityRules:[{id:'age',field:'age',operator:'between',value:[19,34],required:true,plainText:'청년 연령 조건'},{id:'region',field:'region',operator:'region_match',value:null,required:false,plainText:'지역별 접수기관 확인'},{id:'int',field:'interest',operator:'interest_match',value:['living'],required:false,plainText:'생활·복지 관심 분야'}],
+    requiredDocuments:[{id:'d1',name:'서비스 신청서',issuer:'행정복지센터/온라인',issueMethod:'지역별 신청',required:true},{id:'d2',name:'주민등록등본',issuer:'정부24',issueMethod:'온라인 발급',required:false}],
+    deadline:{startDate:'2026-01-01',endDate:null,status:'always'}},
 ];
 
-// ── main.js ───────────────────────────────────────────
-const PROFILE_KEY = 'youth-benefit-radar-profile';
-const DOCUMENT_KEY = 'youth-benefit-radar-documents';
-const state = {
-  profile: readStorage(PROFILE_KEY, DEFAULT_PROFILE),
-  documentProgress: readStorage(DOCUMENT_KEY, []),
-  view: 'dashboard', activeStatus: 'all', selectedPolicyId: null
+/* ── State ── */
+const state={
+  tab:'home',
+  detailId:null,
+  prevTab:null,
+  statusFilter:'all',
+  profile:rSt(PK,DEFAULT),
+  docProgress:rSt(DK,[]),
 };
-const app = document.querySelector('#app');
-const navItems = [['dashboard','홈'],['matches','매칭'],['calendar','마감'],['documents','서류'],['settings','설정']];
-const categoryOptions = ['housing','savings','employment','living','transport','education'];
-const employmentOptions = ['employed','job_seeker','freelancer','student','leaving_soon'];
-const housingOptions = ['monthly_rent','jeonse','with_parents','moving_soon','own_home'];
-const incomeOptions = ['under_2000','2000_3000','3000_4000','4000_5000','5000_6000','over_6000','unknown'];
-const lifeEventOptions = ['first_job','moving_soon','leaving_job','marriage','none'];
-const companyOptions = [['small_medium','중소기업'],['mid_size','중견기업'],['large','대기업'],['public','공공기관'],['unknown','잘 모르겠음']];
 
-function getResults() { return matchPolicies(POLICIES, state.profile); }
-function persistProfile() { writeStorage(PROFILE_KEY, state.profile); }
-function persistDocuments() { writeStorage(DOCUMENT_KEY, state.documentProgress); }
-function setView(view) { state.view = view; if (view!=='detail') state.selectedPolicyId=null; render(); }
-function selectPolicy(id) { state.selectedPolicyId=id; state.view='detail'; render(); }
-function resetAll() { removeStorage(PROFILE_KEY); removeStorage(DOCUMENT_KEY); state.profile=JSON.parse(JSON.stringify(DEFAULT_PROFILE)); state.documentProgress=[]; state.view='dashboard'; state.selectedPolicyId=null; render(); }
-function h(v) { return escapeHtml(v); }
+/* ── Helpers ── */
+function results(){return matchAll(POLICIES,state.profile);}
+function setTab(t){state.tab=t;state.detailId=null;document.querySelectorAll('.nav-item').forEach(b=>{b.classList.toggle('active',b.dataset.tab===t);});render();}
+function openDetail(id){state.prevTab=state.tab;state.detailId=id;state.tab='detail';document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));render();}
+function goBack(){state.tab=state.prevTab||'matches';state.detailId=null;document.querySelectorAll('.nav-item').forEach(b=>{b.classList.toggle('active',b.dataset.tab===state.tab);});render();}
 
-function renderNav(cls) {
-  return '<nav class="'+cls+'" aria-label="주요 메뉴">'+navItems.map(([k,l])=>'<button data-nav="'+k+'" class="'+(state.view===k?'nav-active':'')+'">'+l+'</button>').join('')+'</nav>';
-}
-function renderShell(content) {
-  app.innerHTML = '<div class="app-shell"><header class="topbar"><div class="brand-mark">YR</div><div class="brand-text"><strong>청년혜택 레이더</strong><span>내 조건 기준 청년정책 매칭</span></div>'+renderNav('top-nav')+'</header><div class="workspace">'+renderProfilePanel()+content+'</div>'+renderNav('bottom-nav')+'</div>';
-  bindCommonEvents();
-}
-function renderProfilePanel() {
-  const p = state.profile;
-  return '<aside class="panel profile-panel"><div class="panel-header"><div><p class="eyebrow">내 조건</p><h2>3분 조건 입력</h2></div><button class="ghost-button" data-reset>초기화</button></div>'
-    +'<label>만 나이<input data-profile="age" type="number" min="18" max="45" value="'+h(p.age)+'" /></label>'
-    +'<div class="field-grid two"><label>시/도<select data-profile="regionSido">'+['서울특별시','경기도','부산광역시','대구광역시','광주광역시','대전광역시','인천광역시'].map(i=>opt(i,i,p.regionSido)).join('')+'</select></label>'
-    +'<label>시/군/구<input data-profile="regionSigungu" value="'+h(p.regionSigungu)+'" /></label></div>'
-    +'<label>연소득 구간<select data-profile="incomeRange">'+incomeOptions.map(i=>opt(i,INCOME_LABELS[i],p.incomeRange)).join('')+'</select></label>'
-    +'<div class="field-grid two"><label>직장 상태<select data-profile="employmentStatus">'+employmentOptions.map(i=>opt(i,EMPLOYMENT_LABELS[i],p.employmentStatus)).join('')+'</select></label>'
-    +'<label>회사 유형<select data-profile="companyType">'+companyOptions.map(([v,l])=>opt(v,l,p.companyType)).join('')+'</select></label></div>'
-    +'<label>주거 상태<select data-profile="housingStatus">'+housingOptions.map(i=>opt(i,HOUSING_LABELS[i],p.housingStatus)).join('')+'</select></label>'
-    +'<label>생애 이벤트<select data-profile="lifeEvent">'+lifeEventOptions.map(i=>opt(i,LIFE_EVENT_LABELS[i],p.lifeEvent)).join('')+'</select></label>'
-    +'<div><span class="label-text">관심 분야</span><div class="chip-list">'+categoryOptions.map(c=>'<button type="button" data-interest="'+c+'" class="chip'+(p.interests.includes(c)?' chip-active':'')+'">'+CATEGORY_LABELS[c]+'</button>').join('')+'</div></div>'
-    +'<p class="privacy-note">주민등록번호, 상세주소, 회사명은 받지 않습니다. localStorage에만 저장됩니다.</p></aside>';
-}
-function opt(v,l,sel) { return '<option value="'+h(v)+'"'+(v===sel?' selected':'')+'>'+h(l)+'</option>'; }
-
-function renderBenefitCard(result) {
-  const po = result.policy;
-  const reasons = result.matchedReasons.slice(0,2).map(r=>'<li>✓ '+h(r)+'</li>').join('');
-  const checks = result.checkReasons.slice(0,1).map(r=>'<li>! '+h(r)+'</li>').join('');
-  return '<article class="benefit-card"><div class="card-topline"><span class="category-pill">'+CATEGORY_LABELS[po.category]+'</span><span class="deadline-pill">'+getDeadlineLabel(po)+'</span></div>'
-    +'<h3>'+h(po.title)+'</h3><p class="summary-text">'+h(po.summary)+'</p>'
-    +'<div class="score-row"><div><span class="status-badge '+statusClassName(result.status)+'">'+STATUS_LABELS[result.status]+'</span><p class="small-muted">신뢰도 '+(result.confidence==='high'?'높음':result.confidence==='medium'?'보통':'낮음')+'</p></div><div class="score-circle">'+result.score+'</div></div>'
-    +'<div class="meta-grid"><div><span>예상 혜택</span><strong>'+h(po.estimatedValueLabel)+'</strong></div><div><span>마감</span><strong>'+formatDate(po.deadline.endDate)+'</strong></div><div><span>서류</span><strong>'+po.requiredDocuments.length+'개</strong></div></div>'
-    +(po.isFinancialProduct?'<p class="financial-note">정책금융 · 가입 권유 아님 · 공식 안내 확인 필요</p>':'')
-    +'<div class="reason-box"><strong>왜 추천됐나요?</strong><ul>'+reasons+checks+'</ul></div>'
-    +'<button class="primary-button full" data-select-policy="'+po.id+'">상세 조건 보기</button></article>';
+/* ── Render helpers ── */
+function deadlinePillCls(u){return{urgent:'pill-red',soon:'pill-amber',safe:'pill-teal',closed:'pill-gray',always:'pill-green'}[u]||'pill-gray';}
+function bcCard(r){
+  const p=r.policy,u=deadlineUrgency(p),dl=deadlineLabel(p);
+  const reason=r.matchedReasons[0]||r.checkReasons[0]||'';
+  return`<div class="benefit-card">
+    <div class="bc-top">
+      <span class="pill pill-teal">${esc(CAT[p.category])}</span>
+      <span class="pill ${deadlinePillCls(u)}">${esc(dl)}</span>
+      ${p.isFinancialProduct?'<span class="pill pill-amber">금융</span>':''}
+    </div>
+    <div class="bc-body">
+      <div class="bc-title">${esc(p.title)}</div>
+      <div class="bc-summary">${esc(p.summary)}</div>
+    </div>
+    <div class="bc-meta">
+      <span class="pill ${sClass(r.status)}">${SLABEL[r.status]}</span>
+      <div class="score-circle">${r.score}</div>
+    </div>
+    ${reason?`<div class="bc-reason">✓ ${esc(reason)}</div>`:''}
+    <button class="btn btn-primary btn-sm btn-full" data-detail="${p.id}">상세 조건 보기 →</button>
+  </div>`;
 }
 
-function renderDocumentProgressPanel(results) {
-  const rows = results.map(result=>{
-    const prog = state.documentProgress.find(i=>i.policyId===result.policy.id);
-    const s = getDocumentProgress(result.policy, prog);
-    return '<div><div class="progress-top"><span>'+h(result.policy.title)+'</span><strong>'+s.percent+'%</strong></div><div class="progress-bar"><i style="width:'+s.percent+'%"></i></div><p class="small-muted">필수 서류 '+s.completed+'/'+s.total+'개 완료</p></div>';
-  }).join('');
-  return '<div class="panel"><div class="panel-header"><div><p class="eyebrow">서류 준비</p><h2>체크리스트 준비율</h2></div><button class="ghost-button" data-nav="documents">서류 보기</button></div><div class="doc-progress-list">'+rows+'</div></div>';
+/* ── Screens ── */
+function renderHome(){
+  const rs=results();
+  const likely=rs.filter(r=>['likely_eligible','needs_check'].includes(r.status));
+  const top3=likely.slice(0,3);
+  const estVal=top3.reduce((s,r)=>s+r.policy.estimatedValue,0);
+  const urgent=rs.filter(r=>['urgent','soon'].includes(deadlineUrgency(r.policy)));
+  const first=urgent[0]??top3[0];
+  const cats=['housing','savings','living','transport','employment','education'];
+  const catScores=cats.map(c=>{
+    const sc=rs.filter(r=>r.policy.category===c);
+    return{cat:c,score:sc.length?Math.round(sc.reduce((s,r)=>s+r.score,0)/sc.length):0};
+  }).filter(i=>i.score>0).slice(0,5);
+
+  return`
+  <!-- Hero -->
+  <div class="hero-card">
+    <div class="eyebrow">내 조건 기준</div>
+    <div class="hero-row">
+      <div class="hero-stat">
+        <div class="hero-stat-num coral">${likely.length}<span style="font-size:16px;font-weight:700"> 개</span></div>
+        <div class="hero-stat-label">신청 가능성 높은 혜택</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num purple" style="font-size:20px">${fmtMoney(estVal)}</div>
+        <div class="hero-stat-label">예상 최대 규모</div>
+      </div>
+    </div>
+    <div class="hero-action">
+      <button class="btn btn-ghost btn-sm" data-tab="profile">조건 수정하기 →</button>
+    </div>
+  </div>
+
+  <!-- 오늘 할 일 -->
+  ${first?`
+  <div style="padding:12px 16px 0">
+    <div class="eyebrow">오늘 할 일</div>
+  </div>
+  <div class="action-strip" style="cursor:pointer" data-detail="${first.policy.id}">
+    <div class="action-strip-body">
+      <div class="action-strip-tag">${deadlineLabel(first.policy)} · 서류 ${first.policy.requiredDocuments.length}개</div>
+      <div class="action-strip-title">${esc(first.policy.title)}</div>
+      <div class="action-strip-meta">${esc(first.policy.provider)}</div>
+    </div>
+    <button class="btn btn-primary btn-sm" data-detail="${first.policy.id}">확인 →</button>
+  </div>`:''}
+
+  <!-- 레이더 -->
+  <div class="sec-header">
+    <span class="eyebrow">분야별 가능성</span>
+    <button class="btn btn-link btn-sm" data-tab="matches">전체 →</button>
+  </div>
+  <div class="radar-card">
+    ${catScores.map(i=>`
+    <div class="radar-row">
+      <div class="radar-label">${CAT[i.cat]}</div>
+      <div class="radar-bar"><i style="width:${i.score}%"></i></div>
+      <div class="radar-score">${i.score}</div>
+    </div>`).join('')}
+  </div>
+
+  <!-- Top 3 -->
+  <div class="sec-header">
+    <span class="eyebrow">Top 혜택</span>
+    <button class="btn btn-link btn-sm" data-tab="matches">전체 →</button>
+  </div>
+  ${top3.map(bcCard).join('')}
+  <div class="gap-lg"></div>
+
+  <!-- 면책 -->
+  <div style="padding:0 16px 4px">
+    <p style="font-size:10px;color:var(--muted);line-height:1.6;text-align:center">
+      이 결과는 공식 판정이 아닙니다. 실제 신청 가능 여부는 담당 기관 심사에 따릅니다.
+    </p>
+  </div>
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderDashboard(results) {
-  const likely = results.filter(r=>['likely_eligible','needs_check'].includes(r.status));
-  const top3 = likely.slice(0,3);
-  const estVal = top3.reduce((s,r)=>s+r.policy.estimatedValue,0);
-  const urgent = results.filter(r=>['urgent','soon'].includes(getDeadlineUrgency(r.policy))).slice(0,3);
-  const first = urgent[0]??top3[0];
-  const cats = ['housing','savings','living','transport','employment','education','entrepreneurship'];
-  const catScores = cats.map(c=>{
-    const sc = results.filter(r=>r.policy.category===c);
-    const score = sc.length?Math.round(sc.reduce((s,r)=>s+r.score,0)/sc.length):0;
-    return {category:c,score};
-  }).filter(i=>i.score>0);
-  return '<main class="content-stack"><section class="hero-card"><div><p class="eyebrow">청년혜택 레이더</p><h1>내 조건 기준, 지금 놓치면 아까운 혜택을 먼저 보여드립니다.</h1><p>정책 검색이 아니라 신청 가능성, 마감, 서류를 한 화면에서 판단하는 로컬 시제품입니다.</p></div><div class="hero-metrics"><div><strong>'+top3.length+'개</strong><span>신청 가능성 높은 혜택</span></div><div><strong>'+formatMoney(estVal)+'</strong><span>입력 조건 기준 예상 최대 규모</span></div></div></section>'
-    +(first?'<section class="panel action-panel"><div><p class="eyebrow">오늘 할 일</p><h2>'+h(first.policy.title)+'</h2><p>'+getDeadlineLabel(first.policy)+' · 서류 '+first.policy.requiredDocuments.length+'개를 먼저 확인하세요.</p></div><button class="primary-button" data-select-policy="'+first.policy.id+'">지금 확인</button></section>':'')
-    +'<section class="dashboard-grid"><div class="panel"><div class="panel-header"><div><p class="eyebrow">혜택 레이더</p><h2>분야별 가능성</h2></div><button class="ghost-button" data-nav="matches">전체 보기</button></div><div class="radar-list">'+catScores.map(i=>'<div class="radar-row"><span>'+CATEGORY_LABELS[i.category]+'</span><div class="radar-bar"><i style="width:'+i.score+'%"></i></div><strong>'+i.score+'</strong></div>').join('')+'</div></div>'
-    +'<div class="panel"><div class="panel-header"><div><p class="eyebrow">마감 레이더</p><h2>가까운 마감</h2></div><button class="ghost-button" data-nav="calendar">마감 보기</button></div><div class="deadline-list">'+(urgent.length?urgent.map(r=>'<button class="deadline-item" data-select-policy="'+r.policy.id+'"><strong>'+getDeadlineLabel(r.policy)+'</strong><span>'+h(r.policy.title)+'</span></button>').join(''):'<p class="small-muted">이번 주 긴급 마감은 없습니다.</p>')+'</div></div></section>'
-    +'<section class="section-block"><div class="section-title-row"><div><p class="eyebrow">Top 3</p><h2>지금 먼저 확인할 혜택</h2></div><button class="ghost-button" data-nav="matches">매칭 결과</button></div><div class="card-grid">'+top3.map(renderBenefitCard).join('')+'</div></section>'
-    +'<section class="dashboard-grid">'+renderDocumentProgressPanel(top3)+'<div class="panel premium-card"><p class="eyebrow">Premium mock</p><h2>월 3,900원으로 놓치지 않기</h2><p>무제한 매칭, 마감 리마인더, 서류 체크, 정책 변경 요약을 프리미엄 가치로 검증합니다.</p><div class="premium-price">3,900원 <span>/ 월</span></div><p class="small-muted">예상 지원 규모는 확정 수령액이 아니며 실제 선정 여부는 기관 심사에 따라 달라집니다.</p></div></section></main>';
+function renderMatches(){
+  const rs=results();
+  const tabs=[['all','전체',rs.length],['likely_eligible','가능성 높음',rs.filter(r=>r.status==='likely_eligible').length],['needs_check','확인 필요',rs.filter(r=>r.status==='needs_check').length],['not_eligible','어려움',rs.filter(r=>r.status==='not_eligible').length],['closed','마감',rs.filter(r=>r.status==='closed').length]];
+  const filtered=state.statusFilter==='all'?rs:rs.filter(r=>r.status===state.statusFilter);
+  return`
+  <div class="screen-hero">
+    <div class="eyebrow">혜택 매칭</div>
+    <h1>매칭 결과</h1>
+    <p>입력 조건 기준 신청 가능성 분류 · 확정 판정 아님</p>
+  </div>
+  <div style="height:14px"></div>
+  <div class="filter-row">
+    ${tabs.map(([k,l,c])=>`<button class="chip${state.statusFilter===k?' active':''}" data-filter="${k}">${l} ${c}</button>`).join('')}
+  </div>
+  ${filtered.length?filtered.map(bcCard).join(''):'<div class="empty"><div class="empty-icon">🔍</div><p>해당 조건의 혜택이 없습니다.</p></div>'}
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderMatches(results) {
-  const tabs = [['all','전체'],['likely_eligible',STATUS_LABELS.likely_eligible],['needs_check',STATUS_LABELS.needs_check],['not_eligible',STATUS_LABELS.not_eligible],['closed',STATUS_LABELS.closed]];
-  const filtered = state.activeStatus==='all'?results:results.filter(r=>r.status===state.activeStatus);
-  return '<main class="content-stack"><section class="section-title-row"><div><p class="eyebrow">혜택 매칭</p><h1>내 조건 기준 매칭 결과</h1><p class="small-muted">확정 판정이 아니라 입력 조건 기준의 신청 가능성 분류입니다.</p></div></section><div class="tab-row">'+tabs.map(([k,l])=>'<button class="tab'+(state.activeStatus===k?' active':'')+'" data-status-tab="'+k+'">'+l+' <strong>'+(k==='all'?results.length:results.filter(r=>r.status===k).length)+'</strong></button>').join('')+'</div><div class="card-grid">'+filtered.map(renderBenefitCard).join('')+'</div></main>';
+function renderCalendar(){
+  const rs=results();
+  const ordered=[...rs].sort((a,b)=>(a.policy.deadline.endDate??'9999').localeCompare(b.policy.deadline.endDate??'9999'));
+  return`
+  <div class="screen-hero">
+    <div class="eyebrow">마감 캘린더</div>
+    <h1>D-day 타임라인</h1>
+    <p>D-7 이내는 서류 준비를 먼저 확인하세요</p>
+  </div>
+  <div style="height:14px"></div>
+  ${ordered.map(r=>{
+    const u=deadlineUrgency(r.policy),dl=deadlineLabel(r.policy);
+    return`<button class="timeline-item urgency-${u}" data-detail="${r.policy.id}">
+      <div class="tl-day">
+        <div class="tl-day-num">${esc(dl)}</div>
+        <div class="tl-day-date">${fmtDate(r.policy.deadline.endDate)}</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">${esc(r.policy.title)}</div>
+        <div class="tl-meta">${CAT[r.policy.category]} · ${esc(r.policy.provider)}</div>
+      </div>
+      <div class="tl-score">${r.score}점</div>
+    </button>`;
+  }).join('')}
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderDetail(result) {
-  const po = result.policy;
-  return '<main class="content-stack"><button class="ghost-button back-button" data-nav="matches">← 돌아가기</button><section class="hero-card"><div><div class="card-topline"><span class="category-pill">'+CATEGORY_LABELS[po.category]+'</span><span class="deadline-pill">'+getDeadlineLabel(po)+'</span>'+(po.isFinancialProduct?'<span class="financial-chip">가입 권유 아님</span>':'')+'</div><h1>'+h(po.title)+'</h1><p>'+h(po.summary)+'</p></div><div class="detail-score"><span class="status-badge '+statusClassName(result.status)+'">'+STATUS_LABELS[result.status]+'</span><strong>'+result.score+'점</strong><small>매칭 점수</small></div></section>'
-    +'<section class="dashboard-grid"><div class="panel"><p class="eyebrow">내 조건과 비교</p><h2>조건 해석</h2><div class="evaluation-list">'+result.ruleEvaluations.map(e=>'<div class="evaluation-item '+e.status+'"><strong>'+(e.status==='matched'?'✓':e.status==='needs_check'?'!':'×')+' '+h(e.plainText)+'</strong><p>'+h(e.message)+'</p></div>').join('')+'</div></div>'
-    +'<div class="panel"><p class="eyebrow">마감·지원규모</p><h2>신청 일정</h2><div class="info-list"><div><span>신청 기간</span><strong>'+formatDate(po.deadline.startDate)+' ~ '+formatDate(po.deadline.endDate)+'</strong></div><div><span>마감</span><strong>'+getDeadlineLabel(po)+'</strong></div><div><span>예상 혜택</span><strong>'+h(po.estimatedValueLabel)+'</strong></div><div><span>담당 기관</span><strong>'+h(po.provider)+'</strong></div></div></div></section>'
-    +'<section class="panel"><div class="panel-header"><div><p class="eyebrow">서류</p><h2>제출서류 체크리스트</h2></div><button class="primary-button" data-nav="documents">서류 화면에서 체크</button></div><div class="document-grid">'+po.requiredDocuments.map(d=>'<div class="document-card"><strong>'+(d.required?'필수':'선택')+' · '+h(d.name)+'</strong><p>발급처: '+h(d.issuer)+'</p><p>'+h(d.issueMethod)+'</p>'+(d.memo?'<small>'+h(d.memo)+'</small>':'')+'</div>').join('')+'</div></section>'
-    +'<section class="panel trust-box"><p class="eyebrow">공식 확인</p><h2>'+h(po.sourceLabel)+'</h2><p>'+h(po.cautionNote)+'</p><p>이 결과는 사용자가 입력한 조건과 목업 정책 정보를 기준으로 한 사전 매칭입니다. 실제 신청 가능 여부와 지원금 지급 여부는 담당 기관의 심사 결과에 따라 달라질 수 있습니다.</p></section></main>';
+function renderDocs(){
+  const rs=results().filter(r=>['likely_eligible','needs_check'].includes(r.status)).slice(0,5);
+  return`
+  <div class="screen-hero">
+    <div class="eyebrow">제출서류</div>
+    <h1>서류 체크리스트</h1>
+    <p>실제 제출 서류는 공식 공고에서 최종 확인하세요</p>
+  </div>
+  <div style="height:14px"></div>
+  ${rs.map(r=>{
+    const prog=state.docProgress.find(i=>i.policyId===r.policy.id);
+    const checked=new Set(prog?.checkedDocumentIds??[]);
+    const s=docProg(r.policy,prog);
+    const pgCls=s.pct===100?'done':s.pct>0?'partial':'none';
+    return`<div class="doc-policy">
+      <div class="doc-policy-head">
+        <div class="doc-policy-title">${esc(r.policy.title)}</div>
+        <div class="doc-policy-meta" style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <span class="pill pill-teal" style="font-size:10px">${CAT[r.policy.category]}</span>
+          <span class="prog-badge ${pgCls}">필수 ${s.done}/${s.total} 완료 (${s.pct}%)</span>
+        </div>
+      </div>
+      <div class="doc-prog-bar"><i style="width:${s.pct}%"></i></div>
+      ${r.policy.requiredDocuments.map(d=>`
+      <label class="check-item${checked.has(d.id)?' checked':''}">
+        <input type="checkbox" data-doc-policy="${r.policy.id}" data-doc-id="${d.id}"${checked.has(d.id)?' checked':''}>
+        <div class="check-item-body">
+          <div class="check-item-name">${esc(d.name)}</div>
+          <div class="check-item-issuer">${esc(d.issuer)} · ${esc(d.issueMethod)}${d.memo?` · ${esc(d.memo)}`:''}</div>
+        </div>
+        <span class="check-badge ${d.required?'req':'opt'}">${d.required?'필수':'선택'}</span>
+      </label>`).join('')}
+    </div>`;
+  }).join('')}
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderCalendar(results) {
-  const ordered = [...results].sort((a,b)=>(a.policy.deadline.endDate??'9999-12-31').localeCompare(b.policy.deadline.endDate??'9999-12-31'));
-  return '<main class="content-stack"><section class="section-title-row"><div><p class="eyebrow">마감 캘린더</p><h1>이번 달 놓치면 아까운 혜택</h1><p class="small-muted">D-7, D-3 구간은 서류 준비를 우선 확인하세요.</p></div></section><section class="panel timeline-panel">'+ordered.map(r=>'<button class="timeline-item urgency-'+getDeadlineUrgency(r.policy)+'" data-select-policy="'+r.policy.id+'"><div class="timeline-date"><strong>'+getDeadlineLabel(r.policy)+'</strong><span>'+formatDate(r.policy.deadline.endDate)+'</span></div><div><h3>'+h(r.policy.title)+'</h3><p>'+CATEGORY_LABELS[r.policy.category]+' · '+h(r.policy.provider)+'</p></div><span class="timeline-score">'+r.score+'점</span></button>').join('')+'</section></main>';
+function renderProfile(){
+  const p=state.profile;
+  const sidoList=['서울특별시','경기도','부산광역시','대구광역시','광주광역시','대전광역시','인천광역시'];
+  const cats=['housing','savings','employment','living','transport','education'];
+  return`
+  <div class="screen-hero">
+    <div class="eyebrow">내 조건</div>
+    <h1>3분 조건 입력</h1>
+    <p>입력할수록 매칭 정확도가 높아집니다</p>
+  </div>
+  <div style="height:14px"></div>
+
+  <div class="form-section">
+    <div class="form-section-title">나이 · 지역</div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">만 나이</label>
+        <input class="form-input" type="number" min="18" max="45" value="${p.age}" data-profile="age">
+      </div>
+      <div class="form-field">
+        <label class="form-label">시/도</label>
+        <select class="form-input" data-profile="regionSido">
+          ${sidoList.map(s=>`<option value="${s}"${s===p.regionSido?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label">시/군/구</label>
+      <input class="form-input" value="${esc(p.regionSigungu)}" data-profile="regionSigungu" placeholder="예: 마포구">
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">소득 · 직장</div>
+    <div class="form-field">
+      <label class="form-label">연소득 구간</label>
+      <select class="form-input" data-profile="incomeRange">
+        ${Object.entries(INC).map(([k,v])=>`<option value="${k}"${k===p.incomeRange?' selected':''}>${v}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">직장 상태</label>
+        <select class="form-input" data-profile="employmentStatus">
+          ${Object.entries(EMP).map(([k,v])=>`<option value="${k}"${k===p.employmentStatus?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">회사 유형</label>
+        <select class="form-input" data-profile="companyType">
+          ${[['small_medium','중소기업'],['mid_size','중견기업'],['large','대기업'],['public','공공기관'],['unknown','모르겠음']].map(([k,v])=>`<option value="${k}"${k===p.companyType?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">주거 · 이벤트</div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">주거 상태</label>
+        <select class="form-input" data-profile="housingStatus">
+          ${Object.entries(HOUSE).map(([k,v])=>`<option value="${k}"${k===p.housingStatus?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">생애 이벤트</label>
+        <select class="form-input" data-profile="lifeEvent">
+          ${Object.entries(LIFE).map(([k,v])=>`<option value="${k}"${k===p.lifeEvent?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">관심 분야</div>
+    <div class="interest-grid">
+      ${cats.map(c=>`<button class="interest-chip${p.interests.includes(c)?' on':''}" data-interest="${c}">${CAT[c]}</button>`).join('')}
+    </div>
+  </div>
+
+  <div class="privacy-note">
+    <p>🔒 주민등록번호, 상세주소, 회사명은 받지 않습니다. 입력한 조건은 이 기기의 브라우저에만 저장됩니다.</p>
+  </div>
+
+  <div style="padding:0 16px 4px">
+    <button class="btn btn-danger btn-full" data-reset>초기화</button>
+  </div>
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderDocuments(results) {
-  const top = results.filter(r=>['likely_eligible','needs_check'].includes(r.status)).slice(0,5);
-  return '<main class="content-stack"><section class="section-title-row"><div><p class="eyebrow">제출서류</p><h1>신청 전 필요한 서류를 하나씩 체크하세요.</h1><p class="small-muted">실제 제출 서류는 공식 공고와 접수 화면에서 최종 확인해야 합니다.</p></div></section><div class="document-policy-list">'+top.map(result=>{
-    const prog = state.documentProgress.find(i=>i.policyId===result.policy.id);
-    const checked = new Set(prog?.checkedDocumentIds??[]);
-    const s = getDocumentProgress(result.policy, prog);
-    return '<section class="panel"><div class="panel-header"><div><p class="eyebrow">'+s.completed+'/'+s.total+' 완료</p><h2>'+h(result.policy.title)+'</h2></div><button class="ghost-button" data-select-policy="'+result.policy.id+'">상세</button></div><div class="progress-bar large"><i style="width:'+s.percent+'%"></i></div><div class="checklist">'+result.policy.requiredDocuments.map(d=>'<label class="check-item"><input type="checkbox" data-doc-policy="'+result.policy.id+'" data-doc-id="'+d.id+'"'+(checked.has(d.id)?' checked':'')+' /><span><strong>'+h(d.name)+'</strong><small>'+h(d.issuer)+' · '+h(d.issueMethod)+'</small></span><em>'+(d.required?'필수':'선택')+'</em></label>').join('')+'</div></section>';
-  }).join('')+'</div></main>';
+function renderDetail(result){
+  const p=result.policy,u=deadlineUrgency(p);
+  return`
+  <div style="padding:14px 16px 0">
+    <button class="btn btn-ghost btn-sm" id="back-btn">← 돌아가기</button>
+  </div>
+  <div class="detail-hero">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <span class="pill pill-teal">${esc(CAT[p.category])}</span>
+      <span class="pill ${deadlinePillCls(u)}">${deadlineLabel(p)}</span>
+      ${p.isFinancialProduct?'<span class="pill pill-amber">가입 권유 아님</span>':''}
+    </div>
+    <h1>${esc(p.title)}</h1>
+    <p style="font-size:13px;color:var(--text2);line-height:1.6">${esc(p.summary)}</p>
+    <div class="detail-score-row">
+      <div class="detail-score-big">${result.score}</div>
+      <div>
+        <div class="detail-score-label">매칭 점수</div>
+        <span class="pill ${sClass(result.status)}" style="margin-top:4px">${SLABEL[result.status]}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 조건 해석 -->
+  <div class="detail-card">
+    <div class="detail-card-head"><h3>내 조건과 비교</h3></div>
+    ${result.evals.map(e=>`<div class="eval-item eval-${e.status}">
+      <div class="eval-title">${e.status==='matched'?'✓':e.status==='needs_check'?'△':'✗'} ${esc(e.text)}</div>
+      <div class="eval-msg">${esc(e.msg)}</div>
+    </div>`).join('')}
+  </div>
+
+  <!-- 신청 일정 -->
+  <div class="detail-card">
+    <div class="detail-card-head"><h3>신청 일정 · 규모</h3></div>
+    <div class="info-row"><div class="info-label">신청 기간</div><div class="info-value">${fmtDate(p.deadline.startDate)} ~ ${fmtDate(p.deadline.endDate)}</div></div>
+    <div class="info-row"><div class="info-label">마감</div><div class="info-value">${deadlineLabel(p)}</div></div>
+    <div class="info-row"><div class="info-label">예상 혜택</div><div class="info-value">${esc(p.estimatedValueLabel)}</div></div>
+    <div class="info-row"><div class="info-label">담당 기관</div><div class="info-value">${esc(p.provider)}</div></div>
+  </div>
+
+  <!-- 서류 -->
+  <div class="detail-card">
+    <div class="detail-card-head" style="display:flex;align-items:center;justify-content:space-between">
+      <h3>제출서류</h3>
+      <button class="btn btn-ghost btn-sm" data-tab="docs">체크리스트 →</button>
+    </div>
+    <div class="doc-mini">
+      ${p.requiredDocuments.map(d=>`<div class="doc-mini-item">
+        <div class="doc-mini-name">${esc(d.name)}</div>
+        <div class="doc-mini-issuer">${esc(d.issuer)}</div>
+        <div style="margin-top:4px"><span class="check-badge ${d.required?'req':'opt'}">${d.required?'필수':'선택'}</span></div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- 공식 확인 -->
+  <div class="trust-card">
+    <h3>⚠️ 공식 확인 필요</h3>
+    <p>${esc(p.cautionNote)}</p>
+    <p style="margin-top:8px">이 결과는 입력 조건과 목업 데이터 기준의 사전 매칭입니다. 실제 신청 가능 여부와 지원금 지급은 담당 기관 심사에 따릅니다.</p>
+  </div>
+  <div class="gap-lg"></div>
+  `;
 }
 
-function renderSettings() {
-  return '<main class="content-stack"><section class="section-title-row"><div><p class="eyebrow">설정</p><h1>개인정보와 신뢰 설정</h1></div></section><section class="panel trust-box"><h2>시제품 개인정보 원칙</h2><ul><li>주민등록번호, 상세주소, 회사명, 계좌번호를 수집하지 않습니다.</li><li>조건 정보는 브라우저 localStorage에 저장됩니다.</li><li>모든 결과는 공식 판정이 아니라 사전 매칭입니다.</li></ul><button class="danger-button" data-reset>내 조건 초기화</button></section></main>';
+function renderSettings(){
+  return`
+  <div class="screen-hero">
+    <div class="eyebrow">설정</div>
+    <h1>개인정보 원칙</h1>
+  </div>
+  <div style="height:14px"></div>
+  <div class="trust-card">
+    <h3>이 서비스가 수집하지 않는 것</h3>
+    <p>· 주민등록번호 · 상세 주소 · 회사명 · 계좌번호</p>
+    <p style="margin-top:8px">입력한 조건은 이 기기 브라우저의 localStorage에만 저장됩니다. 서버로 전송되지 않습니다.</p>
+    <p style="margin-top:8px">모든 매칭 결과는 공식 판정이 아닌 사전 매칭입니다.</p>
+  </div>
+  <div style="padding:12px 16px 0">
+    <button class="btn btn-danger btn-full" data-reset>내 조건 초기화</button>
+  </div>
+  <div class="gap-lg"></div>
+  `;
 }
 
-function render() {
-  const results = getResults();
-  const selected = results.find(r=>r.policy.id===state.selectedPolicyId)??results[0];
-  const content = state.view==='matches' ? renderMatches(results)
-    : state.view==='calendar' ? renderCalendar(results)
-    : state.view==='documents' ? renderDocuments(results)
-    : state.view==='settings' ? renderSettings()
-    : state.view==='detail' ? renderDetail(selected)
-    : renderDashboard(results);
-  renderShell(content);
+/* ── Main render ── */
+function render(){
+  const scr=document.getElementById('screen');
+  if(state.tab==='detail'){
+    const rs=results();
+    const r=rs.find(r=>r.policy.id===state.detailId)||rs[0];
+    if(r){scr.innerHTML=renderDetail(r);}
+  } else if(state.tab==='home')    scr.innerHTML=renderHome();
+  else if(state.tab==='matches')   scr.innerHTML=renderMatches();
+  else if(state.tab==='calendar')  scr.innerHTML=renderCalendar();
+  else if(state.tab==='docs')      scr.innerHTML=renderDocs();
+  else if(state.tab==='profile')   scr.innerHTML=renderProfile();
+  else if(state.tab==='settings')  scr.innerHTML=renderSettings();
+  scr.scrollTop=0;
+  bindEvents();
 }
 
-function bindCommonEvents() {
-  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.nav)));
-  document.querySelectorAll('[data-select-policy]').forEach(b=>b.addEventListener('click',()=>selectPolicy(b.dataset.selectPolicy)));
-  document.querySelectorAll('[data-reset]').forEach(b=>b.addEventListener('click',resetAll));
-  document.querySelectorAll('[data-status-tab]').forEach(b=>b.addEventListener('click',()=>{ state.activeStatus=b.dataset.statusTab; render(); }));
-  document.querySelectorAll('[data-profile]').forEach(input=>input.addEventListener('change',()=>{
-    const k=input.dataset.profile;
-    state.profile[k]=k==='age'?Number(input.value):input.value;
-    persistProfile(); render();
-  }));
-  document.querySelectorAll('[data-interest]').forEach(b=>b.addEventListener('click',()=>{
-    const c=b.dataset.interest;
-    state.profile.interests=state.profile.interests.includes(c)?state.profile.interests.filter(i=>i!==c):[...state.profile.interests,c];
-    persistProfile(); render();
-  }));
-  document.querySelectorAll('[data-doc-policy]').forEach(input=>input.addEventListener('change',()=>{
-    const pid=input.dataset.docPolicy; const did=input.dataset.docId;
-    const ex=state.documentProgress.find(i=>i.policyId===pid);
-    if (!ex) { state.documentProgress.push({policyId:pid,checkedDocumentIds:[did]}); }
-    else if (ex.checkedDocumentIds.includes(did)) { ex.checkedDocumentIds=ex.checkedDocumentIds.filter(i=>i!==did); }
-    else { ex.checkedDocumentIds.push(did); }
-    persistDocuments(); render();
-  }));
+/* ── Events ── */
+function bindEvents(){
+  // detail buttons
+  document.querySelectorAll('[data-detail]').forEach(el=>{
+    el.addEventListener('click',e=>{e.stopPropagation();openDetail(el.dataset.detail);});
+  });
+  // tab buttons
+  document.querySelectorAll('[data-tab]').forEach(el=>{
+    el.addEventListener('click',()=>setTab(el.dataset.tab));
+  });
+  // back
+  const bb=document.getElementById('back-btn');
+  if(bb) bb.addEventListener('click',goBack);
+  // filter chips
+  document.querySelectorAll('[data-filter]').forEach(b=>{
+    b.addEventListener('click',()=>{state.statusFilter=b.dataset.filter;render();});
+  });
+  // profile inputs
+  document.querySelectorAll('[data-profile]').forEach(input=>{
+    input.addEventListener('change',()=>{
+      const k=input.dataset.profile;
+      state.profile[k]=k==='age'?Number(input.value):input.value;
+      wSt(PK,state.profile); render();
+    });
+  });
+  // interest chips
+  document.querySelectorAll('[data-interest]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const c=b.dataset.interest;
+      state.profile.interests=state.profile.interests.includes(c)?state.profile.interests.filter(i=>i!==c):[...state.profile.interests,c];
+      wSt(PK,state.profile); render();
+    });
+  });
+  // doc checkboxes
+  document.querySelectorAll('[data-doc-policy]').forEach(input=>{
+    input.addEventListener('change',()=>{
+      const pid=input.dataset.docPolicy,did=input.dataset.docId;
+      let ex=state.docProgress.find(i=>i.policyId===pid);
+      if(!ex){ex={policyId:pid,checkedDocumentIds:[]};state.docProgress.push(ex);}
+      if(ex.checkedDocumentIds.includes(did)) ex.checkedDocumentIds=ex.checkedDocumentIds.filter(i=>i!==did);
+      else ex.checkedDocumentIds.push(did);
+      wSt(DK,state.docProgress); render();
+    });
+  });
+  // reset
+  document.querySelectorAll('[data-reset]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      rmSt(PK);rmSt(DK);
+      state.profile=JSON.parse(JSON.stringify(DEFAULT));
+      state.docProgress=[];state.tab='home';state.detailId=null;
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.tab==='home'));
+      render();
+    });
+  });
+  // action strip click (whole strip)
+  document.querySelectorAll('.action-strip[data-detail]').forEach(el=>{
+    el.addEventListener('click',()=>openDetail(el.dataset.detail));
+  });
 }
+
+// Nav tab clicks
+document.querySelectorAll('.nav-item').forEach(b=>{
+  b.addEventListener('click',()=>setTab(b.dataset.tab));
+});
+// Settings button
+document.getElementById('settings-btn').addEventListener('click',()=>{
+  state.tab='settings';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));render();
+});
 
 render();
-  </script>
+</script>
 </body>
 </html>
