@@ -1,496 +1,761 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DORO 결과물 포털</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>한양대ERICA X DORO 디지털새싹 개선 전략 슬라이드</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --orange: #F97316;
-      --orange-dark: #EA580C;
-      --orange-light: #FFF7ED;
-      --bg: #F9FAFB;
-      --card-bg: #FFFFFF;
-      --text-primary: #111827;
-      --text-secondary: #6B7280;
-      --text-muted: #9CA3AF;
-      --border: #E5E7EB;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-hover: 0 10px 25px rgba(249,115,22,0.15), 0 4px 6px rgba(0,0,0,0.05);
+      --ink:#102033;
+      --muted:#667085;
+      --line:#d8e0ea;
+      --paper:#ffffff;
+      --bg:#edf2f7;
+      --navy:#15395b;
+      --teal:#19a884;
+      --orange:#f28c38;
+      --red:#d94b4b;
+      --violet:#6268d9;
+      --green:#58b368;
     }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
       background: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+      letter-spacing: 0;
     }
-
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(135deg, #1C1917 0%, #292524 50%, #1C1917 100%);
-      padding: 56px 24px 40px;
-      text-align: center;
+    .topbar {
       position: relative;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 24px;
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .topbar strong { font-size: 14px; }
+    .topbar nav { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .topbar a {
+      color: var(--navy);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: #fff;
+    }
+    .deck { padding: 28px 24px 64px; }
+    .slide {
+      width: min(1280px, calc(100vw - 48px));
+      aspect-ratio: 16 / 9;
+      margin: 0 auto 28px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(16,32,51,.14);
       overflow: hidden;
+      position: relative;
+      padding: 42px 50px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 50%, rgba(249,115,22,0.18) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 20%, rgba(249,115,22,0.10) 0%, transparent 50%);
+    .slide::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(21,57,91,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21,57,91,.035) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.15));
     }
-    .hero-inner { position: relative; max-width: 800px; margin: 0 auto; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.35);
-      color: #FB923C; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
-      margin-bottom: 18px;
+    .slide > * { position: relative; z-index: 1; }
+    .slide-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
     }
-    .hero-badge span { width: 6px; height: 6px; background: #F97316; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    .hero h1 {
-      font-size: clamp(28px, 5vw, 48px); font-weight: 900;
-      color: #FFFFFF; line-height: 1.2; margin-bottom: 12px;
-      letter-spacing: -0.03em;
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
     }
-    .hero h1 em { color: var(--orange); font-style: normal; }
-    .hero p { color: #A8A29E; font-size: 15px; line-height: 1.7; }
-
-    .stats-row {
-      display: flex; justify-content: center; gap: 32px; margin-top: 32px;
-      flex-wrap: wrap;
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 54px; line-height: 1.1; margin-bottom: 18px; letter-spacing: 0; }
+    h2 { font-size: 34px; line-height: 1.22; margin: 0; letter-spacing: 0; }
+    h3 { font-size: 20px; line-height: 1.25; margin-bottom: 12px; letter-spacing: 0; }
+    p { line-height: 1.55; }
+    .slide-no {
+      min-width: 56px;
+      height: 40px;
+      border-radius: 999px;
+      background: #eff5f8;
+      color: var(--navy);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      border: 1px solid var(--line);
     }
-    .stat { text-align: center; }
-    .stat-num { font-size: 28px; font-weight: 900; color: #FFFFFF; }
-    .stat-num em { color: var(--orange); font-style: normal; }
-    .stat-label { font-size: 11px; color: #78716C; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
-
-    /* ── MAIN ── */
-    .main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
-
-    /* ── SEARCH + FILTER ── */
-    .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 28px; }
-    .search-wrap { flex: 1; min-width: 220px; position: relative; }
-    .search-wrap input {
-      width: 100%; padding: 11px 16px 11px 42px;
-      border: 1.5px solid var(--border); border-radius: 12px;
-      background: white; font-size: 14px; font-family: inherit;
-      color: var(--text-primary); outline: none; transition: border .2s;
+    .cover {
+      display:grid;
+      grid-template-columns: 1fr 1.12fr;
+      gap: 0;
+      padding:0;
+      background:#0f2538;
+      color:#fff;
     }
-    .search-wrap input:focus { border-color: var(--orange); }
-    .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-
-    .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-    .filter-tab {
-      padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
-      border: 1.5px solid var(--border); background: white; color: var(--text-secondary);
-      cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit;
+    .cover::before { display:none; }
+    .cover-media { min-height:100%; overflow:hidden; }
+    .cover-media img { width:100%; height:100%; object-fit:cover; filter:saturate(.95) contrast(1.02); }
+    .cover-copy { padding:64px 58px; display:flex; flex-direction:column; justify-content:center; }
+    .cover .logo { width:150px; margin-bottom: 22px; background:#fff; border-radius:8px; padding:10px 14px; }
+    .cover .lead { max-width: 600px; color:#d7e3ef; font-size:20px; }
+    .cover .kpi-grid div { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); }
+    .cover .kpi-grid span { color:#d7e3ef; }
+    .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:28px; align-items:stretch; min-height:0; }
+    .two-col.wide-left { grid-template-columns: 1.18fr .82fr; }
+    .two-col.media-right { grid-template-columns: 1.02fr .98fr; }
+    .two-col.media-left { grid-template-columns: .98fr 1.02fr; }
+    .three-col { display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+    .split { display:grid; grid-template-columns: 1.2fr .8fr; gap:24px; align-items:stretch; }
+    .compare-grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    .compare-card, .metric-panel, .quote-card, .chart-card, .weight-box, .module-card, .program-grid article, .sprint-grid div {
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px;
+      box-shadow: 0 10px 28px rgba(16,32,51,.07);
     }
-    .filter-tab:hover { border-color: var(--orange); color: var(--orange); }
-    .filter-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
-    .filter-tab .cnt {
-      display: inline-block; background: rgba(0,0,0,0.1); border-radius: 99px;
-      padding: 1px 7px; font-size: 11px; margin-left: 4px;
+    .compare-card span, .module-card span, .cost span { display:block; color:var(--muted); font-size:13px; font-weight:800; margin-bottom:8px; }
+    .compare-card b { display:block; font-size:22px; margin-bottom:8px; }
+    .compare-card p { color:var(--muted); margin:0; font-size:15px; }
+    .compare-card.old { border-top:5px solid var(--orange); }
+    .compare-card.new { border-top:5px solid var(--teal); }
+    .callout { margin-top:16px; padding:16px 18px; border-radius:12px; background:#edf8f5; border:1px solid #b7e2d8; font-weight:700; line-height:1.5; }
+    .callout.warn { background:#fff6eb; border-color:#ffd2a8; color:#6f3c10; }
+    .source-shot {
+      margin:0;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
     }
-    .filter-tab.active .cnt { background: rgba(255,255,255,0.25); }
-
-    /* ── SECTION HEADER ── */
-    .section-header {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 13px; font-weight: 700; color: var(--text-secondary);
-      letter-spacing: 0.08em; text-transform: uppercase;
-      margin: 32px 0 16px;
+    .source-shot img { width:100%; height:100%; min-height:0; object-fit:contain; border-radius:10px; background:#fff; }
+    .source-shot figcaption { margin-top:10px; color:var(--muted); font-size:12px; text-align:center; }
+    .metric-panel p { color:var(--muted); font-weight:800; margin-bottom:8px; }
+    .metric-panel b { font-size:32px; display:block; margin-bottom:4px; color:var(--navy); }
+    .metric-panel span { color:var(--muted); }
+    .rule-list {
+      background:#f8fbfd;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:22px;
     }
-    .section-header::before {
-      content: ''; display: block; width: 3px; height: 16px;
-      background: var(--orange); border-radius: 2px;
+    .rule-list p { margin: 0 0 11px; font-size:16px; }
+    .rule-list p:last-child { margin-bottom:0; }
+    .weight-box h3, .chart-card h3 { margin-bottom:6px; }
+    .weights { display:grid; gap:18px; }
+    .weights div { display:grid; gap:6px; }
+    .weights span { font-weight:900; color:var(--teal); }
+    .weights b { font-size:13px; color:var(--ink); }
+    .weights i {
+      display:block;
+      height:13px;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--teal), var(--orange));
+      width:var(--w);
     }
-    .section-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-    /* ── GRID ── */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--card-bg); border: 1.5px solid var(--border);
-      border-radius: 16px; padding: 20px;
-      display: flex; flex-direction: column; gap: 12px;
-      color: inherit; cursor: default;
-      transition: border-color .2s, box-shadow .2s, transform .2s;
-      box-shadow: var(--shadow);
-      position: relative; overflow: hidden;
+    .muted { color: var(--muted); font-size:13px; margin-bottom:14px; }
+    .bar-list { display:grid; gap:10px; }
+    .bar-row { display:grid; grid-template-columns: 136px 1fr 42px; gap:10px; align-items:center; font-size:14px; }
+    .bar-track { height:14px; background:#e8eef4; border-radius:999px; overflow:hidden; }
+    .bar-track i { display:block; height:100%; background:linear-gradient(90deg, var(--teal), var(--navy)); border-radius:999px; }
+    .bar-row b { text-align:right; color:var(--navy); }
+    .example-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+    .example-grid div { background:#f8fbfd; border:1px solid var(--line); border-radius:12px; padding:14px; }
+    .example-grid b { display:block; margin-bottom:6px; color:var(--navy); }
+    .example-grid span { color:var(--muted); line-height:1.45; font-size:14px; }
+    .target-chart { margin-top:16px; height:172px; display:flex; align-items:end; gap:14px; padding:18px 12px 10px; background:#fff; border:1px solid var(--line); border-radius:14px; }
+    .mini-bar { flex:1; height:140px; display:flex; flex-direction:column; justify-content:end; align-items:center; gap:4px; color:var(--muted); font-size:12px; }
+    .mini-bar i { width:36px; background:linear-gradient(180deg, var(--orange), var(--teal)); border-radius:8px 8px 0 0; order:2; }
+    .mini-bar strong { color:var(--ink); order:1; }
+    .mini-bar span { order:3; text-align:center; }
+    .kpi-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:14px; margin-bottom:18px; }
+    .kpi-grid.compact { grid-template-columns: repeat(4,1fr); margin-top:24px; }
+    .kpi-grid div { border:1px solid var(--line); border-radius:14px; padding:16px; background:#fff; }
+    .kpi-grid b { display:block; font-size:34px; color:var(--teal); line-height:1; margin-bottom:8px; }
+    .kpi-grid span { color:var(--muted); font-weight:700; font-size:14px; }
+    .keep-list { display:grid; gap:12px; }
+    .keep-list p, .budget-list p { background:#f8fbfd; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:0; }
+    .matrix { display:grid; grid-template-columns: .62fr 1.25fr 1.45fr .45fr; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:#fff; }
+    .matrix > div { padding:16px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); font-size:16px; line-height:1.45; }
+    .matrix > div:nth-child(4n) { border-right:0; text-align:center; }
+    .matrix > div:nth-last-child(-n+4) { border-bottom:0; }
+    .m-head { background:#15395b; color:#fff; font-weight:900; }
+    .risk { display:inline-grid; place-items:center; min-width:38px; height:30px; border-radius:999px; color:#fff; font-weight:900; }
+    .risk.high { background:var(--red); }
+    .risk.mid { background:var(--orange); }
+    .pivot { display:flex; flex-direction:column; gap:16px; }
+    .from, .to { border-radius:16px; padding:22px; border:1px solid var(--line); background:#fff; }
+    .from { border-left:7px solid var(--orange); }
+    .to { border-left:7px solid var(--teal); }
+    .from span, .to span { color:var(--muted); font-size:13px; font-weight:900; }
+    .from b, .to b { display:block; font-size:24px; margin:8px 0; }
+    .from p, .to p { margin-bottom:0; color:var(--muted); }
+    .process-line { display:grid; grid-template-columns: repeat(5,1fr); gap:8px; }
+    .process-line i { font-style:normal; text-align:center; padding:12px 8px; border-radius:999px; background:#eaf6f2; border:1px solid #b7e2d8; font-weight:800; font-size:14px; }
+    .program-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:18px; min-height:0; }
+    .program-grid article { display:flex; flex-direction:column; padding:14px; }
+    .program-grid img { width:100%; aspect-ratio: 16 / 8.5; object-fit:cover; border-radius:12px; border:1px solid var(--line); margin-bottom:14px; background:#f8fafc; }
+    .program-grid article:nth-child(2) img { object-fit:contain; }
+    .program-grid p { color:var(--muted); margin-bottom:12px; font-size:15px; }
+    .program-grid b { margin-top:auto; color:var(--navy); line-height:1.45; }
+    .module-table { display:grid; grid-template-columns: repeat(3,1fr); gap:18px; }
+    .module-card { border-top:6px solid var(--teal); }
+    .module-card:nth-child(2) { border-top-color: var(--orange); }
+    .module-card:nth-child(3) { border-top-color: var(--violet); }
+    .module-card p { color:var(--muted); margin:0; }
+    .lesson-map { display:grid; grid-template-columns: repeat(8,1fr); gap:8px; margin-top:4px; }
+    .lesson-map span { text-align:center; padding:13px 6px; border-radius:10px; background:#15395b; color:#fff; font-weight:800; font-size:13px; }
+    .region-bars { display:grid; gap:12px; margin-bottom:18px; }
+    .region-bars div { display:grid; grid-template-columns: 94px 46px 1fr; align-items:center; gap:10px; }
+    .region-bars span { font-weight:800; }
+    .region-bars b { color:var(--navy); }
+    .region-bars i { height:18px; border-radius:999px; background:linear-gradient(90deg, var(--teal), var(--orange)); width:var(--w); }
+    .timeline { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    .timeline span { padding:14px; border-radius:12px; background:#fff; border:1px solid var(--line); font-weight:800; text-align:center; }
+    .note { color:var(--muted); background:#fff8ef; border:1px solid #ffd2a8; padding:14px; border-radius:12px; }
+    .cost-compare { height:260px; display:flex; align-items:end; gap:40px; padding:18px; background:#f8fbfd; border:1px solid var(--line); border-radius:16px; margin-bottom:18px; }
+    .cost { flex:1; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .cost b { font-size:30px; }
+    .cost i { width:86px; display:block; border-radius:12px 12px 0 0; background:var(--orange); }
+    .cost.new i { background:var(--teal); }
+    .cost em { font-style:normal; color:var(--muted); font-weight:800; }
+    .sprint-grid { display:grid; grid-template-columns: repeat(7,1fr); gap:10px; }
+    .sprint-grid div { padding:14px; min-height:156px; }
+    .sprint-grid b { display:block; color:var(--teal); font-size:20px; margin-bottom:10px; }
+    .sprint-grid span { color:var(--muted); line-height:1.45; font-size:14px; }
+    .closing { margin-top:4px; padding:20px 24px; border-radius:16px; background:#15395b; color:#fff; }
+    .closing b { color:#aee8d8; }
+    .closing p { margin:8px 0 0; color:#eef6fb; font-size:18px; }
+    @media (max-width: 980px) {
+      .slide { aspect-ratio:auto; min-height:760px; padding:32px; }
+      .cover { grid-template-columns:1fr; }
+      .cover-media { min-height:260px; }
+      .two-col, .two-col.wide-left, .two-col.media-right, .two-col.media-left, .split { grid-template-columns:1fr; }
+      .three-col, .program-grid, .module-table, .sprint-grid { grid-template-columns:1fr; }
+      .kpi-grid.compact { grid-template-columns: repeat(2,1fr); }
+      .lesson-map { grid-template-columns: repeat(4,1fr); }
+      .matrix { grid-template-columns:1fr; }
+      .matrix > div, .matrix > div:nth-child(4n) { border-right:0; text-align:left; }
+      h1 { font-size:40px; }
+      h2 { font-size:28px; }
+      .topbar nav { display:none; }
     }
-    .card::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--orange-light), transparent);
-      opacity: 0; transition: opacity .2s; pointer-events: none;
+    @media print {
+      body { background:#fff; }
+      .topbar { display:none; }
+      .deck { padding:0; }
+      .slide {
+        width:16in;
+        height:9in;
+        aspect-ratio:auto;
+        margin:0;
+        border-radius:0;
+        box-shadow:none;
+        page-break-after:always;
+      }
+      @page { size: 16in 9in; margin: 0; }
     }
-    .card:hover { border-color: var(--orange); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-    .card:hover::after { opacity: 1; }
-
-    .card-top { display: flex; align-items: flex-start; gap: 12px; }
-    .card-icon {
-      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-    }
-    .card-meta { flex: 1; min-width: 0; }
-    .card-category {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;
-    }
-    .card h3 {
-      font-size: 15px; font-weight: 700; line-height: 1.35;
-      color: var(--text-primary); transition: color .15s;
-    }
-    .card:hover h3 { color: var(--orange-dark); }
-    .card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
-
-    /* ── CARD ACTIONS (dual buttons) ── */
-    .card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
-    .btn-primary, .btn-demo, .btn-view {
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-      padding: 9px 14px; border-radius: 10px; font-size: 12px; font-weight: 700;
-      text-decoration: none; transition: all .18s; border: 1.5px solid transparent;
-      white-space: nowrap; position: relative; z-index: 1;
-    }
-    .btn-primary { background: var(--orange); color: #fff; flex: 1; }
-    .btn-primary:hover { background: var(--orange-dark); }
-    .btn-demo {
-      background: var(--orange-light); color: var(--orange);
-      border-color: var(--border); flex: 1;
-    }
-    .btn-demo:hover { background: rgba(249,115,22,.12); border-color: var(--orange); }
-    .btn-view { background: var(--orange); color: #fff; flex: 1; }
-    .btn-view:hover { background: var(--orange-dark); }
-
-    /* ── badge on demo button ── */
-    .demo-badge {
-      display: inline-block; background: rgba(249,115,22,.18); color: var(--orange);
-      border-radius: 4px; font-size: 9px; font-weight: 800; padding: 1px 5px;
-      letter-spacing: .04em;
-    }
-
-    /* ── CATEGORY COLOURS ── */
-    .cat-ai    { background:#EFF6FF; color:#3B82F6; } .icon-ai    { background:#EFF6FF; }
-    .cat-biz   { background:#F0FDF4; color:#16A34A; } .icon-biz   { background:#F0FDF4; }
-    .cat-edu   { background:#FFF7ED; color:#EA580C; } .icon-edu   { background:#FFF7ED; }
-    .cat-road  { background:#F5F3FF; color:#7C3AED; } .icon-road  { background:#F5F3FF; }
-    .cat-collab{ background:#FDF4FF; color:#A21CAF; } .icon-collab{ background:#FDF4FF; }
-    .cat-life  { background:#F0FFF4; color:#15803D; } .icon-life  { background:#F0FFF4; }
-
-    /* ── EMPTY STATE ── */
-    .empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-    .empty svg { margin: 0 auto 12px; opacity: .4; }
-
-    /* ── FOOTER ── */
-    footer {
-      text-align: center; padding: 24px;
-      border-top: 1px solid var(--border); color: var(--text-muted); font-size: 12px;
-    }
-
-    /* ── HIDDEN ── */
-    [data-hidden] { display: none !important; }
-  </style>
+    </style>
 </head>
 <body>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge"><span></span> DORO 내부 산출물 포털</div>
-    <h1>DORO <em>결과물</em> 아카이브</h1>
-    <p>팀원 누구나 바로 열어볼 수 있는 인터랙티브 결과물 모음입니다.<br>카테고리 필터 또는 검색으로 원하는 자료를 찾아보세요.</p>
-    <div class="stats-row">
-      <div class="stat"><div class="stat-num" id="total-cnt"><em>23</em></div><div class="stat-label">전체 문서</div></div>
-      <div class="stat"><div class="stat-num"><em>6</em></div><div class="stat-label">카테고리</div></div>
-      <div class="stat"><div class="stat-num"><em>2026</em></div><div class="stat-label">최신 업데이트</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <div class="search-wrap">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="search" placeholder="결과물 검색 (예: 컨설팅, AI, 사업 계획…)">
-    </div>
-    <div class="filter-tabs">
-      <button class="filter-tab active" data-cat="all">전체 <span class="cnt" id="cnt-all">23</span></button>
-      <button class="filter-tab" data-cat="ai">AI·컨설팅 <span class="cnt" id="cnt-ai">2</span></button>
-      <button class="filter-tab" data-cat="biz">사업·전략 <span class="cnt" id="cnt-biz">5</span></button>
-      <button class="filter-tab" data-cat="edu">교육 프로그램 <span class="cnt" id="cnt-edu">4</span></button>
-      <button class="filter-tab" data-cat="road">Open Road <span class="cnt" id="cnt-road">3</span></button>
-      <button class="filter-tab" data-cat="collab">산학연·협력 <span class="cnt" id="cnt-collab">3</span></button>
-      <button class="filter-tab" data-cat="life">기타·커뮤니티 <span class="cnt" id="cnt-life">6</span></button>
-    </div>
-  </div>
-
-  <!-- CARDS DATA (rendered by JS) -->
-  <div id="cards-root"></div>
-
-  <div class="empty" id="empty-state" data-hidden>
-    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-    <p>검색 결과가 없습니다.</p>
-  </div>
-</div>
-
-<footer>© 2026 DORO Co., Ltd. — 내부 산출물 아카이브</footer>
-
-<script>
-const ITEMS = [
-  /* ── AI·컨설팅 ── */
-  {
-    cat: 'ai', icon: '🤖', iconCls: 'icon-ai', catLabel: 'AI·컨설팅', catCls: 'cat-ai',
-    title: 'DORO TEAM AI 업무 자산화 컨설팅 실행안',
-    desc: '4주 커리큘럼으로 구성된 DORO 팀 AI 업무 자산화 실행 계획. 인터랙티브 앱 형식.',
-    file: 'DORO_AI_Action_Plan_App.html'
-  },
-  {
-    cat: 'ai', icon: '🖼️', iconCls: 'icon-ai', catLabel: 'AI·컨설팅', catCls: 'cat-ai',
-    title: 'DORO TEAM AI 업무 자산화 컨설팅 시각화',
-    desc: 'AI 업무 자산화 컨설팅 전 과정을 한눈에 볼 수 있는 인포그래픽 시각화 자료.',
-    file: 'DORO_AI_Consulting_Infographic.html'
-  },
-
-  /* ── 사업·전략 ── */
-  {
-    cat: 'biz', icon: '📊', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
-    title: '강사 관리 전략 대시보드 (IMS)',
-    desc: 'DORO 강사 채용·관리·성과 전략을 시각화한 인터랙티브 대시보드.',
-    file: 'DORO_IMS_Strategy_Dashboard.html'
-  },
-  {
-    cat: 'biz', icon: '📋', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
-    title: 'DORO 사업 계획 (SPA)',
-    desc: 'DORO의 단계별 사업 전략, 수익 모델, 시장 분석을 담은 SPA 형식의 사업계획서.',
-    file: 'DORO_Business_Plan_SPA.html'
-  },
-  {
-    cat: 'biz', icon: '📈', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
-    title: 'DORO 비즈니스 인포그래픽',
-    desc: 'DORO 사업 구조·성장 지표·핵심 수치를 인포그래픽으로 정리한 시각 자료.',
-    file: 'DORO_Business_Infographic.html'
-  },
-  {
-    cat: 'biz', icon: '🏝️', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
-    title: 'DOROLAND 랜딩 페이지',
-    desc: 'DOROLAND 서비스 소개를 위한 마케팅 랜딩 페이지 시안.',
-    file: 'DOROLAND_Landing_Page.html'
-  },
-
-  /* ── 교육 프로그램 ── */
-  {
-    cat: 'edu', icon: '🏫', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
-    title: '2025 DORO 콘텐츠맵 고등부',
-    desc: '2025년 고등부 교육 프로그램 전체 맵. 과목별·학기별 커리큘럼 시각화.',
-    file: '2025 High School Program Map.html'
-  },
-  {
-    cat: 'edu', icon: '📐', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
-    title: '도로 중학교 수학 프로그램 (SPA)',
-    desc: '중학교 수학 커리큘럼을 기반으로 한 인터랙티브 SPA 교육 자료.',
-    file: 'DORO_MiddleSchool_Math_SPA.html'
-  },
-  {
-    cat: 'edu', icon: '🤔', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
-    title: 'AI 윤리 인포그래픽',
-    desc: 'AI 사용 윤리 원칙, 편향·프라이버시·책임 문제를 학습자 친화형으로 시각화.',
-    file: 'AI Ethics Infographic.html'
-  },
-  {
-    cat: 'edu', icon: '📃', iconCls: 'icon-edu', catLabel: '교육 프로그램', catCls: 'cat-edu',
-    title: 'AI 프로젝트 포트폴리오 템플릿',
-    desc: '학생이 AI 프로젝트를 기록·발표할 수 있는 표준화된 포트폴리오 템플릿.',
-    file: 'AI Project Portfolio Template.html'
-  },
-
-  /* ── Open Road ── */
-  {
-    cat: 'road', icon: '💡', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
-    title: 'Open Road 전략적 IP 분석',
-    desc: 'Open Road 프로젝트의 지식재산(IP) 현황·전략 방향을 인포그래픽으로 분석.',
-    file: 'DORO_Open_Road_Infographic.html'
-  },
-  {
-    cat: 'road', icon: '🏗️', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
-    title: 'Open Road 아키텍처 인포그래픽',
-    desc: 'Open Road 시스템 아키텍처 전체 구조를 시각화한 기술 인포그래픽.',
-    file: 'Open Road Architecture Infographic.html'
-  },
-  {
-    cat: 'road', icon: '🦾', iconCls: 'icon-road', catLabel: 'Open Road', catCls: 'cat-road',
-    title: 'Open Road 딥테크 사업 계획',
-    desc: 'Open Road 딥테크 사업화 전략·기술 로드맵·투자 포인트를 담은 인포그래픽.',
-    file: 'Open Road Deep Tech Business Plan Infographic.html'
-  },
-
-  /* ── 사업·전략 (추가) ── */
-  {
-    cat: 'biz', icon: '🎫', iconCls: 'icon-biz', catLabel: '사업·전략', catCls: 'cat-biz',
-    title: 'DORO 과학문화바우처 신청 전략 보고서',
-    desc: '2024~2025 과학문화바우처 선정 데이터 분석 기반 DORO 상품 이원화(온라인몰·찾아가는) 신청 전략 5슬라이드 보고서.',
-    file: 'DORO_ScienceVoucher_Strategy.html'
-  },
-
-  /* ── 기타·커뮤니티 ── */
-  {
-    cat: 'life', icon: '🗺️', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '전주 맛집 지도 · 全州味房',
-    desc: '전주 청창사 대표님들을 위한 맛집 아카이브. 104곳을 지역·카테고리·검색으로 Leaflet 지도에서 탐색. 한옥마을 무드의 에디토리얼 디자인.',
-    file: 'jeonju-food-map/index.html'
-  },
-
-  /* ── 산학연·협력 ── */
-  {
-    cat: 'collab', icon: '🔬', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
-    title: '2026 산학연 콜라보 계획',
-    desc: '2026년 산학연 연계 AI Agent 및 LMS 협력 프로젝트 전략 인포그래픽.',
-    file: 'AI_Agent_LMS_Infographic.html'
-  },
-  {
-    cat: 'collab', icon: '🤝', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
-    title: '협력 인포그래픽',
-    desc: 'DORO의 기관·기업 협력 구조와 파트너십 전략을 한눈에 볼 수 있는 시각 자료.',
-    file: 'Cooperation_Infographic.html'
-  },
-  {
-    cat: 'collab', icon: '⭐', iconCls: 'icon-collab', catLabel: '산학연·협력', catCls: 'cat-collab',
-    title: 'AI Together',
-    desc: 'AI 기술 협력 비전과 함께하는 미래 교육·사업 방향을 담은 시각화 자료.',
-    file: 'AI together.html'
-  },
-
-  /* ── 기타·커뮤니티 (툴) ── */
-  {
-    cat: 'life', icon: '💰', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '월급생존OS',
-    desc: '월급날부터 월급날까지 살아남는 개인 재무 앱. 생존율 링 차트, 일별 사용 가능 금액, 구독 누수 감지, "써도 될까?" 시뮬레이터까지 — Miro 디자인 시스템 기반.',
-    file: 'Claude/plan-월급생존OS/index.html',
-    isApp: true
-  },
-  {
-    cat: 'life', icon: '📋', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '업무로그 기반 경력기술서 빌더',
-    desc: '업무로그를 STAR 성과카드로 변환하는 경력 관리 앱. 채용공고 JD 키워드 매칭, 보안 민감정보 감지·마스킹, 경력기술서 미리보기까지 — Clay 디자인 시스템 기반.',
-    file: 'Claude/plan-업무로그 기반 경력기술서 빌더/index.html',
-    isApp: true
-  },
-  {
-    cat: 'life', icon: '🎯', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '청년혜택 레이더',
-    desc: '26~33세 사회초년생의 조건(나이·소득·주거·직장)을 입력하면 신청 가능성 높은 청년정책·지원금·저축상품을 매칭. 마감 D-day 타임라인·서류 체크리스트 포함 — Cohere 디자인 시스템 기반.',
-    file: 'Claude/plan-청년혜택 레이더/youth-benefit-radar-codex/index.html',
-    isApp: true
-  },
-  {
-    cat: 'life', icon: '🏠', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '원룸 생활비 투명화 도우미',
-    desc: '계약 전 진짜 월 주거비를 파악하세요. 월세·관리비·공과금·보증금 기회비용 합산, 계절별 비용 시뮬레이션, 방 후보 비교, 계약 체크리스트, 보증금 정산 계산기 — Vodafone 디자인.',
-    file: 'Claude/plan-원룸 생활비 투명화 도우미/one-room-cost-transparency/index.html',
-    isApp: true
-  },
-  {
-    cat: 'life', icon: '📅', iconCls: 'icon-life', catLabel: '기타·커뮤니티', catCls: 'cat-life',
-    title: '연차·퇴사·급여 실수방지',
-    desc: '연차 부여일·수당 자동 계산, 4대보험 실수령액 계산기, 퇴사일 기준 퇴직금·일할 급여·연차수당 정산 예상. 급여 점검 체크리스트로 내 근로 권리를 지키는 도구 — Framer 디자인.',
-    file: 'Claude/plan-연차·퇴사·급여 실수방지/index.html',
-    isApp: true
-  },
-];
-
-const SECTIONS = [
-  { cat: 'ai',    label: 'AI · 컨설팅' },
-  { cat: 'biz',   label: '사업 · 전략' },
-  { cat: 'edu',   label: '교육 프로그램' },
-  { cat: 'road',  label: 'Open Road' },
-  { cat: 'collab',label: '산학연 · 협력' },
-  { cat: 'life',  label: '기타 · 커뮤니티' },
-];
-
-function renderCards(filter = 'all', query = '') {
-  const q = query.trim().toLowerCase();
-  const root = document.getElementById('cards-root');
-  root.innerHTML = '';
-  let totalVisible = 0;
-
-  SECTIONS.forEach(({ cat, label }) => {
-    if (filter !== 'all' && filter !== cat) return;
-    const items = ITEMS.filter(it => {
-      if (it.cat !== cat) return false;
-      if (!q) return true;
-      return (it.title + it.desc + it.file + it.catLabel).toLowerCase().includes(q);
-    });
-    if (!items.length) return;
-    totalVisible += items.length;
-
-    const sec = document.createElement('div');
-    sec.innerHTML = `<div class="section-header">${label}</div>`;
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-    items.forEach(it => {
-      const arrow = `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>`;
-      let actions;
-      if (it.isApp) {
-        const demoUrl = it.demoSame ? it.file : (it.file + '?demo=1');
-        actions = `
-          <a href="${it.file}" class="btn-primary">${arrow} 직접 사용</a>
-          <a href="${demoUrl}" class="btn-demo">📊 예시 데이터</a>`;
-      } else {
-        actions = `<a href="${it.file}" class="btn-view">${arrow} 바로 보기</a>`;
-      }
-      grid.innerHTML += `
-        <div class="card" data-cat="${it.cat}">
-          <div class="card-top">
-            <div class="card-icon ${it.iconCls}">${it.icon}</div>
-            <div class="card-meta">
-              <span class="card-category ${it.catCls}">${it.catLabel}</span>
-              <h3>${it.title}</h3>
+  <header class="topbar">
+    <strong>한양대ERICA X DORO 디지털새싹 개선 전략</strong>
+    <nav>
+      <a href="#s1">표지</a><a href="#s2">진단</a><a href="#s4">합격패턴</a><a href="#s8">프로그램</a><a href="#s11">예산</a><a href="#s12">작성계획</a>
+    </nav>
+  </header>
+  <main class="deck">
+    
+        <section class="slide cover" id="s1">
+          <div class="cover-media">
+            <img src="improvement_slide_assets/robot_car.jpg" alt="DORO 로봇 실습 이미지">
+          </div>
+          <div class="cover-copy">
+            <img class="logo" src="improvement_slide_assets/digital_saessak_logo.png" alt="디지털새싹 로고">
+            <p class="eyebrow">2026 디지털새싹 추가모집 대응</p>
+            <h1>한양대ERICA X DORO<br>사업계획서 개선 전략</h1>
+            <p class="lead">기존 새싹A 제안서를 새싹C AI 활용 문제해결형 기준으로 재설계하기 위한 분석 슬라이드</p>
+            <div class="kpi-grid compact">
+              <div><b>45</b><span>1차 선정기관</span></div>
+              <div><b>246</b><span>공개 프로그램 분석</span></div>
+              <div><b>2,200+</b><span>최소 교육목표</span></div>
+              <div><b>8</b><span>차시 모듈형</span></div>
             </div>
           </div>
-          <p class="card-desc">${it.desc}</p>
-          <div class="card-actions">${actions}</div>
-        </div>`;
+        </section>
+        
+
+    <section class="slide " id="s2">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Diagnosis</p>
+          <h2>기존안은 좋은 콘텐츠였지만, 이번 RFP와는 결이 다릅니다</h2>
+        </div>
+        <div class="slide-no">02</div>
+      </div>
+      
+            <div class="two-col wide-left">
+              <div>
+                <div class="compare-grid">
+                  <div class="compare-card old"><span>기존 제출안</span><b>새싹A_AI 특화형</b><p>초·중·다문화 3종, 총 1,200명, 12차시 프로젝트형</p></div>
+                  <div class="compare-card new"><span>추가모집 RFP</span><b>새싹C_AI 활용 문제해결형</b><p>디지털 취약계층 전용, 총 2,200명 이상, 8차시 기본과정</p></div>
+                  <div class="compare-card old"><span>기존 단가</span><b>약 50만 원/명</b><p>6억 원 / 1,200명 기준. 장비·전시·확산비가 무거운 구조</p></div>
+                  <div class="compare-card new"><span>필요 단가</span><b>약 25~27만 원/명</b><p>2,200~2,400명 운영을 전제로 한 교구 재사용·순회형 구조</p></div>
+                </div>
+                <div class="callout warn">
+                  공식 심사평은 공개되지 않았습니다. 탈락 원인은 단정이 아니라 평가표와 합격기관 패턴 기준의 추정입니다.
+                </div>
+              </div>
+              <figure class="source-shot">
+                <img src="improvement_slide_assets/program_cover.png" alt="기존 프로그램 제안서 표지">
+                <figcaption>기존 프로그램 제안서 표지 및 3개 프로그램 구성</figcaption>
+              </figure>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s3">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">RFP Fit</p>
+          <h2>새싹C에서 평가자가 먼저 보는 조건</h2>
+        </div>
+        <div class="slide-no">03</div>
+      </div>
+      
+            <div class="three-col">
+              <div class="metric-panel">
+                <p>선정 규모</p><b>11개 내외</b><span>기관당 6억 원 이내</span>
+              </div>
+              <div class="metric-panel">
+                <p>프로그램</p><b>3종 필수</b><span>AI 활용 문제해결형 기본과정</span>
+              </div>
+              <div class="metric-panel">
+                <p>교육 목표</p><b>2,200명+</b><span>방과후 2,000명 포함</span>
+              </div>
+            </div>
+            <div class="split">
+              <div class="rule-list">
+                <h3>반드시 맞춰야 하는 문장</h3>
+                <p><b>대상 한정</b> 도서벽지, 농어촌, 교육복지, 다문화, 특수교육 학교만 운영 가능</p>
+                <p><b>모듈 구조</b> 진입-도약-성장 3단계, 각 단계 2차시 이상 독립 운영</p>
+                <p><b>난이도</b> 기본과정 수준. 선행학습을 유발하지 않고 학교교육 보완</p>
+                <p><b>심사 포인트</b> 서류는 기관역량·목표·프로그램이 균형, 발표는 프로그램 50점</p>
+                <p><b>주의</b> 추경 예산 여부는 제안서 본문에 사실처럼 쓰지 말고 교육격차 해소 공급 보완으로 표현</p>
+              </div>
+              <div class="weight-box">
+                <h3>평가 가중치</h3>
+                <div class="weights">
+                  <div><span>서류</span><b>기관역량 30</b><i style="--w:30%"></i><b>사업목표 20</b><i style="--w:20%"></i><b>프로그램 30</b><i style="--w:30%"></i><b>성과·예산 20</b><i style="--w:20%"></i></div>
+                  <div><span>발표</span><b>프로그램 50</b><i style="--w:50%"></i><b>예산 20</b><i style="--w:20%"></i><b>역량·목표·성과 30</b><i style="--w:30%"></i></div>
+                </div>
+              </div>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s4">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Selected Program Pattern</p>
+          <h2>합격기관 프로그램은 ‘AI 설명’보다 ‘문제해결 산출물’이 강했습니다</h2>
+        </div>
+        <div class="slide-no">04</div>
+      </div>
+      
+            <div class="two-col">
+              <div class="chart-card">
+                <h3>공개 프로그램 키워드 패턴</h3>
+                <p class="muted">기관-프로그램 중복 제거 기준, 키워드 중복 허용</p>
+                <div class="bar-list">
+            <div class="bar-row">
+              <span>데이터·공공데이터</span>
+              <div class="bar-track"><i style="width:100%"></i></div>
+              <b>188</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>로봇·피지컬AI</span>
+              <div class="bar-track"><i style="width:67%"></i></div>
+              <b>126</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>문화·지역·관광</span>
+              <div class="bar-track"><i style="width:52%"></i></div>
+              <b>98</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>생성형AI·에이전트</span>
+              <div class="bar-track"><i style="width:51%"></i></div>
+              <b>96</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>다문화·특수·접근성</span>
+              <div class="bar-track"><i style="width:46%"></i></div>
+              <b>86</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>환경·기후·SDGs</span>
+              <div class="bar-track"><i style="width:40%"></i></div>
+              <b>75</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>안전·스마트시티</span>
+              <div class="bar-track"><i style="width:31%"></i></div>
+              <b>59</b>
+            </div>
+            
+
+            <div class="bar-row">
+              <span>창업·서비스기획</span>
+              <div class="bar-track"><i style="width:24%"></i></div>
+              <b>45</b>
+            </div>
+            </div>
+              </div>
+              <div>
+                <div class="quote-card">
+                  <b>반복 공식</b>
+                  <p>생활·학교·지역 문제를 정하고, 학생이 데이터를 만들고, AI 도구로 판단하거나 생성하고, 로봇·웹앱·지도·대시보드 같은 결과물로 완성합니다.</p>
+                </div>
+                <div class="example-grid">
+                  <div><b>안전</b><span>통학길, 스쿨존, 재난 대응, 스마트시티</span></div>
+                  <div><b>접근성</b><span>수어, 다문화 통역, 배리어프리 안내</span></div>
+                  <div><b>피지컬AI</b><span>로봇, 센서, 드론, 자율주행, IoT</span></div>
+                  <div><b>데이터</b><span>공공데이터, 센서 데이터, AI 대시보드</span></div>
+                </div>
+                <div class="target-chart">
+        <div class="mini-bar">
+          <span>일반형</span>
+          <strong>213</strong>
+          <i style="height:118px"></i>
+        </div>
+        
+
+        <div class="mini-bar">
+          <span>다문화</span>
+          <strong>63</strong>
+          <i style="height:35px"></i>
+        </div>
+        
+
+        <div class="mini-bar">
+          <span>도서벽지</span>
+          <strong>71</strong>
+          <i style="height:39px"></i>
+        </div>
+        
+
+        <div class="mini-bar">
+          <span>특수교육</span>
+          <strong>53</strong>
+          <i style="height:29px"></i>
+        </div>
+        </div>
+              </div>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s5">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">What To Keep</p>
+          <h2>기존 사업계획서에서 반드시 살릴 자산</h2>
+        </div>
+        <div class="slide-no">05</div>
+      </div>
+      
+            <div class="two-col media-right">
+              <div>
+                <div class="kpi-grid">
+                  <div><b>3,000</b><span>2023 디지털새싹 운영 경험</span></div>
+                  <div><b>30,601</b><span>한양대ERICA SW 가치확산 수혜</span></div>
+                  <div><b>57,922</b><span>DORO 전국형 로봇교육 수혜</span></div>
+                  <div><b>68</b><span>DOROSSAEM + 한양대 멘토 풀</span></div>
+                </div>
+                <div class="keep-list">
+                  <p><b>한양대ERICA</b> 사업 총괄, 교육과정 설계, 품질관리, 성과평가</p>
+                  <p><b>DORO</b> 학교 섭외, 강사 모집·연수·배치, 교구·현장 운영</p>
+                  <p><b>기존 CARE 모델</b> 감성·관계 중심 장점은 유지하되 취약계층 문제해결 언어로 재번역</p>
+                </div>
+              </div>
+              <figure class="source-shot">
+                <img src="improvement_slide_assets/business_strength.png" alt="기존 사업계획서 기관 강점 페이지">
+                <figcaption>기존 사업계획서의 컨소시엄 역할 및 CARE 프레임</figcaption>
+              </figure>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s6">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Gap Matrix</p>
+          <h2>개선해야 할 약점은 콘텐츠가 아니라 ‘RFP 적합성’입니다</h2>
+        </div>
+        <div class="slide-no">06</div>
+      </div>
+      
+            <div class="matrix">
+              <div class="m-head">항목</div><div class="m-head">기존안 리스크</div><div class="m-head">수정 방향</div><div class="m-head">우선도</div>
+              <div>대상</div><div>일반·AI특화 성격이 강함</div><div>취약계층 유형별 프로그램으로 재분류</div><div><span class="risk high">상</span></div>
+              <div>규모</div><div>1,200명 운영 구조</div><div>2,400명 목표로 결원 리스크 흡수</div><div><span class="risk high">상</span></div>
+              <div>예산</div><div>1인 단가 약 50만 원</div><div>교구 순환, 학교 장비 활용, 전시성 예산 축소</div><div><span class="risk high">상</span></div>
+              <div>프로그램</div><div>자기표현·콘텐츠 창작 비중 큼</div><div>지역·학교 문제, 데이터, AI 판단, 피지컬 산출물 강화</div><div><span class="risk mid">중</span></div>
+              <div>증빙</div><div>역량 서술은 강하나 학교 수요 증빙 부족</div><div>권역별 수요확인서, 강사 가용표, 장비·네트워크 조사 첨부</div><div><span class="risk high">상</span></div>
+              <div>구조</div><div>12차시 중심 설계</div><div>8차시, 진입-도약-성장 독립 모듈로 재작성</div><div><span class="risk mid">중</span></div>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s7">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Strategic Pivot</p>
+          <h2>CARE를 ‘사각지대 문제해결형 피지컬 AI’로 재포지셔닝</h2>
+        </div>
+        <div class="slide-no">07</div>
+      </div>
+      
+            <div class="two-col">
+              <div class="pivot">
+                <div class="from">
+                  <span>Before</span>
+                  <b>나와 가족을 표현하는 AI 창작</b>
+                  <p>좋은 교육철학이지만 새싹C의 취약계층·문제해결·단가검증 요구와 직접 연결이 약함</p>
+                </div>
+                <div class="to">
+                  <span>After</span>
+                  <b>학교와 지역 문제를 해결하는 AI 실습</b>
+                  <p>데이터 수집, AI 판단, 피지컬 컴퓨팅, 결과 해석, 학교 재사용 자료까지 완결</p>
+                </div>
+                <div class="process-line">
+                  <i>생활 문제</i><i>데이터</i><i>AI 활용</i><i>로봇·서비스</i><i>공유·환류</i>
+                </div>
+              </div>
+              <figure class="source-shot">
+                <img src="improvement_slide_assets/old_program_cards.png" alt="기존 프로그램 카드">
+                <figcaption>기존 프로그램 프레임은 유지하되 대상과 산출물을 바꿉니다</figcaption>
+              </figure>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s8">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Program Redesign</p>
+          <h2>3개 프로그램은 기존 자산을 버리지 않고, 심사 언어로 바꿉니다</h2>
+        </div>
+        <div class="slide-no">08</div>
+      </div>
+      
+            <div class="program-grid">
+              <article>
+                <img src="improvement_slide_assets/safety_dataset.png" alt="안전 데이터 수집 화면">
+                <h3>AI 우리학교 안전지도</h3>
+                <p>농어촌·교육복지·도서벽지 대상. 위험요소 사진·센서 데이터를 수집하고 AI 분류와 안전지도, 알림 로봇으로 연결.</p>
+                <b>기존 ‘우리 집 안전 지킴이’의 문제해결성을 학교·지역으로 확장</b>
+              </article>
+              <article>
+                <img src="improvement_slide_assets/program_culture.png" alt="문화교류 프로그램 원본 페이지">
+                <h3>다문화 AI 통역·도슨트</h3>
+                <p>다문화 학생과 일반 학생 혼합반. 번역, TTS, 픽토그램, QR 안내로 학교생활 안내와 지역 문화 소개물을 제작.</p>
+                <b>문화 표현에서 학교 소통 문제 해결로 전환</b>
+              </article>
+              <article>
+                <img src="improvement_slide_assets/openbot.jpg" alt="피지컬 AI 로봇">
+                <h3>피지컬 AI 돌봄·환경 지킴이</h3>
+                <p>특수교육·교육복지·농어촌 대상. 공기질, 에너지, 분리배출, 접근성 문제를 센서와 로봇으로 해결.</p>
+                <b>DORO의 로봇교육 실행력을 가장 직접적으로 보여주는 축</b>
+              </article>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s9">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">8-Session Module</p>
+          <h2>8차시 구조는 ‘선택 가능한 독립 모듈’로 보여줘야 합니다</h2>
+        </div>
+        <div class="slide-no">09</div>
+      </div>
+      
+            <div class="module-table">
+              <div class="module-card">
+                <span>진입 2차시</span>
+                <h3>문제 이해와 AI 안전 사용</h3>
+                <p>대상 학생의 생활·학교 문제를 찾고, AI가 할 수 있는 일과 한계, 개인정보·저작권·편향을 다룹니다.</p>
+              </div>
+              <div class="module-card">
+                <span>도약 3차시</span>
+                <h3>데이터 만들기와 AI 활용</h3>
+                <p>사진·센서·문장 데이터를 수집하고 정리합니다. Teachable Machine, 생성형 AI, 번역·TTS 등 쉬운 도구를 사용합니다.</p>
+              </div>
+              <div class="module-card">
+                <span>성장 3차시</span>
+                <h3>피지컬 산출물과 발표</h3>
+                <p>로봇, 지도, 안내 페이지, QR 포스터, 대시보드 등 결과물을 만들고 오류를 개선한 뒤 학교에 공유합니다.</p>
+              </div>
+            </div>
+            <div class="lesson-map">
+              <span>1 문제발견</span><span>2 AI 윤리</span><span>3 데이터 수집</span><span>4 AI 실습</span><span>5 설계</span><span>6 제작</span><span>7 개선</span><span>8 발표</span>
+            </div>
+            <div class="callout">제안서에는 “각 단계 단독 운영 가능, 학교급·수준별 활동지 교체 가능, 10명 이상 소규모 운영 가능”을 명시해야 합니다.</div>
+            
+    </section>
+    
+
+    <section class="slide " id="s10">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Operation Design</p>
+          <h2>운영계획은 ‘전국 가능’보다 ‘어디서 몇 명을 확정할 수 있나’가 중요합니다</h2>
+        </div>
+        <div class="slide-no">10</div>
+      </div>
+      
+            <div class="two-col media-left">
+              <figure class="source-shot">
+                <img src="improvement_slide_assets/quality_steps.png" alt="품질관리 3단계 원본 이미지">
+                <figcaption>기존 품질관리 이미지는 새싹C 운영 안정성 근거로 활용</figcaption>
+              </figure>
+              <div>
+                <div class="region-bars">
+                  <div><span>경기권</span><b>700</b><i style="--w:100%"></i></div>
+                  <div><span>강원·충청</span><b>450</b><i style="--w:64%"></i></div>
+                  <div><span>호남·제주</span><b>450</b><i style="--w:64%"></i></div>
+                  <div><span>경상권</span><b>500</b><i style="--w:71%"></i></div>
+                  <div><span>서울·인천</span><b>300</b><i style="--w:43%"></i></div>
+                </div>
+                <div class="timeline">
+                  <span>7~8월 여름방학 1기</span>
+                  <span>9~12월 2학기 2기</span>
+                  <span>1~2월 겨울방학 3기</span>
+                </div>
+                <p class="note">권역 수치는 제안용 가안입니다. 실제 제출 전 수요확인서와 강사 가용표로 숫자를 잠가야 합니다.</p>
+              </div>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s11">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Budget Reset</p>
+          <h2>예산은 ‘감액 방어’가 아니라 ‘단가검증 통과’ 구조로 써야 합니다</h2>
+        </div>
+        <div class="slide-no">11</div>
+      </div>
+      
+            <div class="two-col">
+              <div>
+                <div class="cost-compare">
+                  <div class="cost old"><span>기존</span><b>1,200명</b><i style="height:76px"></i><em>약 50만 원/명</em></div>
+                  <div class="cost new"><span>수정안</span><b>2,400명</b><i style="height:150px"></i><em>약 25만 원/명</em></div>
+                </div>
+                <div class="budget-list">
+                  <p><b>줄일 항목</b> 장기 노트북·에그 임차, 전시 장비, 홍보 영상, 과도한 성과공유회 비용</p>
+                  <p><b>살릴 항목</b> 강사비, 현장 교구 순환, 안전관리, 취약지역 출장, 교재·활동지 품질</p>
+                  <p><b>명시할 항목</b> 범용 교구 20만 원 이내, 일회성 교구 10만 원 이내, 주관기관 예산 50% 이상</p>
+                </div>
+              </div>
+              <figure class="source-shot">
+                <img src="improvement_slide_assets/ai_dashboard.png" alt="AI 대시보드 원본 이미지">
+                <figcaption>성과관리는 DOROBUS·대시보드형 증빙으로 연결</figcaption>
+              </figure>
+            </div>
+            
+    </section>
+    
+
+    <section class="slide " id="s12">
+      <div class="slide-head">
+        <div>
+          <p class="eyebrow">Writing Sprint</p>
+          <h2>제안서 작성은 7일 안에 증빙부터 잠그는 순서로 진행합니다</h2>
+        </div>
+        <div class="slide-no">12</div>
+      </div>
+      
+            <div class="sprint-grid">
+              <div><b>Day 1</b><span>선정 45개 주관·협력기관 제외 여부 확인, 컨소시엄 2자 구조 확정</span></div>
+              <div><b>Day 2</b><span>취약계층 학교 수요확인서 확보, 권역별 좌석표 작성</span></div>
+              <div><b>Day 3</b><span>3개 프로그램을 8차시 모듈로 재작성, 산출물 루브릭 작성</span></div>
+              <div><b>Day 4</b><span>교구 견적, 강사비, 출장비, 학교장비 활용 기준으로 예산 재산정</span></div>
+              <div><b>Day 5</b><span>사업계획서 본문 작성: 필요성, 목표, 운영, 성과, 예산을 평가표 순서로 정렬</span></div>
+              <div><b>Day 6</b><span>프로그램 제안서 작성: 대상별 조정안, 활동지, 안전·윤리, 산출물 예시 보강</span></div>
+              <div><b>Day 7</b><span>자가점검, 분량 초과, 증빙 누락, 발표 Q&A 리스크 점검</span></div>
+            </div>
+            <div class="closing">
+              <b>제안서 핵심 문장</b>
+              <p>한양대ERICA의 교육 품질관리와 DORO의 현장 로봇교육 실행력을 결합해, 디지털 취약지역 학생이 자기 학교와 지역의 문제를 AI·데이터·피지컬 컴퓨팅으로 해결하는 8차시 모듈형 기본과정을 전국 균형형으로 운영한다.</p>
+            </div>
+            
+    </section>
+    
+  </main>
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    function currentIndex() {
+      const y = window.scrollY + window.innerHeight * 0.35;
+      let idx = 0;
+      slides.forEach((s, i) => { if (s.offsetTop <= y) idx = i; });
+      return idx;
+    }
+    window.addEventListener('keydown', (event) => {
+      if (!['ArrowRight', 'ArrowDown', 'PageDown', 'ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) return;
+      event.preventDefault();
+      const idx = currentIndex();
+      const next = ['ArrowRight', 'ArrowDown', 'PageDown'].includes(event.key) ? Math.min(slides.length - 1, idx + 1) : Math.max(0, idx - 1);
+      slides[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    sec.appendChild(grid);
-    root.appendChild(sec);
-  });
-
-  const empty = document.getElementById('empty-state');
-  if (totalVisible === 0) {
-    empty.removeAttribute('data-hidden');
-  } else {
-    empty.setAttribute('data-hidden', '');
-  }
-}
-
-// Filter tabs
-let activeFilter = 'all';
-let activeQuery = '';
-
-document.querySelectorAll('.filter-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilter = btn.dataset.cat;
-    renderCards(activeFilter, activeQuery);
-  });
-});
-
-document.getElementById('search').addEventListener('input', e => {
-  activeQuery = e.target.value;
-  renderCards(activeFilter, activeQuery);
-});
-
-renderCards();
-</script>
+    </script>
 </body>
 </html>
